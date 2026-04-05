@@ -1,6 +1,6 @@
 """
 db/client.py - Gestión de base de datos SQLite para trades y sesiones
-ACTUALIZADO: Soporte completo para sesiones de trading
+UNIFICADO: Ahora usa la base de datos de cada modelo en trained_models/
 """
 import sqlite3
 from datetime import datetime
@@ -8,18 +8,29 @@ from pathlib import Path
 from loguru import logger
 import config
 
-# Ruta de la base de datos
-DB_PATH = Path(__file__).parent.parent / "data" / "trades.db"
+# Ruta de la base de datos global (fallback si no se especifica modelo)
+DEFAULT_DB_PATH = Path(__file__).parent.parent / "data" / "trades.db"
 
-def _get_connection():
-    """Obtiene conexión a la base de datos"""
-    conn = sqlite3.connect(str(DB_PATH))
+def _get_connection(db_path: Path = None):
+    """Obtiene conexión a la base de datos
+    
+    Args:
+        db_path: Ruta a la base de datos del modelo. Si es None, usa la default.
+    """
+    if db_path is None:
+        db_path = DEFAULT_DB_PATH
+    
+    conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
     return conn
 
-def init_tables():
-    """Inicializa todas las tablas necesarias"""
-    conn = _get_connection()
+def init_tables(db_path: Path = None):
+    """Inicializa todas las tablas necesarias
+    
+    Args:
+        db_path: Ruta a la base de datos del modelo. Si es None, usa la default.
+    """
+    conn = _get_connection(db_path)
     cursor = conn.cursor()
     
     # Tabla de sesiones
@@ -82,12 +93,17 @@ def init_tables():
     
     conn.commit()
     conn.close()
-    logger.debug(f"SQLite tables initialized: {DB_PATH}")
+    logger.debug(f"SQLite tables initialized: {db_path or DEFAULT_DB_PATH}")
 
 def create_session(session_id: str, session_type: str, model_name: str = None, 
-                   initial_balance: float = 0, pair: str = None, config_snapshot: str = None) -> str:
-    """Crea una nueva sesión de trading"""
-    conn = _get_connection()
+                   initial_balance: float = 0, pair: str = None, config_snapshot: str = None,
+                   db_path: Path = None) -> str:
+    """Crea una nueva sesión de trading
+    
+    Args:
+        db_path: Ruta a la base de datos del modelo. Si es None, usa la default.
+    """
+    conn = _get_connection(db_path)
     cursor = conn.cursor()
     
     cursor.execute('''
@@ -111,9 +127,14 @@ def create_session(session_id: str, session_type: str, model_name: str = None,
     return session_id
 
 def close_session(session_id: str, final_balance: float = 0, total_trades: int = 0,
-                  wins: int = 0, losses: int = 0, total_pnl: float = 0):
-    """Cierra una sesión de trading"""
-    conn = _get_connection()
+                  wins: int = 0, losses: int = 0, total_pnl: float = 0,
+                  db_path: Path = None):
+    """Cierra una sesión de trading
+    
+    Args:
+        db_path: Ruta a la base de datos del modelo. Si es None, usa la default.
+    """
+    conn = _get_connection(db_path)
     cursor = conn.cursor()
     
     win_rate = (wins / total_trades * 100) if total_trades > 0 else 0
@@ -144,9 +165,13 @@ def close_session(session_id: str, final_balance: float = 0, total_trades: int =
     conn.close()
     logger.info(f"Sesión cerrada: {session_id} | PnL: {total_pnl:+.2f}%")
 
-def log_trade(trade_record: dict):
-    """Registra un trade en la base de datos"""
-    conn = _get_connection()
+def log_trade(trade_record: dict, db_path: Path = None):
+    """Registra un trade en la base de datos
+    
+    Args:
+        db_path: Ruta a la base de datos del modelo. Si es None, usa la default.
+    """
+    conn = _get_connection(db_path)
     cursor = conn.cursor()
     
     # Determinar session_id (usar 'default' si no se proporciona)
@@ -219,9 +244,13 @@ def log_trade(trade_record: dict):
     finally:
         conn.close()
 
-def get_recent_trades(pair: str = None, limit: int = 20, session_id: str = None):
-    """Obtiene trades recientes"""
-    conn = _get_connection()
+def get_recent_trades(pair: str = None, limit: int = 20, session_id: str = None, db_path: Path = None):
+    """Obtiene trades recientes
+    
+    Args:
+        db_path: Ruta a la base de datos del modelo. Si es None, usa la default.
+    """
+    conn = _get_connection(db_path)
     cursor = conn.cursor()
     
     query = '''
@@ -247,9 +276,13 @@ def get_recent_trades(pair: str = None, limit: int = 20, session_id: str = None)
     
     return [dict(row) for row in rows]
 
-def get_open_positions(session_id: str = None):
-    """Obtiene posiciones abiertas (sin cerrar)"""
-    conn = _get_connection()
+def get_open_positions(session_id: str = None, db_path: Path = None):
+    """Obtiene posiciones abiertas (sin cerrar)
+    
+    Args:
+        db_path: Ruta a la base de datos del modelo. Si es None, usa la default.
+    """
+    conn = _get_connection(db_path)
     cursor = conn.cursor()
     
     query = '''
@@ -270,9 +303,13 @@ def get_open_positions(session_id: str = None):
     
     return [dict(row) for row in rows]
 
-def get_closed_trades(session_id: str = None, limit: int = 50):
-    """Obtiene trades cerrados"""
-    conn = _get_connection()
+def get_closed_trades(session_id: str = None, limit: int = 50, db_path: Path = None):
+    """Obtiene trades cerrados
+    
+    Args:
+        db_path: Ruta a la base de datos del modelo. Si es None, usa la default.
+    """
+    conn = _get_connection(db_path)
     cursor = conn.cursor()
     
     query = '''
@@ -294,9 +331,13 @@ def get_closed_trades(session_id: str = None, limit: int = 50):
     
     return [dict(row) for row in rows]
 
-def get_session_stats(session_id: str = None):
-    """Obtiene estadísticas de una sesión o globales"""
-    conn = _get_connection()
+def get_session_stats(session_id: str = None, db_path: Path = None):
+    """Obtiene estadísticas de una sesión o globales
+    
+    Args:
+        db_path: Ruta a la base de datos del modelo. Si es None, usa la default.
+    """
+    conn = _get_connection(db_path)
     cursor = conn.cursor()
     
     if session_id:
@@ -340,9 +381,13 @@ def get_session_stats(session_id: str = None):
     
     return {'total_trades': 0, 'wins': 0, 'losses': 0, 'win_rate': 0, 'avg_pnl': 0, 'total_pnl_usdt': 0}
 
-def get_all_sessions():
-    """Obtiene todas las sesiones"""
-    conn = _get_connection()
+def get_all_sessions(db_path: Path = None):
+    """Obtiene todas las sesiones
+    
+    Args:
+        db_path: Ruta a la base de datos del modelo. Si es None, usa la default.
+    """
+    conn = _get_connection(db_path)
     cursor = conn.cursor()
     
     cursor.execute('''
@@ -355,9 +400,13 @@ def get_all_sessions():
     
     return [dict(row) for row in rows]
 
-def get_session_by_id(session_id: str):
-    """Obtiene una sesión específica"""
-    conn = _get_connection()
+def get_session_by_id(session_id: str, db_path: Path = None):
+    """Obtiene una sesión específica
+    
+    Args:
+        db_path: Ruta a la base de datos del modelo. Si es None, usa la default.
+    """
+    conn = _get_connection(db_path)
     cursor = conn.cursor()
     
     cursor.execute('''

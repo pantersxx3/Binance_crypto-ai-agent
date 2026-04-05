@@ -46,6 +46,9 @@ class BacktestEngine:
         self.model_name = model_name or f"{pair}_backtest"
         self.trade_mode = trade_mode
         
+        # Obtener la ruta de la base de datos del modelo
+        self.db_path = config.get_model_db_path(self.model_name)
+        
         self.session_id = f"BACKTEST_{uuid.uuid4().hex[:8]}"
         db.create_session(
             session_id=self.session_id,
@@ -57,7 +60,8 @@ class BacktestEngine:
                 'start_date': start_date,
                 'end_date': end_date,
                 'trade_mode': trade_mode
-            })
+            }),
+            db_path=self.db_path
         )
         
         self.collector = DataCollector(db_path=config.MARKET_DATA_DB)

@@ -57,10 +57,14 @@ class Position:
 
 class TradingBot:
     def __init__(self):
+        self.model_name = f"{config.TRADING_PAIRS[0]}_live"
         self.collector = DataCollector(db_path=config.MARKET_DATA_DB)
-        self.brain = TradingBrain(model_name=f"{config.TRADING_PAIRS[0]}_live")
+        self.brain = TradingBrain(model_name=self.model_name)
         self.risk_manager = RiskManager()
         self.executor = TradeExecutor()
+        
+        # Obtener la ruta de la base de datos del modelo para los trades
+        self.db_path = config.get_model_db_path(self.model_name)
         
         self.positions = []
         self.max_slots = config.MAX_SLOTS
@@ -79,6 +83,7 @@ class TradingBot:
         logger.info(f"TRADE_AMOUNT_USDT: ${config.TRADE_AMOUNT_USDT:.2f} | MAX_SLOTS: {self.max_slots}")
         logger.info(f"ORDER_TYPE: {config.ORDER_TYPE} | Multi-TF: {config.PRIMARY_TF}+{config.CONFIRMATION_TF}")
         logger.info(f"Cycle Interval: {config.CYCLE_INTERVAL}s | Timeframe: {config.PRIMARY_TF}")
+        logger.info(f"Model DB: {self.db_path}")
 
     def _signal_handler(self, sig, frame):
         self.shutdown_flag = True
@@ -200,7 +205,7 @@ class TradingBot:
                         "binance_order_id": f"LIVE_{pos.id[:8]}",
                         "is_dry_run": config.DRY_RUN
                     }
-                    db.log_trade(trade_record)
+                    db.log_trade(trade_record, db_path=self.db_path)
                     
                     pos.close(exit_price, datetime.now(), pnl_pct, result)
                     self.positions.remove(pos)
