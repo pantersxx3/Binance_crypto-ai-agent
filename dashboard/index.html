@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto AI Trading Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        header h1 {
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-card h3 {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        
+        .stat-card .value.positive {
+            color: #00ff88;
+        }
+        
+        .stat-card .value.negative {
+            color: #ff4757;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 8px;
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .tab-btn.active {
+            background: #00d4ff;
+            color: #1a1a2e;
+        }
+        
+        .tab-content {
+            display: none;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .sub-tabs {
+            display: flex;
+            gap: 8px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .sub-tab-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+        
+        .sub-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sub-tab-btn.active {
+            background: #00d4ff;
+            color: #1a1a2e;
+            border-color: #00d4ff;
+        }
+        
+        .sub-tab-content {
+            display: none;
+            margin-top: 15px;
+        }
+        
+        .sub-tab-content.active {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        th {
+            background: rgba(255, 255, 255, 0.08);
+            color: #00d4ff;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .badge-win {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+        
+        .badge-loss {
+            background: rgba(255, 71, 87, 0.2);
+            color: #ff4757;
+        }
+        
+        .badge-open {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+        
+        .badge-backtest {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+        
+        .badge-live {
+            background: rgba(138, 43, 226, 0.2);
+            color: #8a2be2;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #00d4ff;
+            color: #1a1a2e;
+        }
+        
+        .btn-primary:hover {
+            background: #00b8e6;
+        }
+        
+        .btn-danger {
+            background: #ff4757;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #ff3344;
+        }
+        
+        .model-detail {
+            display: none;
+        }
+        
+        .model-detail.active {
+            display: block;
+        }
+        
+        .back-btn {
+            margin-bottom: 20px;
+        }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .metric-item {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .metric-item label {
+            display: block;
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .metric-item .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        
+        .session-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .session-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(5px);
+        }
+        
+        .session-card.active {
+            border: 2px solid #00d4ff;
+        }
+        
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .session-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        
+        .session-meta {
+            display: flex;
+            gap: 20px;
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .session-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .session-stat {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+        }
+        
+        .session-stat .label {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .session-stat .value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        
+        .trade-pair {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #00d4ff;
+        }
+        
+        .trade-pair.win {
+            border-left-color: #00ff88;
+        }
+        
+        .trade-pair.loss {
+            border-left-color: #ff4757;
+        }
+        
+        .trade-pair.open {
+            border-left-color: #ffc107;
+        }
+        
+        .log-container {
+            background: #0a0a0a;
+            padding: 15px;
+            border-radius: 8px;
+            height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        .log-line {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        
+        .log-line.info {
+            color: #00d4ff;
+        }
+        
+        .log-line.warning {
+            color: #ffc107;
+        }
+        
+        .log-line.error {
+            color: #ff4757;
+        }
+        
+        .log-line.success {
+            color: #00ff88;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                width: 100%;
+            }
+            
+            .session-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 Crypto AI Trading Dashboard</h1>
+            <p id="connection-status">Conectando...</p>
+        </header>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Capital Inicial</h3>
+                <div class="value" id="initial-balance">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <h3>Balance Actual</h3>
+                <div class="value" id="current-balance">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <h3>PnL Total</h3>
+                <div class="value" id="total-pnl">+0.00%</div>
+            </div>
+            <div class="stat-card">
+                <h3>Balance Real (Binance)</h3>
+                <div class="value" id="real-balance">$0.00</div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('sessions')">📅 Sesiones</button>
+            <button class="tab-btn" onclick="showTab('models')">🎓 Modelos</button>
+            <button class="tab-btn" onclick="showTab('logs')">📋 Logs</button>
+            <button class="tab-btn" onclick="showTab('config')">⚙️ Config</button>
+        </div>
+        
+        <div id="tab-sessions" class="tab-content active">
+            <h2>Sesiones de Trading</h2>
+            <button class="btn btn-primary" onclick="refreshSessions()">🔄 Actualizar</button>
+            
+            <div id="sessions-list">
+                <p>Cargando sesiones...</p>
+            </div>
+            
+            <div id="session-detail" style="display: none; margin-top: 20px;">
+                <button class="btn btn-primary back-btn" onclick="showSessionsList()">← Volver a Sesiones</button>
+                
+                <h3 id="session-detail-title">Detalle de Sesión</h3>
+                
+                <div class="metric-grid" id="session-detail-metrics">
+                </div>
+                
+                <h4>Operaciones (BUY → SELL Pairs)</h4>
+                <div id="session-trades-list">
+                </div>
+            </div>
+        </div>
+        
+        <div id="tab-models" class="tab-content">
+            <div id="models-list">
+                <h2>Modelos Entrenados</h2>
+                <button class="btn btn-primary" onclick="refreshModels()">🔄 Actualizar</button>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Total Decisiones</th>
+                            <th>Trades</th>
+                            <th>Win Rate</th>
+                            <th>PnL Total</th>
+                            <th>Confianza Promedio</th>
+                            <th>Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody id="models-table">
+                        <tr><td colspan="7">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="model-detail" class="model-detail">
+                <button class="btn btn-primary back-btn" onclick="showModelsList()">← Volver a Modelos</button>
+                
+                <h2 id="model-name">Modelo</h2>
+                
+                <div class="metric-grid">
+                    <div class="metric-item">
+                        <label>Win Rate</label>
+                        <div class="value" id="detail-win-rate">0%</div>
+                    </div>
+                    <div class="metric-item">
+                        <label>Total Trades</label>
+                        <div class="value" id="detail-total-trades">0</div>
+                    </div>
+                    <div class="metric-item">
+                        <label>PnL Total</label>
+                        <div class="value" id="detail-total-pnl">0%</div>
+                    </div>
+                    <div class="metric-item">
+                        <label>Confianza Promedio</label>
+                        <div class="value" id="detail-avg-confidence">0%</div>
+                    </div>
+                    <div class="metric-item">
+                        <label>Total Decisiones</label>
+                        <div class="value" id="detail-total-decisions">0</div>
+                    </div>
+                    <div class="metric-item">
+                        <label>Aciertos / Errores</label>
+                        <div class="value" id="detail-correct-wrong">0 / 0</div>
+                    </div>
+                </div>
+                
+                <div class="sub-tabs">
+                    <button class="sub-tab-btn active" onclick="showSubTab('live')">📊 Live Trading</button>
+                    <button class="sub-tab-btn" onclick="showSubTab('sessions')">📅 Sesiones</button>
+                    <button class="sub-tab-btn" onclick="showSubTab('decisions')">📋 Decisiones</button>
+                </div>
+                
+                <div id="subtab-live" class="sub-tab-content active">
+                    <h3>Live Trading - <span id="live-model-name"></span></h3>
+                    
+                    <div class="metric-grid">
+                        <div class="metric-item">
+                            <label>Trades Hoy</label>
+                            <div class="value" id="live-today-trades">0</div>
+                        </div>
+                        <div class="metric-item">
+                            <label>Win Rate Hoy</label>
+                            <div class="value" id="live-today-winrate">0%</div>
+                        </div>
+                        <div class="metric-item">
+                            <label>PnL Hoy</label>
+                            <div class="value" id="live-today-pnl">0%</div>
+                        </div>
+                        <div class="metric-item">
+                            <label>Posiciones Abiertas</label>
+                            <div class="value" id="live-open-positions">0</div>
+                        </div>
+                    </div>
+                    
+                    <h4>Posiciones Abiertas</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Par</th>
+                                <th>Tipo</th>
+                                <th>Entrada</th>
+                                <th>SL</th>
+                                <th>TP</th>
+                                <th>Confianza</th>
+                                <th>Accion</th>
+                            </tr>
+                        </thead>
+                        <tbody id="live-open-trades-table">
+                            <tr><td colspan="7">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>Trades Recientes (Este Modelo)</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Par</th>
+                                <th>Tipo</th>
+                                <th>ID</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>PnL</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="live-recent-trades-table">
+                            <tr><td colspan="8">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="subtab-sessions" class="sub-tab-content">
+                    <h3>Sesiones de Entrenamiento</h3>
+                    <div id="sessions-list">
+                        <p>Cargando sesiones...</p>
+                    </div>
+                </div>
+                
+                <div id="subtab-decisions" class="sub-tab-content">
+                    <h3>Decisiones Recientes</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Tipo</th>
+                                <th>ID</th>
+                                <th>Conf</th>
+                                <th>RSI</th>
+                                <th>Tendencia</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>PnL</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="model-decisions-table">
+                            <tr><td colspan="10">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tab-logs" class="tab-content">
+            <h2>Logs en Vivo</h2>
+            <button class="btn btn-primary" onclick="clearLogs()">Limpiar</button>
+            <div class="log-container" id="log-container">
+                <div class="log-line info">Conectando a logs...</div>
+            </div>
+        </div>
+        
+        <div id="tab-config" class="tab-content">
+            <h2>Configuracion</h2>
+            <div id="config-content">
+                <p>Cargando configuracion...</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let ws = null;
+        let currentModel = null;
+        let currentSubTab = 'live';
+        
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'models') {
+                refreshModels();
+            } else if (tabName === 'sessions') {
+                refreshSessions();
+            }
+        }
+        
+        function showSubTab(subTabName) {
+            document.querySelectorAll('.sub-tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById('subtab-' + subTabName).classList.add('active');
+            event.target.classList.add('active');
+            currentSubTab = subTabName;
+            
+            if (subTabName === 'live' && currentModel) {
+                loadModelLiveTrading(currentModel);
+            }
+        }
+        
+        function showModelsList() {
+            document.getElementById('models-list').style.display = 'block';
+            document.getElementById('model-detail').classList.remove('active');
+            currentModel = null;
+        }
+        
+        function showModelDetail(modelName) {
+            currentModel = modelName;
+            document.getElementById('models-list').style.display = 'none';
+            document.getElementById('model-detail').classList.add('active');
+            document.getElementById('model-name').textContent = modelName;
+            document.getElementById('live-model-name').textContent = modelName;
+            
+            loadModelStats(modelName);
+            loadModelSessions(modelName);
+            loadModelDecisions(modelName);
+            loadModelLiveTrading(modelName);
+        }
+        
+        function showSessionsList() {
+            document.getElementById('sessions-list').style.display = 'block';
+            document.getElementById('session-detail').style.display = 'none';
+        }
+        
+        function showSessionDetail(sessionId) {
+            document.getElementById('sessions-list').style.display = 'none';
+            document.getElementById('session-detail').style.display = 'block';
+            loadSessionDetail(sessionId);
+        }
+        
+        async function refreshModels() {
+            try {
+                const response = await fetch('/api/models');
+                const data = await response.json();
+                
+                const tbody = document.getElementById('models-table');
+                if (data.models && data.models.length > 0) {
+                    tbody.innerHTML = data.models.map(model => `
+                        <tr>
+                            <td>${model.name}</td>
+                            <td>${model.total_decisions || 0}</td>
+                            <td>${model.total_trades || 0}</td>
+                            <td><span class="badge ${model.win_rate >= 50 ? 'badge-win' : 'badge-loss'}">${model.win_rate || 0}%</span></td>
+                            <td class="${(model.total_pnl || 0) >= 0 ? 'positive' : 'negative'}">${(model.total_pnl || 0).toFixed(2)}%</td>
+                            <td>${(model.avg_confidence || 0).toFixed(1)}%</td>
+                            <td><button class="btn btn-primary" onclick="showModelDetail('${model.name}')">Ver Detalles</button></td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="7">No hay modelos entrenados</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading models:', error);
+                document.getElementById('models-table').innerHTML = '<tr><td colspan="7">Error cargando modelos</td></tr>';
+            }
+        }
+        
+        async function refreshSessions() {
+            try {
+                const response = await fetch('/api/sessions');
+                const data = await response.json();
+                
+                const sessionsDiv = document.getElementById('sessions-list');
+                if (data.sessions && data.sessions.length > 0) {
+                    sessionsDiv.innerHTML = data.sessions.map(session => `
+                        <div class="session-card" onclick="showSessionDetail('${session.session_id}')">
+                            <div class="session-header">
+                                <div class="session-title">
+                                    ${session.session_type === 'backtest' ? '🧪' : '🔴'} 
+                                    ${session.session_type.toUpperCase()} - ${session.pair || 'N/A'}
+                                </div>
+                                <div class="session-meta">
+                                    <span class="badge ${session.session_type === 'backtest' ? 'badge-backtest' : 'badge-live'}">
+                                        ${session.session_type}
+                                    </span>
+                                    <span>${session.status}</span>
+                                </div>
+                            </div>
+                            <div class="session-meta" style="margin-top: 10px;">
+                                <span>Inicio: ${new Date(session.start_time).toLocaleString()}</span>
+                                <span>→</span>
+                                <span>Fin: ${session.end_time ? new Date(session.end_time).toLocaleString() : 'En curso'}</span>
+                            </div>
+                            <div class="session-stats">
+                                <div class="session-stat">
+                                    <div class="label">Trades</div>
+                                    <div class="value">${session.total_trades || 0}</div>
+                                </div>
+                                <div class="session-stat">
+                                    <div class="label">Win Rate</div>
+                                    <div class="value">${(session.win_rate || 0).toFixed(1)}%</div>
+                                </div>
+                                <div class="session-stat">
+                                    <div class="label">PnL Total</div>
+                                    <div class="value ${(session.total_pnl || 0) >= 0 ? 'positive' : 'negative'}">
+                                        ${(session.total_pnl || 0).toFixed(2)}%
+                                    </div>
+                                </div>
+                                <div class="session-stat">
+                                    <div class="label">Balance</div>
+                                    <div class="value">${(session.final_balance || session.initial_balance || 0).toFixed(2)}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    sessionsDiv.innerHTML = '<p>No hay sesiones registradas</p>';
+                }
+            } catch (error) {
+                console.error('Error loading sessions:', error);
+                document.getElementById('sessions-list').innerHTML = '<p>Error cargando sesiones</p>';
+            }
+        }
+        
+        async function loadSessionDetail(sessionId) {
+            try {
+                const response = await fetch(`/api/sessions/${sessionId}`);
+                const data = await response.json();
+                
+                document.getElementById('session-detail-title').textContent = 
+                    `Sesión: ${sessionId} (${data.session.session_type})`;
+                
+                const metricsDiv = document.getElementById('session-detail-metrics');
+                metricsDiv.innerHTML = `
+                    <div class="metric-item">
+                        <label>Tipo</label>
+                        <div class="value">${data.session.session_type}</div>
+                    </div>
+                    <div class="metric-item">
+                        <label>Estado</label>
+                        <div class="value">${data.session.status}</div>
+                    </div>
+                    <div class="metric-item">
+                        <label>Inicio</label>
+                        <div class="value">${new Date(data.session.start_time).toLocaleString()}</div>
+                    </div>
+                    <div class="metric-item">
+                        <label>Fin</label>
+                        <div class="value">${data.session.end_time ? new Date(data.session.end_time).toLocaleString() : 'En curso'}</div>
+                    </div>
+                    <div class="metric-item">
+                        <label>Balance Inicial</label>
+                        <div class="value">$${(data.session.initial_balance || 0).toFixed(2)}</div>
+                    </div>
+                    <div class="metric-item">
+                        <label>Balance Final</label>
+                        <div class="value">$${(data.session.final_balance || 0).toFixed(2)}</div>
+                    </div>
+                    <div class="metric-item">
+                        <label>Trades Totales</label>
+                        <div class="value">${data.session.total_trades || 0}</div>
+                    </div>
+                    <div class="metric-item">
+                        <label>Win Rate</label>
+                        <div class="value">${(data.session.win_rate || 0).toFixed(1)}%</div>
+                    </div>
+                `;
+                
+                const tradesDiv = document.getElementById('session-trades-list');
+                if (data.trades && data.trades.length > 0) {
+                    tradesDiv.innerHTML = data.trades.map(trade => `
+                        <div class="trade-pair ${trade.outcome === 'WIN' ? 'win' : trade.outcome === 'LOSS' ? 'loss' : 'open'}">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <div>
+                                    <strong>${trade.pair}</strong> - 
+                                    <span class="badge ${trade.side === 'BUY' ? 'badge-open' : 'badge-loss'}">${trade.side}</span>
+                                    <span class="badge ${trade.outcome === 'WIN' ? 'badge-win' : trade.outcome === 'LOSS' ? 'badge-loss' : 'badge-open'}">
+                                        ${trade.outcome}
+                                    </span>
+                                </div>
+                                <div>
+                                    ${trade.created_at ? new Date(trade.created_at).toLocaleString() : 'N/A'}
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                                <div>
+                                    <small>Entrada</small><br>
+                                    <strong>$${(trade.entry_price || 0).toFixed(2)}</strong>
+                                </div>
+                                <div>
+                                    <small>Salida</small><br>
+                                    <strong>$${(trade.exit_price || 0).toFixed(2)}</strong>
+                                </div>
+                                <div>
+                                    <small>Cantidad</small><br>
+                                    <strong>${(trade.quantity || 0).toFixed(4)}</strong>
+                                </div>
+                                <div>
+                                    <small>PnL</small><br>
+                                    <strong class="${(trade.pnl_pct || 0) >= 0 ? 'positive' : 'negative'}">
+                                        ${(trade.pnl_pct || 0).toFixed(2)}%
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    tradesDiv.innerHTML = '<p>No hay operaciones en esta sesión</p>';
+                }
+            } catch (error) {
+                console.error('Error loading session detail:', error);
+            }
+        }
+        
+        async function loadModelStats(modelName) {
+            try {
+                const safeName = modelName.replace(':', '%3A');
+                const response = await fetch(`/api/models/${safeName}/stats`);
+                const data = await response.json();
+                
+                if (data.summary) {
+                    document.getElementById('detail-win-rate').textContent = (data.summary.win_rate || 0) + '%';
+                    document.getElementById('detail-total-trades').textContent = data.summary.total_trades || 0;
+                    document.getElementById('detail-total-pnl').textContent = (data.summary.total_pnl_pct || 0).toFixed(2) + '%';
+                    document.getElementById('detail-avg-confidence').textContent = (data.summary.avg_confidence || 0).toFixed(1) + '%';
+                    document.getElementById('detail-total-decisions').textContent = data.summary.total_decisions || 0;
+                    
+                    const correct = data.summary.correct_trades || 0;
+                    const wrong = (data.summary.total_trades || 0) - correct;
+                    document.getElementById('detail-correct-wrong').textContent = `${correct} / ${wrong}`;
+                }
+            } catch (error) {
+                console.error('Error loading model stats:', error);
+            }
+        }
+        
+        async function loadModelSessions(modelName) {
+            try {
+                const safeName = modelName.replace(':', '%3A');
+                const response = await fetch(`/api/models/${safeName}/sessions`);
+                const data = await response.json();
+                
+                const sessionsDiv = document.getElementById('sessions-list');
+                if (data.sessions && data.sessions.length > 0) {
+                    sessionsDiv.innerHTML = data.sessions.map((session, index) => `
+                        <div class="session-card">
+                            <div class="session-header">
+                                <div class="session-title">${session.type} - ${session.start_date} → ${session.end_date}</div>
+                                <div class="session-meta">
+                                    <span>Trades: ${session.total_trades}</span>
+                                    <span>Win Rate: ${session.win_rate}%</span>
+                                </div>
+                            </div>
+                            <div class="session-stats">
+                                <div class="session-stat">
+                                    <div class="label">PnL Total</div>
+                                    <div class="value ${(session.total_pnl || 0) >= 0 ? 'positive' : 'negative'}">${(session.total_pnl || 0).toFixed(2)}%</div>
+                                </div>
+                                <div class="session-stat">
+                                    <div class="label">Decisiones</div>
+                                    <div class="value">${session.total_decisions || 0}</div>
+                                </div>
+                                <div class="session-stat">
+                                    <div class="label">Confianza Promedio</div>
+                                    <div class="value">${(session.avg_confidence || 0).toFixed(1)}%</div>
+                                </div>
+                                <div class="session-stat">
+                                    <div class="label">Aciertos</div>
+                                    <div class="value">${session.correct_trades || 0}/${session.total_trades || 0}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    sessionsDiv.innerHTML = '<p>No hay sesiones registradas</p>';
+                }
+            } catch (error) {
+                console.error('Error loading sessions:', error);
+                document.getElementById('sessions-list').innerHTML = '<p>Error cargando sesiones</p>';
+            }
+        }
+        
+        async function loadModelDecisions(modelName) {
+            try {
+                const safeName = modelName.replace(':', '%3A');
+                const response = await fetch(`/api/models/${safeName}/decisions?limit=50`);
+                const data = await response.json();
+                
+                const tbody = document.getElementById('model-decisions-table');
+                if (data.decisions && data.decisions.length > 0) {
+                    tbody.innerHTML = data.decisions.map(dec => `
+                        <tr>
+                            <td>${new Date(dec.timestamp).toLocaleString()}</td>
+                            <td><span class="badge ${dec.direction === 'BUY' ? 'badge-open' : 'badge-loss'}">${dec.direction}</span></td>
+                            <td>${dec.id}</td>
+                            <td>${dec.confidence}%</td>
+                            <td>${dec.rsi || 'N/A'}</td>
+                            <td>${dec.trend_strength || 'N/A'}</td>
+                            <td>$${(dec.entry_price || 0).toFixed(2)}</td>
+                            <td>$${(dec.exit_price || 0).toFixed(2)}</td>
+                            <td class="${(dec.pnl || 0) >= 0 ? 'positive' : 'negative'}">${(dec.pnl || 0).toFixed(2)}%</td>
+                            <td><span class="badge ${dec.was_correct ? 'badge-win' : 'badge-loss'}">${dec.was_correct ? 'WIN' : 'LOSS'}</span></td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="10">No hay decisiones</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading decisions:', error);
+            }
+        }
+        
+        async function loadModelLiveTrading(modelName) {
+            try {
+                const safeName = modelName.replace(':', '%3A');
+                
+                const response = await fetch(`/api/models/${safeName}/trades?limit=20`);
+                const data = await response.json();
+                
+                const openTrades = (data.trades || []).filter(t => !t.exit_price || t.exit_price === 0);
+                document.getElementById('live-open-positions').textContent = openTrades.length;
+                
+                const openTbody = document.getElementById('live-open-trades-table');
+                if (openTrades.length > 0) {
+                    openTbody.innerHTML = openTrades.map(trade => `
+                        <tr>
+                            <td>${trade.pair}</td>
+                            <td><span class="badge ${trade.side === 'BUY' ? 'badge-open' : 'badge-loss'}">${trade.side}</span></td>
+                            <td>$${(trade.entry_price || 0).toFixed(2)}</td>
+                            <td>$${(trade.stop_loss || 0).toFixed(2)}</td>
+                            <td>$${(trade.take_profit || 0).toFixed(2)}</td>
+                            <td>${trade.confidence || 0}%</td>
+                            <td><button class="btn btn-danger" onclick="closePosition('${trade.pair}')">Cerrar</button></td>
+                        </tr>
+                    `).join('');
+                } else {
+                    openTbody.innerHTML = '<tr><td colspan="7">No hay posiciones abiertas</td></tr>';
+                }
+                
+                const closedTrades = (data.trades || []).filter(t => t.exit_price && t.exit_price > 0);
+                const todayTrades = closedTrades.filter(t => {
+                    const tradeDate = new Date(t.time).toDateString();
+                    const today = new Date().toDateString();
+                    return tradeDate === today;
+                });
+                
+                document.getElementById('live-today-trades').textContent = todayTrades.length;
+                
+                const todayWin = todayTrades.filter(t => t.status === 'WIN').length;
+                const todayWinRate = todayTrades.length > 0 ? (todayWin / todayTrades.length * 100) : 0;
+                document.getElementById('live-today-winrate').textContent = todayWinRate.toFixed(1) + '%';
+                
+                const todayPnl = todayTrades.reduce((sum, t) => sum + (parseFloat(t.pnl) || 0), 0);
+                const todayPnlEl = document.getElementById('live-today-pnl');
+                todayPnlEl.textContent = (todayPnl >= 0 ? '+' : '') + todayPnl.toFixed(2) + '%';
+                todayPnlEl.className = 'value ' + (todayPnl >= 0 ? 'positive' : 'negative');
+                
+                const recentTbody = document.getElementById('live-recent-trades-table');
+                if (closedTrades.length > 0) {
+                    recentTbody.innerHTML = closedTrades.slice(0, 10).map(trade => `
+                        <tr>
+                            <td>${new Date(trade.time).toLocaleString()}</td>
+                            <td>${trade.pair}</td>
+                            <td><span class="badge ${trade.side === 'BUY' ? 'badge-open' : 'badge-loss'}">${trade.side}</span></td>
+                            <td>${trade.id}</td>
+                            <td>$${(trade.entry_price || 0).toFixed(2)}</td>
+                            <td>$${(trade.exit_price || 0).toFixed(2)}</td>
+                            <td class="${(trade.pnl || 0) >= 0 ? 'positive' : 'negative'}">${(trade.pnl || 0).toFixed(2)}%</td>
+                            <td><span class="badge ${trade.status === 'WIN' ? 'badge-win' : 'badge-loss'}">${trade.status}</span></td>
+                        </tr>
+                    `).join('');
+                } else {
+                    recentTbody.innerHTML = '<tr><td colspan="8">No hay trades recientes</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading live trading:', error);
+            }
+        }
+        
+        async function loadDashboardData() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                
+                document.getElementById('initial-balance').textContent = '$' + (data.balance_initial || 0).toFixed(2);
+                document.getElementById('current-balance').textContent = '$' + (data.balance || 0).toFixed(2);
+                
+                const pnlElement = document.getElementById('total-pnl');
+                pnlElement.textContent = (data.balance_pnl_pct || 0).toFixed(2) + '%';
+                pnlElement.className = 'value ' + ((data.balance_pnl_pct || 0) >= 0 ? 'positive' : 'negative');
+                
+                document.getElementById('real-balance').textContent = '$' + (data.balance_real || 0).toFixed(2);
+                
+                if (data.cfg) {
+                    const configDiv = document.getElementById('config-content');
+                    configDiv.innerHTML = `
+                        <div class="metric-grid">
+                            <div class="metric-item">
+                                <label>Modo</label>
+                                <div class="value">${data.cfg.trade_mode || 'spot'}</div>
+                            </div>
+                            <div class="metric-item">
+                                <label>Pares</label>
+                                <div class="value">${(data.cfg.pairs || []).join(', ')}</div>
+                            </div>
+                            <div class="metric-item">
+                                <label>Min Confianza</label>
+                                <div class="value">${data.cfg.min_confidence || 70}%</div>
+                            </div>
+                            <div class="metric-item">
+                                <label>Intervalo</label>
+                                <div class="value">${data.cfg.cycle_interval || 60}s</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                document.getElementById('connection-status').textContent = 'Conectado - Actualizado: ' + new Date().toLocaleTimeString();
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                document.getElementById('connection-status').textContent = 'Error de conexion';
+            }
+        }
+        
+        function connectWebSocket() {
+            ws = new WebSocket(`ws://${window.location.host}/ws/logs`);
+            
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+            };
+            
+            ws.onmessage = (event) => {
+                const logContainer = document.getElementById('log-container');
+                const line = document.createElement('div');
+                line.className = 'log-line';
+                
+                if (event.data.includes('ERROR') || event.data.includes('❌')) {
+                    line.classList.add('error');
+                } else if (event.data.includes('WARNING') || event.data.includes('⚠️')) {
+                    line.classList.add('warning');
+                } else if (event.data.includes('WIN') || event.data.includes('✅')) {
+                    line.classList.add('success');
+                } else {
+                    line.classList.add('info');
+                }
+                
+                line.textContent = event.data;
+                logContainer.appendChild(line);
+                logContainer.scrollTop = logContainer.scrollHeight;
+            };
+            
+            ws.onclose = () => {
+                console.log('WebSocket disconnected, reconnecting...');
+                setTimeout(connectWebSocket, 3000);
+            };
+        }
+        
+        function clearLogs() {
+            document.getElementById('log-container').innerHTML = '';
+        }
+        
+        async function closePosition(pair) {
+            if (!confirm(`¿Cerrar posicion de ${pair}?`)) return;
+            
+            try {
+                const response = await fetch(`/api/close/${pair}`, { method: 'POST' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Posicion cerrada');
+                    if (currentModel) {
+                        loadModelLiveTrading(currentModel);
+                    }
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error cerrando posicion: ' + error);
+            }
+        }
+        
+        setInterval(loadDashboardData, 5000);
+        
+        window.onload = () => {
+            loadDashboardData();
+            connectWebSocket();
+        };
+    </script>
+</body>
+</html>
