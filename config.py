@@ -161,10 +161,42 @@ def validate():
     print(f"Spot Order Type: {SPOT_ORDER_TYPE}")
     print(f"Binance: {'TESTNET' if BINANCE_TESTNET else 'MAINNET'} (Backtesting: {BACKTESTING_MODE})")
 
+# Agregar esta función en config.py
+
+def get_model_db_path(model_name: str = "default") -> Path:
+    """
+    Genera path para DB del modelo.
+    CORREGIDO: Usa el nombre del modelo LLM, no el par
+    """
+    # Limpiar nombre para usar como filename
+    safe_name = model_name.replace(":", "_").replace("/", "_").replace(" ", "_")
+    return MODELS_DIR / f"{safe_name}.db"
+    
 def save_config(config_dict: dict):
     """Guarda la configuracion actual a config.json"""
     with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
         json.dump(config_dict, f, indent=2, ensure_ascii=False)
 
+# Agregar al final de config.py
+
+def get_model_name_for_db() -> str:
+    """
+    Genera nombre consistente para la base de datos del modelo.
+    Usa el nombre del modelo LLM, no el par de trading.
+    """
+    # Obtener nombre del modelo LLM
+    model_name = LLM_MODEL
+    
+    # Limpiar caracteres especiales para nombre de archivo
+    safe_name = model_name.replace(":", "_").replace("/", "_").replace(" ", "_")
+    
+    # Agregar sufijo según modo
+    # if TRAIN_MODE:
+        # safe_name += "_backtest"
+    # else:
+        # safe_name += "_live"
+    
+    return safe_name
+    
 if __name__ == "__main__":
     validate()

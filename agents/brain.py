@@ -1,6 +1,6 @@
 """
-agents/brain.py - Trading Brain con SQLite local unificado
-CORREGIDO: Limpieza robusta de JSON, outcome recording para live trading
+agents/brain.py - Trading Brain con Aprendizaje MEJORATIVO
+CORREGIDO: Usa patrones para AJUSTAR decisiones, no BLOQUEARLAS
 """
 import json
 import re
@@ -12,6 +12,7 @@ from pathlib import Path
 from openai import OpenAI
 from loguru import logger
 import config
+from agents.validator import PredictionValidator
 
 class TradingBrain:
     def __init__(self, model_name: str = None):
@@ -20,14 +21,16 @@ class TradingBrain:
             api_key=config.LLM_API_KEY,
             timeout=600.0
         )
-        self.model_name = model_name or "default"
+        self.model_name = model_name or config.LLM_MODEL.replace(":", "_").replace("/", "_")
         self.db_path = config.get_model_db_path(self.model_name)
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
         self.model = config.LLM_MODEL
         
         self._init_database()
+        self.validator = PredictionValidator(str(self.db_path))
+        self.previous_decision = None
         
-        logger.info(f"Brain inicializado | Modelo: {self.model_name} | DB: {self.db_path}")
+        logger.info(f"Brain inicializado | Modelo: {self.model} | DB: {self.db_path}")
     
     def _init_database(self):
         try:
@@ -79,9 +82,37 @@ class TradingBrain:
                     correct_trades INTEGER DEFAULT 0,
                     win_rate REAL DEFAULT 0,
                     total_pnl REAL DEFAULT 0,
-                    avg_confidence REAL DEFAULT 0
+                    avg_confidence REAL DEFAULT 0,
+                    llm_model TEXT
                 )
             ''')
+            
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS prediction_validations (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    decision_id INTEGER,
+                    validated_at TEXT,
+                    previous_direction TEXT,
+                    previous_confidence INTEGER,
+                    price_change_pct REAL,
+                    validation_result TEXT,
+                    success BOOLEAN,
+                    reason TEXT,
+                    opportunity_cost REAL,
+                    pattern_learned TEXT,
+                    prev_rsi REAL,
+                    prev_regime TEXT,
+                    prev_trend TEXT,
+                    current_rsi REAL,
+                    current_regime TEXT,
+                    current_trend TEXT
+                )
+            ''')
+            
+            cursor.execute('''
+                INSERT OR REPLACE INTO model_stats (id, updated_at, llm_model)
+                VALUES (1, ?, ?)
+            ''', (datetime.now().isoformat(), self.model))
             
             conn.commit()
             conn.close()
@@ -91,81 +122,34 @@ class TradingBrain:
             logger.error(f"Error inicializando base de datos: {e}")
             raise
 
-    def _clean_json_response(self, raw_text: str) -> str:
-        """Limpia la respuesta del LLM para extraer JSON valido"""
-        if not raw_text or not isinstance(raw_text, str):
-            return "{}"
+    def _get_learned_patterns(self, limit: int = 3) -> list:
+        """Obtiene patrones exitosos para SUGERIR (no forzar)"""
+        conn = sqlite3.connect(str(self.db_path))
+        cursor = conn.cursor()
         
-        cleaned = re.sub(r'```json\s*', '', raw_text, flags=re.IGNORECASE)
-        cleaned = re.sub(r'```\s*', '', cleaned)
+        cursor.execute('''
+            SELECT pattern_learned, COUNT(*) as count,
+                   ROUND(SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1) as success_rate
+            FROM prediction_validations
+            WHERE pattern_learned != '' AND success = 1
+            GROUP BY pattern_learned
+            HAVING COUNT(*) >= 2
+            ORDER BY success_rate DESC, count DESC
+            LIMIT ?
+        ''', (limit,))
         
-        json_match = re.search(r'\{.*\}', cleaned, re.DOTALL)
-        if json_match:
-            cleaned = json_match.group(0)
+        patterns = []
+        for row in cursor.fetchall():
+            patterns.append({
+                'pattern': row[0],
+                'occurrences': row[1],
+                'success_rate': row[2]
+            })
         
-        cleaned = ''.join(char for char in cleaned if ord(char) >= 32 or char in '\n\r\t')
-        
-        if cleaned.count('{') > cleaned.count('}'):
-            cleaned += '}' * (cleaned.count('{') - cleaned.count('}'))
-        
-        cleaned = re.sub(r',\s*}', '}', cleaned)
-        cleaned = re.sub(r',\s*]', ']', cleaned)
-        
-        try:
-            json.loads(cleaned)
-            return cleaned.strip()
-        except json.JSONDecodeError as e:
-            logger.warning(f"JSON invalido despues de limpiar: {e}")
-            logger.debug(f"   JSON problematico: {cleaned[:500]}")
-            
-            fallback = self._extract_json_fields(cleaned)
-            if fallback:
-                logger.info("   Recuperado con fallback regex")
-                return fallback
-            return "{}"
+        conn.close()
+        return patterns
 
-    def _extract_json_fields(self, json_str: str) -> str:
-        """Ultimo recurso: Extraer campos esenciales con regex"""
-        fields = {}
-        
-        match = re.search(r'"direction"\s*:\s*"(BUY|SELL|HOLD)"', json_str, re.IGNORECASE)
-        if match:
-            fields['direction'] = match.group(1).upper()
-        
-        match = re.search(r'"confidence"\s*:\s*(\d+)', json_str)
-        if match:
-            fields['confidence'] = int(match.group(1))
-        
-        match = re.search(r'"market_regime"\s*:\s*"(bullish|bearish|neutral)"', json_str, re.IGNORECASE)
-        if match:
-            fields['market_regime'] = match.group(1).lower()
-        
-        match = re.search(r'"risk_level"\s*:\s*"(low|medium|high)"', json_str, re.IGNORECASE)
-        if match:
-            fields['risk_level'] = match.group(1).lower()
-        
-        match = re.search(r'"hypothesis"\s*:\s*"([^"]*(?:"[^",}][^"]*)*)"', json_str, re.DOTALL)
-        if match:
-            fields['hypothesis'] = match.group(1).replace('"', "'")
-        else:
-            match = re.search(r'"hypothesis"\s*:\s*"(.+?)(?="(?:\s*,\s*"[a-z_]+"|[\s}]))', json_str, re.DOTALL)
-            if match:
-                fields['hypothesis'] = match.group(1).replace('"', "'")[:500]
-        
-        match = re.search(r'"suggested_stop_loss_pct"\s*:\s*([\d.]+)', json_str)
-        if match:
-            fields['suggested_stop_loss_pct'] = float(match.group(1))
-        
-        match = re.search(r'"suggested_take_profit_pct"\s*:\s*([\d.]+)', json_str)
-        if match:
-            fields['suggested_take_profit_pct'] = float(match.group(1))
-        
-        if not fields:
-            return None
-        
-        return json.dumps(fields, ensure_ascii=False)
-
-    def _build_prompt(self, snapshot: dict) -> str:
+    def _build_prompt(self, snapshot: dict, current_indicators: dict) -> str:
         pair = snapshot.get("pair", "Unknown")
         price = snapshot.get("current_price", 0)
         ind_1h = snapshot.get("indicators_1h", {})
@@ -185,37 +169,66 @@ class TradingBrain:
         else:
             rsi_zone = "NEUTRAL"
         
+        # === OBTENER PATRONES EXITOSOS (Solo sugerencias, no reglas) ===
+        learned_patterns = self._get_learned_patterns(limit=3)
+        
+        learning_section = ""
+        if learned_patterns:
+            learning_section += "\n\n## HISTORICAL SUCCESSFUL PATTERNS (Optional guidance):\n"
+            for i, p in enumerate(learned_patterns, 1):
+                learning_section += f"- {p['pattern']} (Success: {p['success_rate']}% in {p['occurrences']} cases)\n"
+            learning_section += "→ Use these as REFERENCE, not strict rules. Market conditions change.\n"
+        
         prompt = f"""You are a crypto trader. Analyze and decide: BUY, SELL, or HOLD.
 
-MARKET DATA
+## MARKET DATA
 Pair: {pair}
 Price: ${price:,.2f}
 Trading Mode: {trade_mode.upper()}
 Capital per Operation: ${capital_per_slot:.2f}
 
-TECHNICAL ANALYSIS
+## TECHNICAL ANALYSIS
 RSI: {rsi} ({rsi_zone})
 Market Regime: {regime}
 Trend Strength: {trend_strength}
 MACD Cross: {macd_cross}
-
-RULES
+{learning_section}
+## BASE RULES (Always follow these)
 1. BUY when: RSI < 40 and regime is bullish
 2. SELL when: RSI > 60 and regime is bearish (FUTURES only)
 3. HOLD otherwise
 4. In SPOT mode: Only BUY to open, SELL to close
-5. In FUTURES mode: Can BUY or SELL to open
+5. **ALWAYS make a decision** - Do not skip trades due to past patterns
 
-CRITICAL JSON RULES
-- Respond with valid JSON ONLY
-- No markdown, no extra text
-- All strings must use double quotes
-- No trailing commas
-
-OUTPUT FORMAT (JSON only):
+## OUTPUT FORMAT (JSON only):
 {{"direction": "BUY/SELL/HOLD", "confidence": 0-100, "market_regime": "bullish/bearish/neutral", "risk_level": "low/medium/high", "hypothesis": "reason"}}
 """
         return prompt
+
+    def _clean_json_response(self, raw_text: str) -> str:
+        if not raw_text or not isinstance(raw_text, str):
+            return "{}"
+        
+        cleaned = re.sub(r'```json\s*', '', raw_text, flags=re.IGNORECASE)
+        cleaned = re.sub(r'```\s*', '', cleaned)
+        
+        json_match = re.search(r'\{.*\}', cleaned, re.DOTALL)
+        if json_match:
+            cleaned = json_match.group(0)
+        
+        cleaned = ''.join(char for char in cleaned if ord(char) >= 32 or char in '\n\r\t')
+        
+        if cleaned.count('{') > cleaned.count('}'):
+            cleaned += '}' * (cleaned.count('{') - cleaned.count('}'))
+        
+        cleaned = re.sub(r',\s*}', '}', cleaned)
+        
+        try:
+            json.loads(cleaned)
+            return cleaned.strip()
+        except json.JSONDecodeError as e:
+            logger.warning(f"JSON inválido después de limpiar: {e}")
+            return "{}"
 
     def _fallback_decision(self, snapshot: dict) -> dict:
         ind_1h = snapshot.get("indicators_1h", {})
@@ -223,6 +236,7 @@ OUTPUT FORMAT (JSON only):
         regime = ind_1h.get('market_regime', 'neutral')
         trend_strength = ind_1h.get('trend_strength', 'weak')
         
+        # Fallback SIEMPRE genera una decisión, nunca HOLD por defecto
         if rsi < 35 and regime == 'bullish':
             direction = "BUY"
             confidence = 55
@@ -240,9 +254,10 @@ OUTPUT FORMAT (JSON only):
             confidence = 50
             hypothesis = f"Fallback: RSI extremely overbought ({rsi})"
         else:
+            # Solo HOLD si realmente no hay señal
             direction = "HOLD"
             confidence = 40
-            hypothesis = f"Fallback: Mixed signals (RSI={rsi}, regime={regime})"
+            hypothesis = f"Fallback: No clear signal (RSI={rsi}, regime={regime})"
         
         if trend_strength in ['strong', 'STRONG']:
             confidence = min(confidence + 10, 80)
@@ -345,28 +360,42 @@ OUTPUT FORMAT (JSON only):
             trend_strength = snapshot.get("indicators_1h", {}).get('trend_strength', 'weak')
             macd_cross = snapshot.get("indicators_1h", {}).get('macd_cross', 'none')
             
+            # === VALIDAR DECISIÓN ANTERIOR (Solo guarda, no bloquea) ===
+            if self.previous_decision is not None:
+                try:
+                    from agents.validator import validate_and_save
+                    validation = validate_and_save(
+                        str(self.db_path),
+                        snapshot,
+                        self.previous_decision
+                    )
+                    logger.info(f"Validación: {validation['previous_direction']} → {validation['validation_result']}")
+                except Exception as e:
+                    logger.debug(f"Error en validación: {e}")
+            
+            # Feedback de decisiones recientes (solo informativo)
             recent = self._get_recent_decisions(pair, limit=3)
             feedback = ""
             if recent:
-                feedback = "\n## Recent Learning:\n"
+                feedback = "\n## Recent Outcomes:\n"
                 for r in recent:
                     status = "WIN" if r[5] == 1 else "LOSS" if r[5] == 0 else "PENDING"
                     pnl_str = f"{r[6]:+.1f}%" if r[6] else "N/A"
                     feedback += f"- {r[0]} @ {r[1]}%: {status} | PnL: {pnl_str}\n"
             
-            prompt = self._build_prompt(snapshot)
+            prompt = self._build_prompt(snapshot, snapshot.get("indicators_1h", {}))
             if feedback:
                 prompt += feedback
             
             historical_ts = snapshot.get("historical_timestamp")
             ts_display = historical_ts.strftime("%Y-%m-%d %H:%M") if historical_ts else datetime.now().strftime("%Y-%m-%d %H:%M")
             
-            logger.info(f"[{pair}] Enviando a ({self.model})...")
+            logger.info(f"[{pair}] Analizando mercado...")
             
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "You are a trading expert. Respond with valid JSON only. No markdown, no extra text."},
+                    {"role": "system", "content": "You are a trading expert. Respond with valid JSON only. ALWAYS make a decision (BUY/SELL/HOLD)."},
                     {"role": "user", "content": prompt},
                 ],
                 temperature=0.3,
@@ -378,7 +407,7 @@ OUTPUT FORMAT (JSON only):
             cleaned = self._clean_json_response(raw_response)
             
             if not cleaned or cleaned == "{}" or len(cleaned) < 10:
-                logger.warning("JSON invalido, usando fallback")
+                logger.warning("JSON inválido, usando fallback")
                 reasoning = self._fallback_decision(snapshot)
             else:
                 try:
@@ -429,7 +458,19 @@ OUTPUT FORMAT (JSON only):
             
             reasoning["_decision_id"] = decision_id
             
-            logger.info(f"[{ts_display}] [{pair}] {reasoning['direction']} @ {reasoning['confidence']}% | {reasoning['hypothesis'][:200]}")
+            logger.info(f"[{ts_display}] [{pair}] {reasoning['direction']} @ {reasoning['confidence']}% | {reasoning['hypothesis'][:2000]}")
+            
+            # Guardar para validar en próxima iteración
+            self.previous_decision = {
+                'id': decision_id,
+                'direction': reasoning['direction'],
+                'confidence': reasoning['confidence'],
+                'hypothesis': reasoning['hypothesis'],
+                'price': price,
+                'rsi': rsi,
+                'market_regime': regime,
+                'trend_strength': trend_strength
+            }
             
             return reasoning
             
@@ -497,9 +538,9 @@ OUTPUT FORMAT (JSON only):
         
         cursor.execute('''
             INSERT OR REPLACE INTO model_stats (id, updated_at, total_decisions, total_trades,
-                                                correct_trades, win_rate, total_pnl, avg_confidence)
-            VALUES (1, ?, ?, ?, ?, ?, ?, ?)
-        ''', (datetime.now().isoformat(), total_decisions, total_trades, correct, win_rate, total_pnl, avg_confidence))
+                                                correct_trades, win_rate, total_pnl, avg_confidence, llm_model)
+            VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (datetime.now().isoformat(), total_decisions, total_trades, correct, win_rate, total_pnl, avg_confidence, self.model))
         
         conn.commit()
         conn.close()
@@ -519,6 +560,7 @@ OUTPUT FORMAT (JSON only):
                 'correct_trades': row[4],
                 'win_rate': row[5],
                 'total_pnl': row[6],
-                'avg_confidence': row[7]
+                'avg_confidence': row[7],
+                'llm_model': row[8] if len(row) > 8 else self.model
             }
         return {}

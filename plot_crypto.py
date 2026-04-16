@@ -65,13 +65,13 @@ else:
     ax.plot(df['timestamp'], df['close'], label='Close Price', linewidth=1, color='#2E86AB')
     
     # Volumen como barras en eje secundario
-    ax2 = ax.twinx()
-    # CORREGIDO: Usar color con transparencia RGBA en lugar de alpha en tick_params
-    ax2.bar(df['timestamp'], df['volume'], alpha=0.1, label='Volume', color='#A23B72')
-    ax2.set_ylabel('Volume', color='#A23B72')
-    # CORREGIDO: Eliminar alpha de tick_params, usar grid_alpha si es necesario
-    ax2.tick_params(axis='y', labelcolor='#A23B72')
-    ax2.grid(False)  # Desactivar grilla del eje secundario para evitar superposicion
+    # ax2 = ax.twinx()
+    # # CORREGIDO: Usar color con transparencia RGBA en lugar de alpha en tick_params
+    # ax2.bar(df['timestamp'], df['volume'], alpha=0.1, label='Volume', color='#A23B72')
+    # ax2.set_ylabel('Volume', color='#A23B72')
+    # # CORREGIDO: Eliminar alpha de tick_params, usar grid_alpha si es necesario
+    # ax2.tick_params(axis='y', labelcolor='#A23B72')
+    # ax2.grid(False)  # Desactivar grilla del eje secundario para evitar superposicion
     
     # Formato de fechas en el eje X
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
@@ -85,8 +85,8 @@ else:
     
     # Leyenda combinada
     lines1, labels1 = ax.get_legend_handles_labels()
-    lines2, labels2 = ax2.get_legend_handles_labels()
-    ax.legend(lines1 + lines2, labels1 + labels2, loc='upper left')
+    #lines2, labels2 = ax2.get_legend_handles_labels()
+    ax.legend(lines1 , labels1 , loc='upper left')
     
     # Grid y layout
     ax.grid(True, alpha=0.3)

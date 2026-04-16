@@ -514,6 +514,56 @@
                     <button class="sub-tab-btn" onclick="showSubTab('decisions')">📋 Decisiones</button>
                 </div>
                 
+				<div id="subtab-validations" class="sub-tab-content">
+					<h3>Validación de Predicciones</h3>
+					
+					<div class="metric-grid" id="validation-stats">
+						<!-- Se llena dinámicamente -->
+					</div>
+					
+					<h4>Patrones Aprendidos</h4>
+					<table>
+						<thead>
+							<tr>
+								<th>Patrón</th>
+								<th>Veces</th>
+								<th>Aciertos</th>
+								<th>Success Rate</th>
+								<th>Opportunity Cost Prom.</th>
+							</tr>
+						</thead>
+						<tbody id="patterns-table">
+							<tr><td colspan="5">Cargando...</td></tr>
+						</tbody>
+					</table>
+					
+					<h4>Validaciones Recientes</h4>
+					<table>
+						<thead>
+							<tr>
+								<th>Fecha</th>
+								<th>Decisión</th>
+								<th>Conf</th>
+								<th>Cambio Precio</th>
+								<th>Resultado</th>
+								<th>Razón</th>
+								<th>Patrón</th>
+							</tr>
+						</thead>
+						<tbody id="validations-table">
+							<tr><td colspan="7">Cargando...</td></tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Agregar botón en sub-tabs -->
+				<div class="sub-tabs">
+					<button class="sub-tab-btn active" onclick="showSubTab('live')">📊 Live Trading</button>
+					<button class="sub-tab-btn" onclick="showSubTab('sessions')">📅 Sesiones</button>
+					<button class="sub-tab-btn" onclick="showSubTab('decisions')">📋 Decisiones</button>
+					<button class="sub-tab-btn" onclick="showSubTab('validations')">✅ Validaciones</button>
+				</div>
+
                 <div id="subtab-live" class="sub-tab-content active">
                     <h3>Live Trading - <span id="live-model-name"></span></h3>
                     
@@ -642,17 +692,19 @@
         }
         
         function showSubTab(subTabName) {
-            document.querySelectorAll('.sub-tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
-            
-            document.getElementById('subtab-' + subTabName).classList.add('active');
-            event.target.classList.add('active');
-            currentSubTab = subTabName;
-            
-            if (subTabName === 'live' && currentModel) {
-                loadModelLiveTrading(currentModel);
-            }
-        }
+			document.querySelectorAll('.sub-tab-content').forEach(tab => tab.classList.remove('active'));
+			document.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+			
+			document.getElementById('subtab-' + subTabName).classList.add('active');
+			event.target.classList.add('active');
+			currentSubTab = subTabName;
+			
+			if (subTabName === 'live' && currentModel) {
+				loadModelLiveTrading(currentModel);
+			} else if (subTabName === 'validations' && currentModel) {
+				loadModelValidations(currentModel);
+			}
+		}
         
         function showModelsList() {
             document.getElementById('models-list').style.display = 'block';
@@ -960,10 +1012,10 @@
             try {
                 const safeName = modelName.replace(':', '%3A');
                 
-                const response = await fetch(`/api/models/${safeName}/trades?limit=20`);
+                const response = await fetch(`/api/models/${safeName}/trades?limit=20&open_only=true`);
                 const data = await response.json();
                 
-                const openTrades = (data.trades || []).filter(t => !t.exit_price || t.exit_price === 0);
+                const openTrades = (data.trades || []).filter(t => t.status === 'OPEN' && t.source === 'live');
                 document.getElementById('live-open-positions').textContent = openTrades.length;
                 
                 const openTbody = document.getElementById('live-open-trades-table');
@@ -1132,6 +1184,93 @@
             loadDashboardData();
             connectWebSocket();
         };
+		
+		async function loadModelValidations(modelName) {
+		try {
+			const safeName = modelName.replace(':', '%3A');
+			
+			// Cargar estadísticas
+			const statsResponse = await fetch(`/api/models/${safeName}/validation-stats`);
+			const stats = await statsResponse.json();
+			
+			const statsDiv = document.getElementById('validation-stats');
+			if (stats.total_validations) {
+				statsDiv.innerHTML = `
+					<div class="metric-item">
+						<label>Total Validaciones</label>
+						<div class="value">${stats.total_validations || 0}</div>
+					</div>
+					<div class="metric-item">
+						<label>Predicciones Correctas</label>
+						<div class="value">${stats.correct_predictions || 0}</div>
+					</div>
+					<div class="metric-item">
+						<label>Incorrectas</label>
+						<div class="value">${stats.incorrect_predictions || 0}</div>
+					</div>
+					<div class="metric-item">
+						<label>Oportunidades Perdidas</label>
+						<div class="value">${stats.missed_opportunities || 0}</div>
+					</div>
+					<div class="metric-item">
+						<label>Validación Accuracy</label>
+						<div class="value">${(stats.validation_accuracy || 0).toFixed(1)}%</div>
+					</div>
+					<div class="metric-item">
+						<label>Opportunity Cost Total</label>
+						<div class="value ${(stats.total_opportunity_cost || 0) >= 0 ? 'negative' : 'positive'}">
+							${(stats.total_opportunity_cost || 0).toFixed(2)}%
+						</div>
+					</div>
+				`;
+			} else {
+				statsDiv.innerHTML = '<p>No hay validaciones registradas aún</p>';
+			}
+			
+			// Cargar patrones
+			const patternsResponse = await fetch(`/api/models/${safeName}/patterns`);
+			const patternsData = await patternsResponse.json();
+			
+			const patternsTbody = document.getElementById('patterns-table');
+			if (patternsData.patterns && patternsData.patterns.length > 0) {
+				patternsTbody.innerHTML = patternsData.patterns.map(p => `
+					<tr>
+						<td>${p.pattern}</td>
+						<td>${p.count}</td>
+						<td>${p.successes}</td>
+						<td><span class="badge ${p.success_rate >= 60 ? 'badge-win' : 'badge-loss'}">${p.success_rate}%</span></td>
+						<td>${p.avg_opportunity_cost.toFixed(2)}%</td>
+					</tr>
+				`).join('');
+			} else {
+				patternsTbody.innerHTML = '<tr><td colspan="5">No hay patrones registrados</td></tr>';
+			}
+			
+			// Cargar validaciones recientes
+			const validationsResponse = await fetch(`/api/models/${safeName}/validations?limit=20`);
+			const validationsData = await validationsResponse.json();
+			
+			const validationsTbody = document.getElementById('validations-table');
+			if (validationsData.validations && validationsData.validations.length > 0) {
+				validationsTbody.innerHTML = validationsData.validations.map(v => `
+					<tr>
+						<td>${new Date(v.validated_at).toLocaleString()}</td>
+						<td><span class="badge ${v.previous_direction === 'BUY' ? 'badge-open' : v.previous_direction === 'SELL' ? 'badge-loss' : 'badge-open'}">${v.previous_direction}</span></td>
+						<td>${v.previous_confidence}%</td>
+						<td class="${(v.price_change_pct || 0) >= 0 ? 'positive' : 'negative'}">${(v.price_change_pct || 0).toFixed(2)}%</td>
+						<td><span class="badge ${v.validation_result === 'CORRECT' ? 'badge-win' : v.validation_result === 'INCORRECT' ? 'badge-loss' : 'badge-open'}">${v.validation_result}</span></td>
+						<td>${v.reason ? v.reason.substring(0, 80) + '...' : 'N/A'}</td>
+						<td>${v.pattern_learned || 'N/A'}</td>
+					</tr>
+				`).join('');
+			} else {
+				validationsTbody.innerHTML = '<tr><td colspan="7">No hay validaciones recientes</td></tr>';
+			}
+		} catch (error) {
+			console.error('Error loading validations:', error);
+		}
+	}
+
     </script>
 </body>
 </html>

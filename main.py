@@ -58,7 +58,7 @@ class Position:
 class TradingBot:
     def __init__(self):
         self.collector = DataCollector(db_path=config.MARKET_DATA_DB)
-        self.brain = TradingBrain(model_name=f"{config.TRADING_PAIRS[0]}_live")
+        self.brain = TradingBrain(model_name=config.get_model_name_for_db())
         self.risk_manager = RiskManager()
         self.executor = TradeExecutor()
         
@@ -282,7 +282,7 @@ def main():
             pair=config.TRADING_PAIRS[0],
             start_date=config.TRAIN_START,
             end_date=config.TRAIN_END,
-            model_name=f"{config.TRADING_PAIRS[0]}_backtest",
+            model_name=config.get_model_name_for_db(),
             trade_mode=config.TRADE_MODE
         )
         results = engine.run()

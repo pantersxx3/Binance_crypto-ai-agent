@@ -7,8 +7,8 @@
   },
   "binance": {
     "mainnet": {
-      "api_key": "TU_API_KEY_MAINNET_AQUI",
-      "secret_key": "TU_SECRET_KEY_MAINNET_AQUI"
+      "api_key": "XCIBWtQzvJlgvj6H6HMN9znXBSaesUYVH4zh13AilKPPTyIXeEG8arhnqS66qjW4",
+      "secret_key": "VpOvSs7UuGTc8xgq9wPJmqbAwbzNKf9NbJOVQvtUy4SGpudVNZQCP0OXyqGfeMUJ"
     },
     "testnet": {
       "api_key": "G3T7oqdzm7m2wgZ02AIUlohOHVcpPeR5RYFti89fpj6lTcqOrEzgN9uE24TVNDQA",
@@ -18,7 +18,7 @@
   },
   "llm": {
     "api_key": "lm-studio",
-    "model": "qwen2.5-.5b-abliterated",
+    "model": "qwen2.5-7b-instruct-1m",
     "base_url": "http://localhost:1234/v1"
   },
   "trading": {
@@ -31,7 +31,7 @@
     "log_level": "DEBUG",
     "train": true,
     "train_start": "1 Jan 2024",
-    "train_end": "1 Mar 2024",
+    "train_end": "17 Jan 2024",
     "spot_order_type": "MARKET"
   },
   "position_management": {

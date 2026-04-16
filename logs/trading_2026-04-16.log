@@ -1,0 +1,508 @@
+2026-04-16 08:25:07 | INFO | Iniciando backtesting: 1 Jan 2024 -> 17 Jan 2024
+2026-04-16 08:25:07 | INFO | Sesión creada: BACKTEST_b0362309 (backtest)
+2026-04-16 08:25:07 | INFO | Connecting to Binance MAINNET for historical data
+2026-04-16 08:25:08 | INFO | SQLite tables created/verified
+2026-04-16 08:25:08 | INFO | DataCollector initialized with SQLite: F:\Desktop\Binance_crypto-ai-agent\data\market_data.db
+2026-04-16 08:25:09 | DEBUG | Base de datos inicializada: F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated_backtest.db
+2026-04-16 08:25:09 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated_backtest.db
+2026-04-16 08:25:09 | INFO | Brain inicializado | Modelo: gemma-3-4b-it-abliterated | DB: F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated_backtest.db
+2026-04-16 08:25:09 | INFO | Backtest Engine | Sesión: BACKTEST_b0362309
+2026-04-16 08:25:09 | INFO | Periodo: 1 Jan 2024 → 17 Jan 2024
+2026-04-16 08:25:09 | INFO | Cargando datos para BNBUSDT...
+2026-04-16 08:25:09 | INFO | get_historical_klines | BNBUSDT | 1h | 2023-12-17 10:00:00 -> 2024-01-17 00:00:00
+2026-04-16 08:25:11 | INFO | Obtenidas 735 velas | Rango: 2023-12-17 10:00:00 -> 2024-01-17 00:00:00
+2026-04-16 08:25:11 | INFO |    Despues de filtro: 735 velas en el rango solicitado
+2026-04-16 08:25:11 | INFO | Cargadas 385 velas totales
+2026-04-16 08:25:11 | INFO | Simulando 84 velas...
+2026-04-16 08:25:11 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:25:25 | ERROR | [BNBUSDT] Error: Connection error.
+2026-04-16 08:25:25 | INFO | [0%] Balance: $100.00
+2026-04-16 08:25:25 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:25:38 | ERROR | [BNBUSDT] Error: Connection error.
+2026-04-16 08:25:38 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:25:52 | ERROR | [BNBUSDT] Error: Connection error.
+2026-04-16 08:25:52 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:26:06 | WARNING | Backtesting interrumpido por el usuario.
+2026-04-16 08:26:06 | ERROR | [BNBUSDT] Error: Connection error.
+2026-04-16 08:26:06 | INFO | Sesión cerrada: BACKTEST_b0362309 | PnL: +0.00%
+2026-04-16 08:26:06 | INFO | 
+================================================================================
+2026-04-16 08:26:06 | INFO | RESULTADOS DEL BACKTESTING
+2026-04-16 08:26:06 | INFO | ================================================================================
+2026-04-16 08:26:06 | INFO | Sesión: BACKTEST_b0362309
+2026-04-16 08:26:06 | INFO | Capital inicial: $100.00
+2026-04-16 08:26:06 | INFO | Capital final: $100.00
+2026-04-16 08:26:06 | INFO | Retorno: +0.00%
+2026-04-16 08:26:06 | INFO | Trades: 0 | Wins: 0 | Losses: 0
+2026-04-16 08:26:06 | INFO | Win Rate: 0.0%
+2026-04-16 08:26:06 | INFO | ================================================================================
+2026-04-16 08:26:06 | INFO | Backtesting completado
+2026-04-16 08:26:06 | INFO | Retorno: +0.00%
+2026-04-16 08:26:06 | INFO | Win Rate: 0.0%
+2026-04-16 08:26:06 | INFO | Trades: 0
+2026-04-16 08:27:29 | INFO | Iniciando backtesting: 1 Jan 2024 -> 17 Jan 2024
+2026-04-16 08:27:29 | INFO | Sesión creada: BACKTEST_cdb4734e (backtest)
+2026-04-16 08:27:29 | INFO | Connecting to Binance MAINNET for historical data
+2026-04-16 08:27:30 | INFO | SQLite tables created/verified
+2026-04-16 08:27:30 | INFO | DataCollector initialized with SQLite: F:\Desktop\Binance_crypto-ai-agent\data\market_data.db
+2026-04-16 08:27:31 | DEBUG | Base de datos inicializada: F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:27:31 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:27:31 | INFO | Brain inicializado | Modelo: gemma-3-4b-it-abliterated | DB: F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:27:31 | INFO | Backtest Engine | Sesión: BACKTEST_cdb4734e
+2026-04-16 08:27:31 | INFO | Periodo: 1 Jan 2024 → 17 Jan 2024
+2026-04-16 08:27:31 | INFO | Cargando datos para BNBUSDT...
+2026-04-16 08:27:31 | INFO | get_historical_klines | BNBUSDT | 1h | 2023-12-17 10:00:00 -> 2024-01-17 00:00:00
+2026-04-16 08:27:32 | INFO | Obtenidas 735 velas | Rango: 2023-12-17 10:00:00 -> 2024-01-17 00:00:00
+2026-04-16 08:27:32 | INFO |    Despues de filtro: 735 velas en el rango solicitado
+2026-04-16 08:27:32 | INFO | Cargadas 385 velas totales
+2026-04-16 08:27:32 | INFO | Simulando 84 velas...
+2026-04-16 08:27:32 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:28:02 | INFO | [2024-01-13 12:00] [BNBUSDT] HOLD @ 75% | RSI is neutral and the market regime is bearish, but trend strength is weak. In SPOT mode, only BUY to open, so holding is a reasonable strategy given the current data.
+2026-04-16 08:28:02 | INFO | [0%] Balance: $100.00
+2026-04-16 08:28:02 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:28:02 | INFO | Validación: HOLD → CORRECT
+2026-04-16 08:28:02 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:28:25 | INFO | [2024-01-13 13:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bearish and MACD is bullish suggesting a potential for a short-term bounce. Given the current price, a buy position at $299.30 with $100 capital offers reasonable risk.
+2026-04-16 08:28:25 | INFO | [301] ABRIR BUY @ 80% | ID: 44bf039e | Precio: $299.30
+2026-04-16 08:28:25 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:28:25 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:28:25 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:28:48 | INFO | [2024-01-13 14:00] [BNBUSDT] SELL @ 85% | RSI is overbought (75.76) and the market regime is bearish, indicating a potential correction. While the MACD shows a bullish cross, it's weak trend strength combined with the high RSI suggests selling pressure.
+2026-04-16 08:28:48 | INFO | Outcome registrado para decision 2
+2026-04-16 08:28:48 | INFO | [302] CERRAR BUY | Entry: $299.30 → Exit: $299.10 | LOSS | PnL: -0.17%
+2026-04-16 08:28:48 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:28:48 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 08:28:48 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:29:10 | INFO | [2024-01-13 14:00] [BNBUSDT] SELL @ 90% | RSI is overbought (75.76) and the market regime is bearish, indicating a potential correction. This aligns with the recent SELL trade.
+2026-04-16 08:29:10 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:29:10 | INFO | Validación: SELL → PREMATURE
+2026-04-16 08:29:10 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:29:37 | INFO | [2024-01-13 15:00] [BNBUSDT] HOLD @ 75% | RSI is overbought and the market regime is bearish. While the MACD shows a bullish cross, it's weak trend strength combined with an overbought RSI suggests potential for a pullback rather than immediate continuation of the uptrend. Given the recent SELL trades, holding is the most conservative approach.
+2026-04-16 08:29:37 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:29:37 | INFO | Validación: HOLD → CORRECT
+2026-04-16 08:29:37 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:30:02 | INFO | [2024-01-13 16:00] [BNBUSDT] BUY @ 75% | MACD cross is bullish despite the overall bearish market regime. RSI is relatively high but not overbought, suggesting potential for a short-term bounce. $100 operation size allows for reasonable risk.
+2026-04-16 08:30:02 | INFO | [304] ABRIR BUY @ 75% | ID: 3cd73496 | Precio: $300.70
+2026-04-16 08:30:02 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:30:02 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:30:02 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:30:26 | INFO | [2024-01-13 17:00] [BNBUSDT] BUY @ 80% | RSI is overbought but the market regime and MACD cross are bullish, suggesting a potential pullback for a buy opportunity. $100 operation size is suitable.
+2026-04-16 08:30:26 | INFO | Outcome registrado para decision 6
+2026-04-16 08:30:26 | INFO | [305] CERRAR BUY | Entry: $300.70 → Exit: $302.00 | WIN | PnL: +0.33%
+2026-04-16 08:30:26 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:30:26 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:30:26 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:30:50 | INFO | [2024-01-13 17:00] [BNBUSDT] BUY @ 85% | RSI is overbought but the market regime and MACD cross are bullish, suggesting a potential pullback for a buy. Recent 75% BUY was successful.
+2026-04-16 08:30:50 | INFO | [305] ABRIR BUY @ 85% | ID: 1a5d06d9 | Precio: $302.00
+2026-04-16 08:30:50 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:30:50 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:30:50 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:31:14 | INFO | [2024-01-13 18:00] [BNBUSDT] HOLD @ 85% | RSI is overbought but the market regime is bullish and MACD cross is bullish. A hold allows us to capture further upside without excessive risk.
+2026-04-16 08:31:14 | INFO | Outcome registrado para decision 8
+2026-04-16 08:31:14 | INFO | [306] CERRAR BUY | Entry: $302.00 → Exit: $302.30 | WIN | PnL: -0.00%
+2026-04-16 08:31:14 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:31:14 | INFO | Validación: HOLD → CORRECT
+2026-04-16 08:31:14 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:31:39 | INFO | [2024-01-13 18:00] [BNBUSDT] BUY @ 80% | RSI is overbought but the market regime and MACD cross are bullish, suggesting a potential pullback for a buy opportunity. $100 operation size is suitable.
+2026-04-16 08:31:39 | INFO | [306] ABRIR BUY @ 80% | ID: 4452c68a | Precio: $302.30
+2026-04-16 08:31:39 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:31:39 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:31:39 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:32:03 | INFO | [2024-01-13 19:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. A $100 buy at current price offers a good entry.
+2026-04-16 08:32:03 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:32:03 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:32:03 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:32:27 | INFO | [2024-01-13 20:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. A $100 investment offers a good entry point.
+2026-04-16 08:32:27 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:32:27 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:32:27 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:32:51 | INFO | [2024-01-13 21:00] [BNBUSDT] BUY @ 75% | RSI is neutral but within a bullish regime and MACD confirms trend. A moderate trend suggests room for growth with a relatively low risk.
+2026-04-16 08:32:51 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:32:51 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:32:51 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:33:16 | INFO | [2024-01-13 22:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish, indicating potential for continued upward movement. Given the recent trend, a buy order aligns with the current outlook.
+2026-04-16 08:33:16 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:33:16 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:33:16 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:33:40 | INFO | [2024-01-13 23:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, indicating continued upward momentum. Given the recent buy successes, I'm confident in a further increase.
+2026-04-16 08:33:40 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:33:40 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:33:40 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:34:04 | INFO | [2024-01-14 00:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish. Given recent buys with high confidence, a continued upward trend is likely.
+2026-04-16 08:34:04 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:34:04 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:34:04 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:34:29 | INFO | [2024-01-14 01:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. Given the recent successful buys, a moderate risk buy aligns with the current trend.
+2026-04-16 08:34:29 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:34:29 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:34:29 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:34:54 | INFO | [2024-01-14 02:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. A $100 buy at this price point offers a reasonable entry.
+2026-04-16 08:34:54 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:34:54 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:34:54 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:35:18 | INFO | [2024-01-14 03:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime is bullish and MACD cross is bullish. A low-risk buy at $302.20 seems appropriate.
+2026-04-16 08:35:18 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:35:18 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:35:18 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:35:43 | INFO | [2024-01-14 04:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. Given the recent successful buys, a buy order aligns with the current trend.
+2026-04-16 08:35:43 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:35:43 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:35:43 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:36:09 | INFO | [2024-01-14 05:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, indicating continued upward momentum. Given the recent buy attempts with high confidence, a further entry at $304.00 seems appropriate.
+2026-04-16 08:36:09 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:36:09 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:36:09 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:36:35 | INFO | [2024-01-14 06:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. Given the recent successful buys at 80% and 85%, a buy order aligns with the trend.
+2026-04-16 08:36:35 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:36:35 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:36:35 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:37:00 | INFO | [2024-01-14 07:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. Given the recent buys with similar conditions, a strategic buy at $304.30 aligns well.
+2026-04-16 08:37:00 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:37:00 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:37:00 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:37:25 | INFO | [2024-01-14 08:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish, indicating continued upward momentum. Given recent successful buys, a buy position aligns with the current trend.
+2026-04-16 08:37:25 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:37:25 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:37:25 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:37:51 | INFO | [2024-01-14 09:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, indicating continued upward momentum. A $100 buy at $305.20 offers a good entry point.
+2026-04-16 08:37:51 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:37:51 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:37:51 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:38:15 | INFO | [2024-01-14 10:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and we have a bullish MACD cross. Considering recent buys with high confidence, I'm going to buy now.
+2026-04-16 08:38:15 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:38:15 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:38:15 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:38:40 | INFO | [2024-01-14 11:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and we have a bullish MACD cross. A small buy at $303.20 aligns with the current trend.
+2026-04-16 08:38:40 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:38:40 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:38:40 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:39:05 | INFO | [2024-01-14 12:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime is bullish and we have a bullish MACD cross. Given the recent trend, a buy position at $303.40 seems appropriate.
+2026-04-16 08:39:05 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:39:05 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:39:05 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:39:30 | INFO | [2024-01-14 13:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bullish and we have a bullish MACD cross. A small buy at $304.80 aligns with a cautious approach.
+2026-04-16 08:39:30 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:39:30 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:39:30 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:39:56 | INFO | [2024-01-14 14:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. Given recent buys with high confidence, a strategic buy at $304.70 is warranted.
+2026-04-16 08:39:56 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:39:56 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:39:56 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:40:21 | INFO | [2024-01-14 15:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and we have a bullish MACD cross. Considering recent buys with high confidence, I'm going for another buy.
+2026-04-16 08:40:21 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:40:21 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:40:21 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:40:45 | INFO | [2024-01-14 16:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and MACD cross is bullish. A low-risk buy at $305.30 seems appropriate.
+2026-04-16 08:40:45 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:40:45 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:40:45 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:41:10 | INFO | [2024-01-14 17:00] [BNBUSDT] HOLD @ 85% | RSI is relatively high (69.16) but within a bullish market regime and trend strength, suggesting continued upward movement with moderate risk. No immediate sell signal.
+2026-04-16 08:41:10 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:41:10 | INFO | Validación: HOLD → CORRECT
+2026-04-16 08:41:10 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:41:35 | INFO | [2024-01-14 18:00] [BNBUSDT] HOLD @ 80% | RSI is slightly high but within a bullish regime and trend strength is moderate. Awaiting more confirmation before committing to a new position.
+2026-04-16 08:41:35 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:41:35 | INFO | Validación: HOLD → CORRECT
+2026-04-16 08:41:35 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:42:02 | INFO | [2024-01-14 19:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. A $100 buy at $304.00 offers a good entry point.
+2026-04-16 08:42:02 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:42:02 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:42:02 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:42:27 | INFO | [2024-01-14 20:00] [BNBUSDT] HOLD @ 75% | RSI is neutral and the market regime is bullish with a weak trend. The MACD cross is bearish but not strong enough to outweigh the overall bullish sentiment given the low risk.
+2026-04-16 08:42:27 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:42:27 | INFO | Validación: HOLD → CORRECT
+2026-04-16 08:42:27 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:42:53 | INFO | [2024-01-14 21:00] [BNBUSDT] HOLD @ 75% | RSI is neutral and the market regime is bullish but trend strength is weak. MACD cross is bearish, suggesting slight selling pressure, but overall it's a consolidation phase.
+2026-04-16 08:42:53 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:42:53 | INFO | Validación: HOLD → CORRECT
+2026-04-16 08:42:53 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:43:19 | INFO | [2024-01-14 22:00] [BNBUSDT] HOLD @ 85% | RSI is neutral and market regime is bullish but trend strength is weak. A bearish MACD cross suggests a potential short-term pullback, but the overall outlook remains slightly bullish. Given the current holdings, holding is the most conservative approach.
+2026-04-16 08:43:19 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:43:19 | INFO | Validación: HOLD → ACCEPTABLE
+2026-04-16 08:43:19 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:43:43 | INFO | [2024-01-14 23:00] [BNBUSDT] BUY @ 80% | RSI is oversold and indicating a potential bounce in a bearish market regime. A low risk trade with $100.
+2026-04-16 08:43:43 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:43:43 | INFO | Validación: BUY → CORRECT
+2026-04-16 08:43:43 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:44:08 | INFO | [2024-01-15 00:00] [BNBUSDT] HOLD @ 80% | RSI is neutral and the market regime is bearish with weak trend strength. Given the current conditions and small capital per operation, holding is a conservative approach.
+2026-04-16 08:44:08 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:44:08 | INFO | Validación: HOLD → CORRECT
+2026-04-16 08:44:08 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:44:33 | INFO | [2024-01-15 01:00] [BNBUSDT] HOLD @ 75% | RSI is neutral and the market regime is bullish with weak trend strength. The MACD cross is bearish but not strong enough to outweigh the overall bullish sentiment given the current conditions.
+2026-04-16 08:44:33 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:44:33 | INFO | Validación: HOLD → CORRECT
+2026-04-16 08:44:33 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:44:59 | INFO | [2024-01-15 02:00] [BNBUSDT] HOLD @ 75% | RSI is neutral and the market regime is bullish but trend strength is weak. The MACD cross is bearish, suggesting slight selling pressure, but overall the outlook remains positive. Given the current holdings, holding is the most conservative approach.
+2026-04-16 08:44:59 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:44:59 | INFO | Validación: HOLD → CORRECT
+2026-04-16 08:44:59 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:45:25 | INFO | [2024-01-15 03:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish, indicating continued upward momentum. A small buy order at $309.60 aligns well with the moderate trend strength.
+2026-04-16 08:45:25 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:45:25 | INFO | Validación: BUY → CORRECT
+2026-04-16 08:45:25 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:45:50 | INFO | [2024-01-15 04:00] [BNBUSDT] HOLD @ 80% | RSI is relatively high (69.05) but within a bullish regime and trend strength is moderate. A holding position allows us to capture further upside while maintaining a reasonable risk level.
+2026-04-16 08:45:50 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:45:50 | INFO | Validación: HOLD → CORRECT
+2026-04-16 08:45:50 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:46:15 | INFO | [2024-01-15 05:00] [BNBUSDT] SELL @ 80% | RSI is overbought (71.74) and while the market regime is bullish, the strong trend suggests a potential pullback. Selling now limits potential losses.
+2026-04-16 08:46:15 | INFO | Outcome registrado para decision 10
+2026-04-16 08:46:15 | INFO | [341] CERRAR BUY | Entry: $302.30 → Exit: $317.20 | WIN | PnL: +4.83%
+2026-04-16 08:46:15 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:46:15 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 08:46:15 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:46:40 | INFO | [2024-01-15 05:00] [BNBUSDT] HOLD @ 75% | RSI is overbought but the market regime and MACD cross are bullish, suggesting a potential pullback followed by continuation. A holding position allows us to capture that bounce.
+2026-04-16 08:46:40 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:46:40 | INFO | Validación: HOLD → CORRECT
+2026-04-16 08:46:40 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:47:04 | INFO | [2024-01-15 06:00] [BNBUSDT] HOLD @ 75% | RSI is overbought but the market regime and trend strength are bullish with a strong MACD cross. A hold allows us to ride the current trend.
+2026-04-16 08:47:04 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:47:04 | INFO | Validación: HOLD → CORRECT
+2026-04-16 08:47:04 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:47:29 | INFO | [2024-01-15 07:00] [BNBUSDT] BUY @ 85% | Strong bullish trend confirmed by RSI, MACD cross and market regime. A buy order at $314.90 aligns with the current conditions.
+2026-04-16 08:47:29 | INFO | [343] ABRIR BUY @ 85% | ID: 21ffae48 | Precio: $314.90
+2026-04-16 08:47:29 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:47:29 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:47:29 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:47:54 | INFO | [2024-01-15 08:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, indicating continued upward momentum. A $100 buy at current price offers a reasonable entry.
+2026-04-16 08:47:54 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:47:54 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:47:54 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:48:18 | INFO | [2024-01-15 09:00] [BNBUSDT] SELL @ 80% | RSI is extremely high (71.97) indicating overbought conditions and a strong trend suggests a potential pullback. Selling some to lock in profits.
+2026-04-16 08:48:18 | INFO | Outcome registrado para decision 48
+2026-04-16 08:48:18 | INFO | [345] CERRAR BUY | Entry: $314.90 → Exit: $316.70 | WIN | PnL: +0.47%
+2026-04-16 08:48:18 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:48:18 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 08:48:18 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:48:44 | INFO | [2024-01-15 09:00] [BNBUSDT] SELL @ 90% | RSI is overbought (71.97) and the MACD cross is bullish, suggesting a potential correction. Let's capitalize on this with a SELL.
+2026-04-16 08:48:44 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:48:44 | INFO | Validación: SELL → CORRECT
+2026-04-16 08:48:44 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:49:10 | INFO | [2024-01-15 10:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime and MACD cross are bullish. Given the current price and moderate trend strength, a buy position aligns with the bullish outlook.
+2026-04-16 08:49:10 | INFO | [346] ABRIR BUY @ 75% | ID: a54cb393 | Precio: $313.30
+2026-04-16 08:49:10 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:49:10 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:49:10 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:49:35 | INFO | [2024-01-15 11:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime and MACD cross are bullish. Considering recent trends, a buy order aligns with the moderate trend strength.
+2026-04-16 08:49:35 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:49:35 | INFO | Validación: BUY → CORRECT
+2026-04-16 08:49:35 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:50:02 | INFO | [2024-01-15 12:00] [BNBUSDT] SELL @ 85% | RSI is overbought (70.18) and the trend is strong, suggesting a potential pullback. The bullish market regime supports this decision.
+2026-04-16 08:50:02 | INFO | Outcome registrado para decision 52
+2026-04-16 08:50:02 | INFO | [348] CERRAR BUY | Entry: $313.30 → Exit: $317.10 | WIN | PnL: +1.11%
+2026-04-16 08:50:02 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:50:02 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 08:50:02 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:50:28 | INFO | [2024-01-15 12:00] [BNBUSDT] BUY @ 80% | RSI is overbought but the market regime and MACD cross are bullish. Recent buy at 75% was a win, suggesting a good entry point.
+2026-04-16 08:50:28 | INFO | [348] ABRIR BUY @ 80% | ID: 5798a545 | Precio: $317.10
+2026-04-16 08:50:28 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:50:28 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:50:28 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:50:55 | INFO | [2024-01-15 13:00] [BNBUSDT] SELL @ 90% | RSI is overbought (80.12) and the market regime is bullish, suggesting a potential correction. The strong trend could be nearing its peak.
+2026-04-16 08:50:55 | INFO | Outcome registrado para decision 55
+2026-04-16 08:50:55 | INFO | [349] CERRAR BUY | Entry: $317.10 → Exit: $318.90 | WIN | PnL: +0.47%
+2026-04-16 08:50:55 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:50:55 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 08:50:55 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:51:22 | INFO | [2024-01-15 13:00] [BNBUSDT] BUY @ 85% | RSI is overbought but the market regime and MACD cross are bullish. Recent buy @ 80% was a win. Let's capitalize on the trend.
+2026-04-16 08:51:22 | INFO | [349] ABRIR BUY @ 85% | ID: e0e7a770 | Precio: $318.90
+2026-04-16 08:51:22 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:51:22 | INFO | Validación: BUY → INCORRECT
+2026-04-16 08:51:22 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:51:52 | INFO | [2024-01-15 14:00] [BNBUSDT] BUY @ 85% | RSI is relatively high (67.61) but within a bullish regime and trend strength is strong. The MACD cross is bullish. Considering the historical success of BUY_RSI62_bullish, it's a good entry point.
+2026-04-16 08:51:52 | INFO | [60%] Balance: $107.05
+2026-04-16 08:51:52 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:51:52 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:51:52 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:52:18 | INFO | [2024-01-15 15:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish. Considering historical success with RSI62 patterns and current conditions, a buy is warranted.
+2026-04-16 08:52:18 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:52:18 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:52:18 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:52:48 | INFO | [2024-01-15 16:00] [BNBUSDT] BUY @ 80% | RSI is relatively high (66.15) but within a bullish regime and trend strength with a bullish MACD cross. The historical patterns of BUY_RSI62_bullish align well, suggesting an opportunity for growth.
+2026-04-16 08:52:48 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:52:48 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:52:48 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:53:18 | INFO | [2024-01-15 17:00] [BNBUSDT] BUY @ 90% | RSI is neutral but within bullish range, MACD cross is bullish and the market regime is bullish. Previous RSI62 patterns have been successful. Let's take advantage of the strong trend.
+2026-04-16 08:53:18 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:53:18 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:53:18 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:53:46 | INFO | [2024-01-15 18:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. Let's capitalize on this with a $100 buy.
+2026-04-16 08:53:46 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:53:46 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:53:46 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:54:13 | INFO | [2024-01-15 19:00] [BNBUSDT] BUY @ 85% | Strong bullish trend confirmed by MACD and RSI is neutral. Recent buys with high confidence suggest continuation.
+2026-04-16 08:54:13 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:54:13 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:54:13 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:54:43 | INFO | [2024-01-15 20:00] [BNBUSDT] SELL @ 75% | RSI is neutral but the MACD cross is bearish and the market regime is bullish. Considering the recent trend strength, a sell trade aligns with the potential for a correction.
+2026-04-16 08:54:43 | INFO | Outcome registrado para decision 57
+2026-04-16 08:54:43 | INFO | [356] CERRAR BUY | Entry: $318.90 → Exit: $316.80 | LOSS | PnL: -0.76%
+2026-04-16 08:54:43 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:54:44 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 08:54:44 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:55:12 | INFO | [2024-01-15 20:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and trend strength is strong. Considering the recent sell was at a high RSI, a buy position aligns with the current conditions.
+2026-04-16 08:55:12 | INFO | [356] ABRIR BUY @ 75% | ID: 4b0f8577 | Precio: $316.80
+2026-04-16 08:55:12 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:55:12 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:55:12 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:55:43 | INFO | [2024-01-15 21:00] [BNBUSDT] SELL @ 80% | RSI is approaching 60 and the MACD cross is bearish, indicating a potential reversal within a bullish regime. A SELL trade aligns with the recent RSI72_bullish pattern.
+2026-04-16 08:55:43 | INFO | Outcome registrado para decision 65
+2026-04-16 08:55:43 | INFO | [357] CERRAR BUY | Entry: $316.80 → Exit: $314.90 | LOSS | PnL: -0.70%
+2026-04-16 08:55:43 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:55:43 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 08:55:43 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:56:12 | INFO | [2024-01-15 21:00] [BNBUSDT] SELL @ 85% | RSI is approaching 60 and the MACD cross is bearish. While the market regime is bullish, the recent loss and pending sell signal suggest exiting before a potential further increase.
+2026-04-16 08:56:12 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:56:12 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 08:56:12 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:56:42 | INFO | [2024-01-15 22:00] [BNBUSDT] SELL @ 85% | RSI is relatively high (53.23) and the MACD cross is bearish, suggesting a potential reversal within the bullish market regime. The recent SELL trade also supports this decision.
+2026-04-16 08:56:42 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:56:42 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 08:56:42 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:57:13 | INFO | [2024-01-15 23:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and we can leverage the moderate trend. Historical patterns suggest buying when RSI is near 62 or lower. Given recent selling activity, a buy position seems appropriate.
+2026-04-16 08:57:13 | INFO | [359] ABRIR BUY @ 75% | ID: bb5330f7 | Precio: $317.50
+2026-04-16 08:57:13 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:57:13 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:57:13 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:57:43 | INFO | [2024-01-16 00:00] [BNBUSDT] SELL @ 75% | RSI is relatively neutral but the MACD cross is bearish and the market regime is bullish. Considering recent performance and the potential for a pullback, a sell trade aligns with the current analysis.
+2026-04-16 08:57:43 | INFO | Outcome registrado para decision 69
+2026-04-16 08:57:43 | INFO | [360] CERRAR BUY | Entry: $317.50 → Exit: $315.60 | LOSS | PnL: -0.70%
+2026-04-16 08:57:43 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:57:43 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 08:57:43 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:58:13 | INFO | [2024-01-16 00:00] [BNBUSDT] SELL @ 80% | RSI is relatively neutral but the MACD cross is bearish and the market regime is bullish, suggesting a potential pullback. Let's capitalize on this with a SELL.
+2026-04-16 08:58:13 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:58:13 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 08:58:13 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:58:43 | INFO | [2024-01-16 01:00] [BNBUSDT] HOLD @ 80% | RSI is neutral and the market regime is bullish but trend strength is weak. The MACD cross is bearish, suggesting a potential short-term pullback, but with a low risk level we will hold.
+2026-04-16 08:58:43 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:58:43 | INFO | Validación: HOLD → CORRECT
+2026-04-16 08:58:43 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:59:13 | INFO | [2024-01-16 02:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime is bullish. Considering the weak trend strength, a BUY based on RSI62_bullish pattern (successful in 2 cases) offers a good entry point with low risk.
+2026-04-16 08:59:13 | INFO | [362] ABRIR BUY @ 85% | ID: aee46aae | Precio: $314.70
+2026-04-16 08:59:13 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:59:13 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:59:13 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 08:59:43 | INFO | [2024-01-16 03:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish. Considering the weak trend strength, a BUY trade aligns with the current conditions and historical success of BUY_RSI62_bullish.
+2026-04-16 08:59:43 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 08:59:43 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 08:59:43 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:00:11 | INFO | [2024-01-16 04:00] [BNBUSDT] SELL @ 75% | RSI is neutral but the MACD cross is bearish and the market regime is bullish, suggesting a potential pullback. Let's sell to close out the pending BUY order.
+2026-04-16 09:00:11 | INFO | Outcome registrado para decision 73
+2026-04-16 09:00:11 | INFO | [364] CERRAR BUY | Entry: $314.70 → Exit: $315.20 | WIN | PnL: +0.06%
+2026-04-16 09:00:11 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:00:11 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:00:11 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:00:43 | INFO | [2024-01-16 04:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bullish and we recently had a successful buy with RSI near 62. A low risk play.
+2026-04-16 09:00:43 | INFO | [364] ABRIR BUY @ 80% | ID: 1464efad | Precio: $315.20
+2026-04-16 09:00:43 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:00:43 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 09:00:43 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:01:11 | INFO | [2024-01-16 05:00] [BNBUSDT] SELL @ 80% | RSI is relatively high (52.13) and the MACD cross is bearish, suggesting a potential pullback within a bullish regime. Let's capitalize on this with a SELL.
+2026-04-16 09:01:11 | INFO | Outcome registrado para decision 76
+2026-04-16 09:01:11 | INFO | [365] CERRAR BUY | Entry: $315.20 → Exit: $315.20 | LOSS | PnL: -0.10%
+2026-04-16 09:01:11 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:01:11 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:01:11 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:01:39 | INFO | [2024-01-16 05:00] [BNBUSDT] HOLD @ 75% | RSI is neutral and the market regime is bullish but with weak trend strength. The MACD cross is bearish, suggesting a potential short-term pullback, but given the recent loss, holding is the most conservative approach.
+2026-04-16 09:01:39 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:01:39 | INFO | Validación: HOLD → CORRECT
+2026-04-16 09:01:39 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:02:05 | INFO | [2024-01-16 06:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish. Recent sell trade was at high RSI, and we can buy with a lower RSI.
+2026-04-16 09:02:05 | INFO | [366] ABRIR BUY @ 75% | ID: fd7e3f68 | Precio: $315.90
+2026-04-16 09:02:05 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:02:05 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 09:02:05 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:02:33 | INFO | [2024-01-16 07:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bullish. Considering the weak trend strength and bearish MACD cross, a BUY could be profitable. Leveraging historical patterns suggests this is a reasonable decision.
+2026-04-16 09:02:33 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:02:33 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 09:02:33 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:03:01 | INFO | [2024-01-16 08:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bullish. Considering the weak trend strength, a BUY is appropriate with $100 capital.
+2026-04-16 09:03:01 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:03:01 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 09:03:01 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:03:32 | INFO | [2024-01-16 09:00] [BNBUSDT] SELL @ 85% | RSI is neutral but the MACD cross is bearish and market regime is bullish. Considering historical patterns (Sell_RSI72_bullish) and the current data, a sell trade seems appropriate to take profit.
+2026-04-16 09:03:32 | INFO | Outcome registrado para decision 79
+2026-04-16 09:03:32 | INFO | [369] CERRAR BUY | Entry: $315.90 → Exit: $318.90 | WIN | PnL: +0.85%
+2026-04-16 09:03:32 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:03:32 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:03:32 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:04:01 | INFO | [2024-01-16 09:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and we can utilize the BUY_RSI62_bullish pattern. A moderate trend strength suggests continued upward movement.
+2026-04-16 09:04:01 | INFO | [369] ABRIR BUY @ 75% | ID: 13bb7aa3 | Precio: $318.90
+2026-04-16 09:04:01 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:04:01 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-16 09:04:01 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:04:32 | INFO | [2024-01-16 10:00] [BNBUSDT] SELL @ 75% | RSI is relatively neutral but the MACD cross is bearish and the market regime is bullish suggesting a potential pullback. Let's capitalize on this with a SELL.
+2026-04-16 09:04:32 | INFO | Outcome registrado para decision 83
+2026-04-16 09:04:32 | INFO | [370] CERRAR BUY | Entry: $318.90 → Exit: $318.40 | LOSS | PnL: -0.26%
+2026-04-16 09:04:32 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:04:32 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:04:32 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:05:02 | INFO | [2024-01-16 10:00] [BNBUSDT] SELL @ 80% | RSI is approaching 60 and the MACD cross is bearish. While the market regime is bullish, the current RSI reading suggests a potential pullback.
+2026-04-16 09:05:02 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:05:02 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:05:02 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:05:38 | INFO | [2024-01-16 11:00] [BNBUSDT] SELL @ 85% | RSI is moderately high (60), and while the market regime is bullish, the trend strength is weak and there's a bearish MACD cross. The recent SELL trade at 75% provides supporting evidence. Let’s capitalize on potential resistance.
+2026-04-16 09:05:38 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:05:38 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:05:38 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:06:07 | INFO | [2024-01-16 12:00] [BNBUSDT] SELL @ 85% | RSI is relatively high (57.75) and the MACD cross is bearish, suggesting a potential pullback within the bullish market regime.
+2026-04-16 09:06:07 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:06:07 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:06:07 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:06:36 | INFO | [2024-01-16 13:00] [BNBUSDT] HOLD @ 75% | RSI is neutral and market regime is bullish, but MACD cross is bearish. Recent sell trades were high confidence, so holding for now.
+2026-04-16 09:06:36 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:06:36 | INFO | Validación: HOLD → CORRECT
+2026-04-16 09:06:36 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:07:04 | INFO | [2024-01-16 14:00] [BNBUSDT] SELL @ 75% | RSI is relatively neutral but the MACD cross is bearish and within a weak bullish regime. Selling now allows us to capitalize on potential downward pressure.
+2026-04-16 09:07:04 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:07:04 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:07:04 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:07:33 | INFO | [2024-01-16 15:00] [BNBUSDT] SELL @ 80% | RSI is neutral but the MACD cross is bearish and the market regime is bullish suggesting a potential correction. Using SELL_RSI55_bullish pattern as reference.
+2026-04-16 09:07:33 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:07:33 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:07:33 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:08:00 | INFO | [2024-01-16 16:00] [BNBUSDT] SELL @ 80% | RSI is relatively high (62.86) suggesting a potential pullback within the bullish regime. The bearish MACD cross adds to this signal.
+2026-04-16 09:08:00 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:08:00 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:08:00 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:08:35 | INFO | [2024-01-16 17:00] [BNBUSDT] SELL @ 85% | RSI is relatively high (57) and the MACD cross is bearish, suggesting a potential pullback within the bullish regime. Using SELL_RSI55_bullish pattern as reference.
+2026-04-16 09:08:35 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:08:35 | INFO | Validación: SELL → CORRECT
+2026-04-16 09:08:35 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:09:04 | INFO | [2024-01-16 18:00] [BNBUSDT] SELL @ 85% | RSI is relatively neutral but the MACD cross is bearish and we're in a bullish market regime. The recent SELL trades with high confidence suggest a good opportunity to capitalize on potential resistance.
+2026-04-16 09:09:04 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:09:04 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:09:04 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:09:38 | INFO | [2024-01-16 19:00] [BNBUSDT] SELL @ 75% | RSI is neutral but the market regime is bearish and MACD cross is bearish. Considering recent sell patterns and the overall trend, a sell position aligns with the current outlook.
+2026-04-16 09:09:38 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:09:38 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:09:38 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:10:08 | INFO | [2024-01-16 20:00] [BNBUSDT] SELL @ 75% | RSI is neutral but the market regime is bearish and MACD cross is bearish, suggesting a continued downward trend. Given the recent sell orders, it's prudent to capitalize on the expected price decline.
+2026-04-16 09:10:08 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:10:08 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:10:08 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:10:37 | INFO | [2024-01-16 21:00] [BNBUSDT] SELL @ 80% | RSI is relatively neutral but the MACD cross is bearish and the market regime is bullish suggesting a potential pullback. Leveraging the SELL_RSI55_bullish pattern as reference.
+2026-04-16 09:10:37 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:10:37 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:10:37 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:11:06 | INFO | [2024-01-16 22:00] [BNBUSDT] SELL @ 80% | RSI is neutral but the market regime is bearish and MACD cross is bearish, suggesting a continued downward trend. Let's capitalize on this with an RSI based sell.
+2026-04-16 09:11:06 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\gemma-3-4b-it-abliterated.db
+2026-04-16 09:11:06 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-16 09:11:06 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-16 09:11:35 | INFO | [2024-01-16 23:00] [BNBUSDT] SELL @ 85% | RSI is neutral but the market regime is bearish and MACD cross is bearish. Considering recent trends, a sell trade aligns with the current outlook.
+2026-04-16 09:11:35 | INFO | Sesión cerrada: BACKTEST_cdb4734e | PnL: +5.44%
+2026-04-16 09:11:35 | INFO | 
+================================================================================
+2026-04-16 09:11:35 | INFO | RESULTADOS DEL BACKTESTING
+2026-04-16 09:11:35 | INFO | ================================================================================
+2026-04-16 09:11:35 | INFO | Sesión: BACKTEST_cdb4734e
+2026-04-16 09:11:35 | INFO | Capital inicial: $100.00
+2026-04-16 09:11:35 | INFO | Capital final: $105.44
+2026-04-16 09:11:35 | INFO | Retorno: +5.44%
+2026-04-16 09:11:35 | INFO | Trades: 14 | Wins: 8 | Losses: 6
+2026-04-16 09:11:35 | INFO | Win Rate: 57.1%
+2026-04-16 09:11:35 | INFO | ================================================================================
+2026-04-16 09:11:35 | INFO | Backtesting completado
+2026-04-16 09:11:35 | INFO | Retorno: +5.44%
+2026-04-16 09:11:35 | INFO | Win Rate: 57.1%
+2026-04-16 09:11:35 | INFO | Trades: 14

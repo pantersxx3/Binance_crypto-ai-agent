@@ -1,0 +1,928 @@
+2026-04-14 20:10:27 | INFO | Iniciando backtesting: 1 Jan 2024 -> 17 Jan 2024
+2026-04-14 20:10:27 | INFO | Sesión creada: BACKTEST_f08aa8c6 (backtest)
+2026-04-14 20:10:27 | INFO | Connecting to Binance MAINNET for historical data
+2026-04-14 20:10:29 | INFO | SQLite tables created/verified
+2026-04-14 20:10:29 | INFO | DataCollector initialized with SQLite: F:\Desktop\Binance_crypto-ai-agent\data\market_data.db
+2026-04-14 20:10:30 | DEBUG | Base de datos inicializada: F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:14:04 | INFO | Iniciando backtesting: 1 Jan 2024 -> 17 Jan 2024
+2026-04-14 20:14:04 | INFO | Sesión creada: BACKTEST_6c0852ca (backtest)
+2026-04-14 20:14:04 | INFO | Connecting to Binance MAINNET for historical data
+2026-04-14 20:14:05 | INFO | SQLite tables created/verified
+2026-04-14 20:14:05 | INFO | DataCollector initialized with SQLite: F:\Desktop\Binance_crypto-ai-agent\data\market_data.db
+2026-04-14 20:14:06 | DEBUG | Base de datos inicializada: F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:14:06 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:14:06 | INFO | Brain inicializado | Modelo: gemma-3-4b-it-abliterated | DB: F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:14:06 | INFO | Backtest Engine | Sesión: BACKTEST_6c0852ca
+2026-04-14 20:14:06 | INFO | Periodo: 1 Jan 2024 → 17 Jan 2024
+2026-04-14 20:14:06 | INFO | Cargando datos para BNBUSDT...
+2026-04-14 20:14:06 | INFO | get_historical_klines | BNBUSDT | 1h | 2023-12-17 10:00:00 -> 2024-01-17 00:00:00
+2026-04-14 20:14:07 | INFO | Obtenidas 735 velas | Rango: 2023-12-17 10:00:00 -> 2024-01-17 00:00:00
+2026-04-14 20:14:07 | INFO |    Despues de filtro: 735 velas en el rango solicitado
+2026-04-14 20:14:07 | INFO | Cargadas 385 velas totales
+2026-04-14 20:14:07 | INFO | Simulando 84 velas...
+2026-04-14 20:14:07 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:14:21 | ERROR | [BNBUSDT] Error: Connection error.
+2026-04-14 20:14:21 | INFO | [0%] Balance: $100.00
+2026-04-14 20:14:21 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:14:35 | ERROR | [BNBUSDT] Error: Connection error.
+2026-04-14 20:14:35 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:14:48 | ERROR | [BNBUSDT] Error: Connection error.
+2026-04-14 20:14:48 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:15:02 | ERROR | [BNBUSDT] Error: Connection error.
+2026-04-14 20:15:02 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:15:15 | ERROR | [BNBUSDT] Error: Connection error.
+2026-04-14 20:15:15 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:15:20 | WARNING | Backtesting interrumpido por el usuario.
+2026-04-14 20:15:22 | WARNING | Backtesting interrumpido por el usuario.
+2026-04-14 20:15:29 | ERROR | [BNBUSDT] Error: Connection error.
+2026-04-14 20:15:29 | INFO | Sesión cerrada: BACKTEST_6c0852ca | PnL: +0.00%
+2026-04-14 20:15:29 | INFO | 
+================================================================================
+2026-04-14 20:15:29 | INFO | RESULTADOS DEL BACKTESTING
+2026-04-14 20:15:29 | INFO | ================================================================================
+2026-04-14 20:15:29 | INFO | Sesión: BACKTEST_6c0852ca
+2026-04-14 20:15:29 | INFO | Capital inicial: $100.00
+2026-04-14 20:15:29 | INFO | Capital final: $100.00
+2026-04-14 20:15:29 | INFO | Retorno: +0.00%
+2026-04-14 20:15:29 | INFO | Trades: 0 | Wins: 0 | Losses: 0
+2026-04-14 20:15:29 | INFO | Win Rate: 0.0%
+2026-04-14 20:15:29 | INFO | ================================================================================
+2026-04-14 20:15:29 | INFO | Backtesting completado
+2026-04-14 20:15:29 | INFO | Retorno: +0.00%
+2026-04-14 20:15:29 | INFO | Win Rate: 0.0%
+2026-04-14 20:15:29 | INFO | Trades: 0
+2026-04-14 20:15:48 | INFO | Iniciando backtesting: 1 Jan 2024 -> 17 Jan 2024
+2026-04-14 20:15:48 | INFO | Sesión creada: BACKTEST_bb307a44 (backtest)
+2026-04-14 20:15:48 | INFO | Connecting to Binance MAINNET for historical data
+2026-04-14 20:15:50 | INFO | SQLite tables created/verified
+2026-04-14 20:15:50 | INFO | DataCollector initialized with SQLite: F:\Desktop\Binance_crypto-ai-agent\data\market_data.db
+2026-04-14 20:15:51 | DEBUG | Base de datos inicializada: F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:15:51 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:15:51 | INFO | Brain inicializado | Modelo: gemma-3-4b-it-abliterated | DB: F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:15:51 | INFO | Backtest Engine | Sesión: BACKTEST_bb307a44
+2026-04-14 20:15:51 | INFO | Periodo: 1 Jan 2024 → 17 Jan 2024
+2026-04-14 20:15:51 | INFO | Cargando datos para BNBUSDT...
+2026-04-14 20:15:51 | INFO | get_historical_klines | BNBUSDT | 1h | 2023-12-17 10:00:00 -> 2024-01-17 00:00:00
+2026-04-14 20:15:52 | INFO | Obtenidas 735 velas | Rango: 2023-12-17 10:00:00 -> 2024-01-17 00:00:00
+2026-04-14 20:15:52 | INFO |    Despues de filtro: 735 velas en el rango solicitado
+2026-04-14 20:15:52 | INFO | Cargadas 385 velas totales
+2026-04-14 20:15:52 | INFO | Simulando 84 velas...
+2026-04-14 20:15:52 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:16:22 | INFO | [2024-01-13 12:00] [BNBUSDT] SELL @ 80% | RSI is above 60 indicating potential overbought conditions and the market regime is bearish. This aligns with our SELL strategy.
+2026-04-14 20:16:22 | INFO | [0%] Balance: $100.00
+2026-04-14 20:16:22 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:16:22 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:16:22 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:16:45 | INFO | [2024-01-13 13:00] [BNBUSDT] BUY @ 60% | RSI is neutral but the market regime is bearish and trend strength is weak. Given recent SELL decisions, a cautious BUY is warranted to potentially capitalize on a short-term bounce.
+2026-04-14 20:16:45 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:16:45 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:16:45 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:17:14 | INFO | [2024-01-13 14:00] [BNBUSDT] SELL @ 75% | RSI is overbought (75.76) and the market regime is bearish, indicating a potential correction. This aligns with our SELL strategy.
+2026-04-14 20:17:14 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:17:14 | INFO | Validación: SELL → PREMATURE
+2026-04-14 20:17:14 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:17:41 | INFO | [2024-01-13 15:00] [BNBUSDT] HOLD @ 75% | RSI is overbought and the market regime is bearish. While there's a weak bullish MACD cross, the overall trend suggests a pullback is likely. Given it's SPOT mode, I'll hold to avoid taking profits fr
+2026-04-14 20:17:41 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:17:41 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:17:41 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:18:08 | INFO | [2024-01-13 16:00] [BNBUSDT] HOLD @ 80% | RSI is neutral and the market regime is bearish with moderate trend strength. While the MACD is bullish, the overall picture suggests a consolidation phase rather than an immediate breakout. Given it'
+2026-04-14 20:18:08 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:18:08 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:18:08 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:18:31 | INFO | [2024-01-13 17:00] [BNBUSDT] BUY @ 80% | RSI is overbought but the market regime and MACD cross are bullish, suggesting a potential pullback for a buy opportunity.
+2026-04-14 20:18:31 | INFO | [305] ABRIR BUY @ 80% | ID: a8c89316 | Precio: $302.00
+2026-04-14 20:18:31 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:18:31 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:18:31 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:18:57 | INFO | [2024-01-13 18:00] [BNBUSDT] HOLD @ 85% | RSI is overbought but the market regime and MACD cross are bullish, suggesting a potential pullback before continuation. A holding strategy allows us to capture further gains if the price consolidates
+2026-04-14 20:18:57 | INFO | Outcome registrado para decision 12
+2026-04-14 20:18:57 | INFO | [306] CERRAR BUY | Entry: $302.00 → Exit: $302.30 | WIN | PnL: -0.00%
+2026-04-14 20:18:57 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:18:57 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:18:57 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:19:20 | INFO | [2024-01-13 18:00] [BNBUSDT] BUY @ 85% | RSI is overbought but the market regime and MACD cross are bullish, suggesting a potential pullback for a buying opportunity.
+2026-04-14 20:19:20 | INFO | [306] ABRIR BUY @ 85% | ID: f43cf4f7 | Precio: $302.30
+2026-04-14 20:19:20 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:19:20 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:19:20 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:19:46 | INFO | [2024-01-13 19:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. A $100 buy at current price offers a good entry point.
+2026-04-14 20:19:46 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:19:46 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:19:46 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:20:10 | INFO | [2024-01-13 20:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, indicating potential upward momentum. A $100 investment aligns well with current conditions.
+2026-04-14 20:20:10 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:20:10 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:20:10 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:20:35 | INFO | [2024-01-13 21:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. Given the recent buys at high confidence, a further entry with $100 is reasonable.
+2026-04-14 20:20:35 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:20:35 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:20:35 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:21:00 | INFO | [2024-01-13 22:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, indicating continued upward momentum. Given the recent trends, a buy order at $302.50 seems appropriate.
+2026-04-14 20:21:00 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:21:00 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:21:00 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:21:31 | INFO | [2024-01-13 23:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. A $100 buy at current price offers a reasonable entry point.
+2026-04-14 20:21:31 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:21:31 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:21:31 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:22:02 | INFO | [2024-01-14 00:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime is bullish and there's a bullish MACD cross. Given the recent BUY successes with similar RSI readings, I'm taking a moderate risk on a buy.
+2026-04-14 20:22:02 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:22:02 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:22:02 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:22:31 | INFO | [2024-01-14 01:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. Given recent successful buys, a buy order aligns with the current trend.
+2026-04-14 20:22:31 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:22:31 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:22:31 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:22:59 | INFO | [2024-01-14 02:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, indicating continued upward momentum. A $100 buy at this price offers a good entry point.
+2026-04-14 20:22:59 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:22:59 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:22:59 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:23:25 | INFO | [2024-01-14 03:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and MACD cross is bullish. Given the recent trend, a buy position aligns with the current outlook.
+2026-04-14 20:23:25 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:23:25 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:23:25 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:23:55 | INFO | [2024-01-14 04:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime and MACD cross are bullish, indicating potential for continued upward movement. Given the recent buys with similar conditions, a cautious buy at $301.50 aligns wel
+2026-04-14 20:23:55 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:23:55 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:23:55 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:24:23 | INFO | [2024-01-14 05:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish, indicating potential upward momentum. Given the recent buy decisions with similar conditions, a continued bullish outlook seems appropr
+2026-04-14 20:24:23 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:24:23 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:24:23 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:24:51 | INFO | [2024-01-14 06:00] [BNBUSDT] BUY @ 80% | RSI is neutral but within a bullish regime and MACD confirms trend. A good entry point with moderate trend strength.
+2026-04-14 20:24:51 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:24:51 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:24:51 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:25:16 | INFO | [2024-01-14 07:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. Given recent buys with high confidence, a buy at $304.30 is a reasonable strategy.
+2026-04-14 20:25:16 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:25:16 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:25:16 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:25:42 | INFO | [2024-01-14 08:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. Given the recent successful buys at 80% and 85%, a buy order aligns with the current trend.
+2026-04-14 20:25:42 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:25:42 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:25:42 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:26:06 | INFO | [2024-01-14 09:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. Given the recent successful buys at 80% I'm going with a buy.
+2026-04-14 20:26:06 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:26:06 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:26:06 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:26:32 | INFO | [2024-01-14 10:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime and MACD cross are bullish, suggesting a potential upward trend. Given the recent buying activity, a buy order at $304.50 aligns well with the current conditions.
+2026-04-14 20:26:32 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:26:32 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:26:32 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:26:56 | INFO | [2024-01-14 11:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime is bullish and we have a bullish MACD cross. Given the recent trend, a small buy position aligns with the current conditions.
+2026-04-14 20:26:56 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:26:56 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:26:56 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:27:21 | INFO | [2024-01-14 12:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bullish and we have a bullish MACD cross. Given the recent successful BUY trades, I'm taking a moderate risk position.
+2026-04-14 20:27:21 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:27:21 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:27:21 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:27:48 | INFO | [2024-01-14 13:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, suggesting a potential upward trend. Given the recent buy attempts at 75% and 85%, a further entry with $100 could capitalize on contin
+2026-04-14 20:27:48 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:27:48 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:27:48 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:28:12 | INFO | [2024-01-14 14:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. A $100 buy at current price offers a reasonable entry point.
+2026-04-14 20:28:12 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:28:12 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:28:12 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:28:39 | INFO | [2024-01-14 15:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and MACD cross is bullish. A small buy at $305.20 aligns with a cautious bullish outlook.
+2026-04-14 20:28:39 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:28:39 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:28:39 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:29:08 | INFO | [2024-01-14 16:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime is bullish and MACD cross is bullish. Considering recent trends, a buy position aligns with the current outlook.
+2026-04-14 20:29:08 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:29:08 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:29:08 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:29:35 | INFO | [2024-01-14 17:00] [BNBUSDT] HOLD @ 80% | RSI is relatively high (69.16) but within a bullish regime and trend strength is moderate. A holding position allows us to capture further upside while maintaining a reasonable risk level.
+2026-04-14 20:29:35 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:29:35 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:29:35 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:30:02 | INFO | [2024-01-14 18:00] [BNBUSDT] HOLD @ 80% | RSI is slightly high but within a bullish regime and trend strength is moderate. Continuing to hold the current position offers a good risk/reward ratio.
+2026-04-14 20:30:02 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:30:02 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:30:02 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:30:29 | INFO | [2024-01-14 19:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, suggesting a continuation of the uptrend. A $100 investment offers good potential.
+2026-04-14 20:30:29 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:30:29 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:30:29 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:30:57 | INFO | [2024-01-14 20:00] [BNBUSDT] HOLD @ 75% | RSI is neutral and the market regime is bullish but trend strength is weak. The MACD cross is bearish, suggesting a potential short-term pullback, but with a weak trend, holding is a reasonable strate
+2026-04-14 20:30:57 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:30:57 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:30:57 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:31:22 | INFO | [2024-01-14 21:00] [BNBUSDT] HOLD @ 75% | RSI is neutral and the market regime is bullish but trend strength is weak. The MACD cross is bearish, suggesting slight selling pressure, but overall it's a stable position to hold.
+2026-04-14 20:31:22 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:31:22 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:31:22 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:31:46 | INFO | [2024-01-14 22:00] [BNBUSDT] HOLD @ 85% | RSI is neutral and the market regime is bullish with a weak trend. The MACD cross is bearish but not strong enough to outweigh the current conditions given the low risk.
+2026-04-14 20:31:46 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:31:46 | INFO | Validación: HOLD → ACCEPTABLE
+2026-04-14 20:31:46 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:32:10 | INFO | [2024-01-14 23:00] [BNBUSDT] BUY @ 80% | RSI is oversold and the market regime is bearish. A low risk trade with a potential upward bounce is warranted.
+2026-04-14 20:32:10 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:32:10 | INFO | Validación: BUY → CORRECT
+2026-04-14 20:32:10 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:32:33 | INFO | [2024-01-15 00:00] [BNBUSDT] HOLD @ 80% | RSI is neutral and the market is bearish with weak trend. Given the recent holdings, holding position to observe further developments.
+2026-04-14 20:32:33 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:32:33 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:32:33 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:32:59 | INFO | [2024-01-15 01:00] [BNBUSDT] HOLD @ 75% | RSI is neutral and the market regime is bullish but trend strength is weak. The MACD cross is bearish, suggesting a potential short-term pullback, but with a weak trend, holding is a reasonable strate
+2026-04-14 20:32:59 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:32:59 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:32:59 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:33:24 | INFO | [2024-01-15 02:00] [BNBUSDT] HOLD @ 75% | RSI is neutral and the market regime is bullish but trend strength is weak. The MACD cross is bearish, suggesting potential for a pullback, but with a weak trend it's best to hold.
+2026-04-14 20:33:24 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:33:24 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:33:24 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:33:50 | INFO | [2024-01-15 03:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish, indicating potential upward momentum. A $100 buy at $309.60 offers a good entry point.
+2026-04-14 20:33:50 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:33:50 | INFO | Validación: BUY → CORRECT
+2026-04-14 20:33:50 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:34:14 | INFO | [2024-01-15 04:00] [BNBUSDT] HOLD @ 80% | RSI is high but within a bullish market regime and trend strength is moderate. A holding position allows us to capture further upside without excessive risk.
+2026-04-14 20:34:14 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:34:14 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:34:14 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:34:38 | INFO | [2024-01-15 05:00] [BNBUSDT] SELL @ 80% | RSI is overbought (71.74) and while the market regime is bullish, the strong trend suggests a potential pullback. A SELL decision aligns with this outlook.
+2026-04-14 20:34:38 | INFO | Outcome registrado para decision 14
+2026-04-14 20:34:38 | INFO | [341] CERRAR BUY | Entry: $302.30 → Exit: $317.20 | WIN | PnL: +4.83%
+2026-04-14 20:34:38 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:34:38 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:34:38 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:35:03 | INFO | [2024-01-15 05:00] [BNBUSDT] HOLD @ 75% | RSI is overbought but the market regime and MACD cross are bullish indicating a potential pullback followed by continuation. Given the strong trend, holding is a conservative approach.
+2026-04-14 20:35:03 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:35:03 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:35:03 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:35:26 | INFO | [2024-01-15 06:00] [BNBUSDT] HOLD @ 75% | RSI is overbought but the market regime and trend strength are bullish with a strong MACD cross. A hold allows us to ride the current trend.
+2026-04-14 20:35:26 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:35:26 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:35:26 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:35:51 | INFO | [2024-01-15 07:00] [BNBUSDT] BUY @ 85% | Strong bullish trend confirmed by RSI, MACD cross, and market regime. A small buy at this level could capitalize on further upward movement.
+2026-04-14 20:35:51 | INFO | [343] ABRIR BUY @ 85% | ID: ce6765a2 | Precio: $314.90
+2026-04-14 20:35:51 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:35:51 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:35:51 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:36:15 | INFO | [2024-01-15 08:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. A $100 buy at current price offers a good entry point.
+2026-04-14 20:36:15 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:36:15 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:36:15 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:36:39 | INFO | [2024-01-15 09:00] [BNBUSDT] SELL @ 80% | RSI is overbought (71.97) despite a strong bullish market regime, suggesting potential for a pullback. Selling some profits.
+2026-04-14 20:36:39 | INFO | Outcome registrado para decision 52
+2026-04-14 20:36:39 | INFO | [345] CERRAR BUY | Entry: $314.90 → Exit: $316.70 | WIN | PnL: +0.47%
+2026-04-14 20:36:39 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:36:39 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:36:39 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:37:05 | INFO | [2024-01-15 09:00] [BNBUSDT] SELL @ 90% | RSI is overbought (71.97) and the MACD cross is bullish, suggesting a potential pullback in BNBUSDT. Let's capitalize on this with a SELL order.
+2026-04-14 20:37:05 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:37:05 | INFO | Validación: SELL → CORRECT
+2026-04-14 20:37:05 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:37:30 | INFO | [2024-01-15 10:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime and MACD cross are bullish. Considering the recent sell decisions were at higher RSI levels, a buy position aligns with the current trend strength.
+2026-04-14 20:37:30 | INFO | [346] ABRIR BUY @ 75% | ID: a4c43b66 | Precio: $313.30
+2026-04-14 20:37:30 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:37:30 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:37:30 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:37:54 | INFO | [2024-01-15 11:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime and MACD cross are bullish. A moderate trend suggests a good entry point for a BUY.
+2026-04-14 20:37:54 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:37:54 | INFO | Validación: BUY → CORRECT
+2026-04-14 20:37:54 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:38:23 | INFO | [2024-01-15 12:00] [BNBUSDT] SELL @ 85% | RSI is overbought (70.18) and the trend is strong with a bullish MACD cross. While the market regime is bullish, the high RSI suggests a potential correction. Using the SELL_RSI72_bullish pattern as r
+2026-04-14 20:38:23 | INFO | Outcome registrado para decision 56
+2026-04-14 20:38:23 | INFO | [348] CERRAR BUY | Entry: $313.30 → Exit: $317.10 | WIN | PnL: +1.11%
+2026-04-14 20:38:23 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:38:23 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:38:23 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:38:51 | INFO | [2024-01-15 12:00] [BNBUSDT] BUY @ 80% | RSI is overbought but the market regime and MACD cross are bullish. Historically, RSI62 buys have been successful in bullish regimes. Given recent success with a similar buy, I'll take advantage.
+2026-04-14 20:38:51 | INFO | [348] ABRIR BUY @ 80% | ID: ae0fc549 | Precio: $317.10
+2026-04-14 20:38:51 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:38:51 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:38:51 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:39:17 | INFO | [2024-01-15 13:00] [BNBUSDT] SELL @ 90% | RSI is overbought (80.12) and the trend is strong, suggesting a potential correction. Using SELL_RSI72_bullish pattern reference.
+2026-04-14 20:39:17 | INFO | Outcome registrado para decision 59
+2026-04-14 20:39:17 | INFO | [349] CERRAR BUY | Entry: $317.10 → Exit: $318.90 | WIN | PnL: +0.47%
+2026-04-14 20:39:17 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:39:17 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:39:17 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:39:43 | INFO | [2024-01-15 13:00] [BNBUSDT] BUY @ 85% | RSI is overbought but the market regime and MACD cross are bullish. A buy trade based on RSI62_bullish pattern is a good bet.
+2026-04-14 20:39:43 | INFO | [349] ABRIR BUY @ 85% | ID: ee3d524c | Precio: $318.90
+2026-04-14 20:39:43 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:39:43 | INFO | Validación: BUY → INCORRECT
+2026-04-14 20:39:43 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:40:10 | INFO | [2024-01-15 14:00] [BNBUSDT] BUY @ 85% | RSI is relatively high (67.61) but within a bullish market regime and trend strength, aligning with the BUY_RSI62_bullish pattern. A good entry point.
+2026-04-14 20:40:10 | INFO | [60%] Balance: $106.88
+2026-04-14 20:40:10 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:40:10 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:40:10 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:40:38 | INFO | [2024-01-15 15:00] [BNBUSDT] BUY @ 80% | RSI is relatively high (65.29) but within a bullish regime and trend strength suggests continued upward movement. The MACD cross is also bullish. Using the BUY_RSI62_bullish pattern as reference.
+2026-04-14 20:40:38 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:40:38 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:40:38 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:41:03 | INFO | [2024-01-15 16:00] [BNBUSDT] BUY @ 80% | RSI is still relatively high but within a bullish trend and MACD confirms strength. A buy order aligns with the current market regime.
+2026-04-14 20:41:03 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:41:03 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:41:03 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:41:29 | INFO | [2024-01-15 17:00] [BNBUSDT] BUY @ 90% | RSI is neutral but within bullish range, MACD and market regime are bullish. Historical data favors buying at RSI 62 in a bullish trend.
+2026-04-14 20:41:29 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:41:29 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:41:29 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:41:55 | INFO | [2024-01-15 18:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish. Considering historical success with RSI62 patterns and the overall trend, a buy position aligns well.
+2026-04-14 20:41:55 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:41:55 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:41:55 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:42:22 | INFO | [2024-01-15 19:00] [BNBUSDT] BUY @ 85% | Strong bullish trend confirmed by MACD and RSI is neutral. Historical patterns favor buying when RSI is near neutral in a bullish regime.
+2026-04-14 20:42:22 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:42:22 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:42:22 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:42:53 | INFO | [2024-01-15 20:00] [BNBUSDT] SELL @ 75% | RSI is neutral but the MACD cross is bearish and the market regime is bullish. Considering the recent trend strength, a sell trade aligns with the potential for a minor correction before continuing th
+2026-04-14 20:42:53 | INFO | Outcome registrado para decision 61
+2026-04-14 20:42:53 | INFO | [356] CERRAR BUY | Entry: $318.90 → Exit: $316.80 | LOSS | PnL: -0.76%
+2026-04-14 20:42:53 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:42:53 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:42:53 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:43:23 | INFO | [2024-01-15 20:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and trend strength is strong. Considering the recent sell was at a high RSI, a buy position aligns with the current conditions.
+2026-04-14 20:43:23 | INFO | [356] ABRIR BUY @ 75% | ID: 04ad1429 | Precio: $316.80
+2026-04-14 20:43:23 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:43:23 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:43:23 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:43:50 | INFO | [2024-01-15 21:00] [BNBUSDT] SELL @ 80% | RSI is neutral but the MACD cross is bearish and we're in a moderate bullish regime. Considering the recent sell signal at 75% is pending, I’ll take profit now.
+2026-04-14 20:43:50 | INFO | Outcome registrado para decision 69
+2026-04-14 20:43:50 | INFO | [357] CERRAR BUY | Entry: $316.80 → Exit: $314.90 | LOSS | PnL: -0.70%
+2026-04-14 20:43:50 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:43:50 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:43:50 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:44:16 | INFO | [2024-01-15 21:00] [BNBUSDT] SELL @ 85% | RSI is approaching overbought levels (around 50) and the MACD cross is bearish, suggesting a potential pullback within the bullish regime. The recent BUY trade was a loss.
+2026-04-14 20:44:16 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:44:16 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:44:16 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:44:42 | INFO | [2024-01-15 22:00] [BNBUSDT] SELL @ 85% | RSI is approaching 60 and the MACD cross is bearish. While the market regime is bullish, recent performance suggests a potential pullback.
+2026-04-14 20:44:42 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:44:42 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:44:42 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:45:09 | INFO | [2024-01-15 23:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and we have a moderate trend. The MACD cross is bearish, suggesting a potential pullback for entry. Let's take advantage of this with a $100 buy.
+2026-04-14 20:45:09 | INFO | [359] ABRIR BUY @ 75% | ID: fa41b60d | Precio: $317.50
+2026-04-14 20:45:09 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:45:09 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:45:09 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:45:36 | INFO | [2024-01-16 00:00] [BNBUSDT] SELL @ 75% | RSI is approaching 60 and the MACD cross is bearish, suggesting a potential reversal within the bullish market regime. Let's capitalize on this with a SELL.
+2026-04-14 20:45:36 | INFO | Outcome registrado para decision 73
+2026-04-14 20:45:36 | INFO | [360] CERRAR BUY | Entry: $317.50 → Exit: $315.60 | LOSS | PnL: -0.70%
+2026-04-14 20:45:36 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:45:36 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:45:36 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:46:02 | INFO | [2024-01-16 00:00] [BNBUSDT] SELL @ 80% | RSI is relatively neutral but the MACD cross is bearish and the market regime is bullish, suggesting a potential pullback. Let's capitalize on this with a SELL.
+2026-04-14 20:46:02 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:46:02 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:46:02 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:46:29 | INFO | [2024-01-16 01:00] [BNBUSDT] HOLD @ 80% | RSI is neutral and the market regime is bullish but trend strength is weak. The MACD cross is bearish which suggests a potential short-term pullback, but given the current context and recent losses, h
+2026-04-14 20:46:29 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:46:29 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:46:29 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:46:56 | INFO | [2024-01-16 02:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime is bullish. Considering the weak trend strength, a BUY based on RSI62_bullish pattern (historical success) offers a good entry point with low risk.
+2026-04-14 20:46:56 | INFO | [362] ABRIR BUY @ 85% | ID: f46b830b | Precio: $314.70
+2026-04-14 20:46:56 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:46:56 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:46:56 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:47:22 | INFO | [2024-01-16 03:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish. We can leverage this with a BUY based on the RSI62_bullish pattern and the current price.
+2026-04-14 20:47:22 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:47:22 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:47:22 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:47:48 | INFO | [2024-01-16 04:00] [BNBUSDT] SELL @ 75% | RSI is neutral but the MACD cross is bearish and market regime is bullish, suggesting a potential reversal. Let's sell to take profits.
+2026-04-14 20:47:48 | INFO | Outcome registrado para decision 77
+2026-04-14 20:47:48 | INFO | [364] CERRAR BUY | Entry: $314.70 → Exit: $315.20 | WIN | PnL: +0.06%
+2026-04-14 20:47:48 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:47:48 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:47:48 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:48:15 | INFO | [2024-01-16 04:00] [BNBUSDT] SELL @ 80% | RSI is neutral but the MACD cross is bearish and trend strength is weak. Considering the recent SELL trade at 75% was successful, I'm leaning towards selling to capitalize on a potential pullback.
+2026-04-14 20:48:15 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:48:15 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:48:15 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:48:43 | INFO | [2024-01-16 05:00] [BNBUSDT] SELL @ 80% | RSI is relatively high (52.13) and the MACD cross is bearish, suggesting a potential pullback in the bullish market regime. Leveraging the SELL_RSI72_bullish pattern reference.
+2026-04-14 20:48:43 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:48:43 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:48:43 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:49:10 | INFO | [2024-01-16 06:00] [BNBUSDT] BUY @ 75% | RSI is neutral and the market regime is bullish. While MACD is bearish, it's weak trend strength suggests a potential bounce. Using BUY_RSI62_bullish as reference.
+2026-04-14 20:49:10 | INFO | [366] ABRIR BUY @ 75% | ID: b380422a | Precio: $315.90
+2026-04-14 20:49:10 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:49:10 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:49:10 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:49:36 | INFO | [2024-01-16 07:00] [BNBUSDT] HOLD @ 75% | RSI is neutral and the market regime is bullish but trend strength is weak. The MACD cross is bearish, suggesting a potential pullback, but with a low risk level we hold for now.
+2026-04-14 20:49:36 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:49:36 | INFO | Validación: HOLD → CORRECT
+2026-04-14 20:49:36 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:50:01 | INFO | [2024-01-16 08:00] [BNBUSDT] BUY @ 70% | RSI is neutral but the market regime is bullish. Recent trends suggest a potential buy opportunity.
+2026-04-14 20:50:01 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:50:01 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:50:01 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:50:27 | INFO | [2024-01-16 09:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bullish and we can leverage the moderate trend strength. The MACD cross is bearish, suggesting a potential pullback for entry.
+2026-04-14 20:50:27 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:50:27 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 20:50:27 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:50:53 | INFO | [2024-01-16 10:00] [BNBUSDT] SELL @ 85% | RSI is neutral but the MACD cross is bearish and we're in a moderate bullish regime. Let’s capitalize on potential resistance with an RSI based sell strategy.
+2026-04-14 20:50:53 | INFO | Outcome registrado para decision 82
+2026-04-14 20:50:53 | INFO | [370] CERRAR BUY | Entry: $315.90 → Exit: $318.40 | WIN | PnL: +0.69%
+2026-04-14 20:50:53 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:50:53 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:50:53 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:51:20 | INFO | [2024-01-16 10:00] [BNBUSDT] SELL @ 85% | RSI is relatively neutral but the MACD cross is bearish and combined with a moderate trend strength suggests a potential pullback. Also, the recent SELL trade at 85% provides further confirmation.
+2026-04-14 20:51:20 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:51:20 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:51:20 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:51:47 | INFO | [2024-01-16 11:00] [BNBUSDT] SELL @ 85% | RSI is relatively high (60) and the MACD cross is bearish, suggesting a potential reversal within the bullish market regime. Following SELL_RSI55_bullish pattern.
+2026-04-14 20:51:47 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:51:47 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:51:47 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:52:14 | INFO | [2024-01-16 12:00] [BNBUSDT] SELL @ 80% | RSI is relatively high (57.75) and the MACD cross is bearish, suggesting a potential pullback within the bullish market regime. Let's capitalize on this with a SELL.
+2026-04-14 20:52:14 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:52:14 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:52:14 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:52:40 | INFO | [2024-01-16 13:00] [BNBUSDT] SELL @ 80% | RSI is relatively neutral but the MACD cross is bearish and the market regime is bullish suggesting a potential reversal. Let's capitalize on this with a SELL.
+2026-04-14 20:52:40 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:52:40 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:52:40 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:53:06 | INFO | [2024-01-16 14:00] [BNBUSDT] SELL @ 75% | RSI is relatively neutral but the MACD cross is bearish and we're in a bullish market regime. Let’s sell to take profits before a potential reversal.
+2026-04-14 20:53:06 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:53:06 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:53:06 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:53:33 | INFO | [2024-01-16 15:00] [BNBUSDT] SELL @ 75% | RSI is relatively neutral but the MACD cross is bearish and the market regime is bullish, suggesting a potential pullback. Using SELL_RSI55_bullish pattern as reference.
+2026-04-14 20:53:33 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:53:33 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:53:33 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:53:59 | INFO | [2024-01-16 16:00] [BNBUSDT] SELL @ 85% | RSI is relatively high (62.86) indicating potential overbought conditions, and the MACD cross is bearish, suggesting a possible trend reversal within the bullish regime.
+2026-04-14 20:53:59 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:53:59 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:53:59 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:54:25 | INFO | [2024-01-16 17:00] [BNBUSDT] SELL @ 80% | RSI is relatively high (57) and the MACD cross is bearish, suggesting a potential pullback within the bullish market regime. The recent sell trades provide supporting evidence.
+2026-04-14 20:54:25 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:54:26 | INFO | Validación: SELL → CORRECT
+2026-04-14 20:54:26 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:54:52 | INFO | [2024-01-16 18:00] [BNBUSDT] SELL @ 80% | RSI is relatively neutral but the MACD cross is bearish and we're in a bullish market regime. Let's capitalize on the moderate trend with a Sell.
+2026-04-14 20:54:52 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:54:52 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:54:52 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:55:18 | INFO | [2024-01-16 19:00] [BNBUSDT] SELL @ 75% | RSI is neutral but the market regime is bearish and the MACD cross is bearish, aligning with a potential sell opportunity. Recent trend suggests continuation of the downtrend.
+2026-04-14 20:55:18 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:55:18 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:55:18 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:55:44 | INFO | [2024-01-16 20:00] [BNBUSDT] SELL @ 75% | RSI is neutral but the market regime is bearish and MACD cross is bearish, suggesting a continued downward trend. Given recent selling pressure, it's prudent to sell.
+2026-04-14 20:55:44 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:55:44 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:55:44 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:56:10 | INFO | [2024-01-16 21:00] [BNBUSDT] SELL @ 85% | RSI is relatively neutral but the MACD cross is bearish within a weak bullish trend. Considering the recent sell decisions and the current data, a bearish exit seems prudent.
+2026-04-14 20:56:10 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:56:11 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:56:11 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:56:36 | INFO | [2024-01-16 22:00] [BNBUSDT] SELL @ 80% | RSI is neutral but the market regime is bearish and MACD cross is bearish. Considering recent sell trades were successful, I'll take a bearish position.
+2026-04-14 20:56:36 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 20:56:37 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 20:56:37 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 20:57:02 | INFO | [2024-01-16 23:00] [BNBUSDT] SELL @ 80% | RSI is neutral but the market regime is bearish and MACD cross is bearish, aligning with a potential sell opportunity.
+2026-04-14 20:57:02 | INFO | Sesión cerrada: BACKTEST_bb307a44 | PnL: +5.47%
+2026-04-14 20:57:02 | INFO | 
+================================================================================
+2026-04-14 20:57:02 | INFO | RESULTADOS DEL BACKTESTING
+2026-04-14 20:57:02 | INFO | ================================================================================
+2026-04-14 20:57:02 | INFO | Sesión: BACKTEST_bb307a44
+2026-04-14 20:57:02 | INFO | Capital inicial: $100.00
+2026-04-14 20:57:02 | INFO | Capital final: $105.47
+2026-04-14 20:57:02 | INFO | Retorno: +5.47%
+2026-04-14 20:57:02 | INFO | Trades: 10 | Wins: 7 | Losses: 3
+2026-04-14 20:57:02 | INFO | Win Rate: 70.0%
+2026-04-14 20:57:02 | INFO | ================================================================================
+2026-04-14 20:57:02 | INFO | Backtesting completado
+2026-04-14 20:57:02 | INFO | Retorno: +5.47%
+2026-04-14 20:57:02 | INFO | Win Rate: 70.0%
+2026-04-14 20:57:02 | INFO | Trades: 10
+2026-04-14 22:15:11 | INFO | Iniciando backtesting: 1 Jan 2024 -> 17 Jan 2024
+2026-04-14 22:15:11 | INFO | Sesión creada: BACKTEST_faa4f12d (backtest)
+2026-04-14 22:15:11 | INFO | Connecting to Binance MAINNET for historical data
+2026-04-14 22:16:00 | INFO | Iniciando backtesting: 1 Jan 2024 -> 17 Jan 2024
+2026-04-14 22:16:00 | INFO | Sesión creada: BACKTEST_fdcda3f9 (backtest)
+2026-04-14 22:16:00 | INFO | Connecting to Binance MAINNET for historical data
+2026-04-14 22:16:43 | INFO | Iniciando backtesting: 1 Jan 2024 -> 17 Jan 2024
+2026-04-14 22:16:43 | INFO | Sesión creada: BACKTEST_827008e0 (backtest)
+2026-04-14 22:16:43 | INFO | Connecting to Binance MAINNET for historical data
+2026-04-14 22:16:44 | INFO | SQLite tables created/verified
+2026-04-14 22:16:44 | INFO | DataCollector initialized with SQLite: F:\Desktop\Binance_crypto-ai-agent\data\market_data.db
+2026-04-14 22:16:45 | DEBUG | Base de datos inicializada: F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:16:45 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:16:45 | INFO | Brain inicializado | Modelo: gemma-3-4b-it-abliterated | DB: F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:16:45 | INFO | Backtest Engine | Sesión: BACKTEST_827008e0
+2026-04-14 22:16:45 | INFO | Periodo: 1 Jan 2024 → 17 Jan 2024
+2026-04-14 22:16:45 | INFO | Cargando datos para BNBUSDT...
+2026-04-14 22:16:45 | INFO | get_historical_klines | BNBUSDT | 1h | 2023-12-17 10:00:00 -> 2024-01-17 00:00:00
+2026-04-14 22:16:46 | INFO | Obtenidas 735 velas | Rango: 2023-12-17 10:00:00 -> 2024-01-17 00:00:00
+2026-04-14 22:16:46 | INFO |    Despues de filtro: 735 velas en el rango solicitado
+2026-04-14 22:16:46 | INFO | Cargadas 385 velas totales
+2026-04-14 22:16:46 | INFO | Simulando 84 velas...
+2026-04-14 22:16:46 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:17:17 | INFO | [2024-01-13 12:00] [BNBUSDT] BUY @ 75% | RSI is relatively high (66.42) suggesting potential for a pullback, but the MACD cross is bullish and the market regime is bearish. A buy could capitalize on this divergence.
+2026-04-14 22:17:17 | INFO | [300] ABRIR BUY @ 75% | ID: ff14ebaa | Precio: $299.60
+2026-04-14 22:17:17 | INFO | [0%] Balance: $100.00
+2026-04-14 22:17:17 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:17:17 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:17:17 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:17:42 | INFO | [2024-01-13 13:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bearish and MACD is bullish suggesting a potential short-term reversal. Let's take advantage with a small buy.
+2026-04-14 22:17:42 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:17:42 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:17:42 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:18:07 | INFO | [2024-01-13 14:00] [BNBUSDT] SELL @ 85% | RSI is overbought and the market regime is bearish. A SELL trade aligns with the current technical indicators.
+2026-04-14 22:18:07 | INFO | Outcome registrado para decision 101
+2026-04-14 22:18:07 | INFO | [302] CERRAR BUY | Entry: $299.60 → Exit: $299.10 | LOSS | PnL: -0.27%
+2026-04-14 22:18:07 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:18:07 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:18:07 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:18:33 | INFO | [2024-01-13 14:00] [BNBUSDT] SELL @ 85% | RSI is overbought (75.76) and the market regime is bearish. The MACD cross is bullish but weak trend suggests a potential reversal. Let's capitalize on the overbought condition.
+2026-04-14 22:18:33 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:18:33 | INFO | Validación: SELL → PREMATURE
+2026-04-14 22:18:33 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:19:00 | INFO | [2024-01-13 15:00] [BNBUSDT] SELL @ 80% | RSI is overbought (80.33) and the market regime is bearish, suggesting a potential correction. The MACD cross is bullish but weak trend strength supports a sell.
+2026-04-14 22:19:00 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:19:00 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:19:00 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:19:28 | INFO | [2024-01-13 16:00] [BNBUSDT] SELL @ 80% | RSI is above 60 and the market regime is bearish. The MACD cross is bullish but we're in a bearish trend. Let’s capitalize on the potential downward movement.
+2026-04-14 22:19:28 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:19:28 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:19:28 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:19:56 | INFO | [2024-01-13 17:00] [BNBUSDT] SELL @ 85% | RSI is overbought (70.92) and the market regime is bullish, suggesting a potential correction. The MACD cross is bullish but we'll take profit now.
+2026-04-14 22:19:56 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:19:56 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:19:57 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:20:25 | INFO | [2024-01-13 18:00] [BNBUSDT] SELL @ 85% | RSI is overbought (70.07) and the MACD cross is bullish, suggesting a potential pullback within a bullish regime. Following the SELL_RSI55_bullish pattern.
+2026-04-14 22:20:25 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:20:25 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:20:25 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:20:52 | INFO | [2024-01-13 19:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and we have a moderate trend strength with a bullish MACD cross. Considering recent trends, a BUY trade aligns well.
+2026-04-14 22:20:52 | INFO | [307] ABRIR BUY @ 75% | ID: 56b62318 | Precio: $301.60
+2026-04-14 22:20:52 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:20:52 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:20:52 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:21:20 | INFO | [2024-01-13 20:00] [BNBUSDT] BUY @ 70% | RSI is neutral but the market regime and MACD cross are bullish. Considering the recent sell trades were at high RSI, a buy position offers a good entry point with moderate risk.
+2026-04-14 22:21:20 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:21:20 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:21:20 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:21:47 | INFO | [2024-01-13 21:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish. Considering past success with RSI55 bullish patterns, a buy order aligns well.
+2026-04-14 22:21:47 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:21:47 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:21:47 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:22:14 | INFO | [2024-01-13 22:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. Let's capitalize on this with a $100 buy.
+2026-04-14 22:22:14 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:22:14 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:22:14 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:22:39 | INFO | [2024-01-13 23:00] [BNBUSDT] BUY @ 85% | RSI is moderately high (66.97) but within the bullish regime and trend strength, suggesting continued upward movement. The MACD cross confirms this.
+2026-04-14 22:22:39 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:22:39 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:22:39 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:23:05 | INFO | [2024-01-14 00:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and we have a bullish MACD cross. Let's take advantage of the upward trend with a moderate risk.
+2026-04-14 22:23:05 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:23:05 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:23:05 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:23:30 | INFO | [2024-01-14 01:00] [BNBUSDT] BUY @ 75% | RSI is neutral but within a bullish regime and MACD confirms trend. Given the recent successful buys, I'll take advantage of the moderate trend.
+2026-04-14 22:23:30 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:23:30 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:23:30 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:23:56 | INFO | [2024-01-14 02:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bullish and we have a moderate trend strength with a bullish MACD cross. Considering the recent activity, a buy trade aligns well.
+2026-04-14 22:23:56 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:23:56 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:23:56 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:24:22 | INFO | [2024-01-14 03:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bullish and MACD cross is bullish. Considering recent buys with good confidence, a buy position aligns well.
+2026-04-14 22:24:22 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:24:22 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:24:22 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:24:48 | INFO | [2024-01-14 04:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish. Given the recent activity and the opportunity to capitalize on a moderate trend, a buy order aligns well with the current conditions.
+2026-04-14 22:24:48 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:24:48 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:24:48 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:25:14 | INFO | [2024-01-14 05:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime is bullish and we have a moderate trend strength with a bullish MACD cross. Considering recent successful buys, I'm confident in a positive movement.
+2026-04-14 22:25:14 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:25:14 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:25:14 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:25:41 | INFO | [2024-01-14 06:00] [BNBUSDT] BUY @ 75% | RSI is moderate (66.94), indicating continued bullish momentum. The market regime is bullish and the MACD cross is bullish, suggesting an upward trend. Let's capitalize on this with a BUY.
+2026-04-14 22:25:41 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:25:41 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:25:41 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:26:07 | INFO | [2024-01-14 07:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bullish and we have a moderate trend strength with a bullish MACD cross. Considering recent buys at similar RSI levels, a buy position aligns well.
+2026-04-14 22:26:07 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:26:07 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:26:07 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:26:33 | INFO | [2024-01-14 08:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bullish and we have a moderate trend strength with a bullish MACD cross. Let's take advantage of this.
+2026-04-14 22:26:33 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:26:33 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:26:33 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:26:59 | INFO | [2024-01-14 09:00] [BNBUSDT] BUY @ 85% | RSI is neutral but within a bullish regime and MACD confirms. Considering the recent trend strength suggests continued upward movement.
+2026-04-14 22:26:59 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:26:59 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:26:59 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:27:27 | INFO | [2024-01-14 10:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime is bullish and we have a bullish MACD cross. Let's take advantage of this with a BUY.
+2026-04-14 22:27:27 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:27:27 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:27:27 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:27:54 | INFO | [2024-01-14 11:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bullish and we have a bullish MACD cross. Let's take advantage of the momentum.
+2026-04-14 22:27:54 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:27:54 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:27:54 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:28:20 | INFO | [2024-01-14 12:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and we have a bullish MACD cross. Let's take advantage of the upward trend with a moderate risk.
+2026-04-14 22:28:20 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:28:20 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:28:20 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:28:46 | INFO | [2024-01-14 13:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and we have a bullish MACD cross. Considering recent buys with good confidence, I'll take a moderate risk.
+2026-04-14 22:28:46 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:28:46 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:28:46 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:29:15 | INFO | [2024-01-14 14:00] [BNBUSDT] BUY @ 85% | RSI is moderately high (66.38) but within a bullish regime and trend strength is moderate; recent buys have been successful. Utilizing SELL_RSI55_bullish pattern as reference.
+2026-04-14 22:29:15 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:29:15 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:29:15 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:29:41 | INFO | [2024-01-14 15:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bullish and we have a bullish MACD cross. Let's take advantage of the upward trend with a moderate risk.
+2026-04-14 22:29:41 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:29:41 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:29:41 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:30:07 | INFO | [2024-01-14 16:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bullish and MACD cross is bullish. Considering recent buys with good confidence, a buy position aligns well.
+2026-04-14 22:30:07 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:30:07 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:30:07 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:30:33 | INFO | [2024-01-14 17:00] [BNBUSDT] SELL @ 85% | RSI is currently high at 69.16 and while the market regime is bullish, we can capitalize on a potential pullback with the SELL_RSI55_bullish pattern success.
+2026-04-14 22:30:33 | INFO | Outcome registrado para decision 109
+2026-04-14 22:30:33 | INFO | [329] CERRAR BUY | Entry: $301.60 → Exit: $306.30 | WIN | PnL: +1.46%
+2026-04-14 22:30:33 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:30:33 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:30:33 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:31:00 | INFO | [2024-01-14 17:00] [BNBUSDT] BUY @ 75% | RSI is relatively high (69.16) but within a bullish market regime and the MACD cross is bullish, suggesting continued upward momentum. A BUY decision with $100 capital aligns well.
+2026-04-14 22:31:00 | INFO | [329] ABRIR BUY @ 75% | ID: bb707781 | Precio: $306.30
+2026-04-14 22:31:00 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:31:00 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:31:00 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:31:26 | INFO | [2024-01-14 18:00] [BNBUSDT] SELL @ 85% | RSI is currently high (69.81) and the market regime is bullish, aligning with the SELL_RSI55_bullish pattern which has a good success rate.
+2026-04-14 22:31:26 | INFO | Outcome registrado para decision 132
+2026-04-14 22:31:26 | INFO | [330] CERRAR BUY | Entry: $306.30 → Exit: $305.70 | LOSS | PnL: -0.30%
+2026-04-14 22:31:26 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:31:27 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:31:27 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:31:54 | INFO | [2024-01-14 18:00] [BNBUSDT] BUY @ 80% | RSI is relatively high at 69.81 but the market regime and MACD cross are bullish, suggesting continued upward momentum. A recent buy was a loss, but we can capitalize on this with a focused BUY.
+2026-04-14 22:31:54 | INFO | [330] ABRIR BUY @ 80% | ID: b6e61db5 | Precio: $305.70
+2026-04-14 22:31:54 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:31:54 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:31:54 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:32:21 | INFO | [2024-01-14 19:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime is bullish and we have a moderate trend strength with a bullish MACD cross. Recent buy at 75% was a loss, so let's take a calculated buy.
+2026-04-14 22:32:21 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:32:21 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:32:21 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:32:46 | INFO | [2024-01-14 20:00] [BNBUSDT] SELL @ 85% | RSI is neutral but the MACD cross is bearish and the market regime is bullish, suggesting a potential pullback. Let's sell to capitalize on this.
+2026-04-14 22:32:46 | INFO | Outcome registrado para decision 134
+2026-04-14 22:32:46 | INFO | [332] CERRAR BUY | Entry: $305.70 → Exit: $304.40 | LOSS | PnL: -0.53%
+2026-04-14 22:32:46 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:32:47 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:32:47 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:33:12 | INFO | [2024-01-14 20:00] [BNBUSDT] SELL @ 85% | RSI is neutral but the MACD cross is bearish and within a bullish market regime. Recent sell trade with high confidence suggests a good entry point.
+2026-04-14 22:33:12 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:33:12 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:33:12 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:33:38 | INFO | [2024-01-14 21:00] [BNBUSDT] SELL @ 75% | RSI is relatively neutral but the MACD cross is bearish and the market regime is bullish, suggesting a potential pullback. Let's capitalize on this with a SELL.
+2026-04-14 22:33:38 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:33:38 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:33:38 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:34:05 | INFO | [2024-01-14 22:00] [BNBUSDT] SELL @ 75% | RSI is neutral but the MACD cross is bearish and we have a bullish market regime. Recent sells were successful. Let's capitalize on the weak trend.
+2026-04-14 22:34:05 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:34:05 | INFO | Validación: SELL → CORRECT
+2026-04-14 22:34:05 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:34:32 | INFO | [2024-01-14 23:00] [BNBUSDT] BUY @ 70% | RSI is oversold (29.79) and the market regime is bearish, suggesting a potential bounce. While MACD is bearish, it's weak. This aligns with a BUY opportunity.
+2026-04-14 22:34:32 | INFO | [335] ABRIR BUY @ 70% | ID: ec85bdd6 | Precio: $299.50
+2026-04-14 22:34:32 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:34:32 | INFO | Validación: BUY → CORRECT
+2026-04-14 22:34:32 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:34:57 | INFO | [2024-01-15 00:00] [BNBUSDT] SELL @ 80% | RSI is neutral but the market regime is bearish and MACD cross is bearish. Selling to capitalize on the downward trend.
+2026-04-14 22:34:57 | INFO | Outcome registrado para decision 140
+2026-04-14 22:34:57 | INFO | [336] CERRAR BUY | Entry: $299.50 → Exit: $303.80 | WIN | PnL: +1.34%
+2026-04-14 22:34:57 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:34:57 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:34:57 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:35:23 | INFO | [2024-01-15 00:00] [BNBUSDT] SELL @ 85% | RSI is neutral but the market regime is bearish and MACD cross is bearish. Recent buy at 70% was successful. Let's capitalize on the bearish trend.
+2026-04-14 22:35:23 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:35:23 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:35:23 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:35:49 | INFO | [2024-01-15 01:00] [BNBUSDT] SELL @ 85% | RSI is approaching 60 and the MACD cross is bearish. Recent sell trades have been successful. Following SELL_RSI55_bullish pattern.
+2026-04-14 22:35:49 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:35:49 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:35:49 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:36:15 | INFO | [2024-01-15 02:00] [BNBUSDT] SELL @ 85% | RSI is relatively high (59.28) and the MACD cross is bearish, suggesting a potential reversal within the bullish regime. Let's capitalize on this with a SELL.
+2026-04-14 22:36:15 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:36:15 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:36:15 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:36:41 | INFO | [2024-01-15 03:00] [BNBUSDT] BUY @ 75% | RSI is neutral but the market regime is bullish and we have a moderate trend strength with a bullish MACD cross. Considering recent trends, a buy is appropriate.
+2026-04-14 22:36:41 | INFO | [339] ABRIR BUY @ 75% | ID: ff678b6d | Precio: $309.60
+2026-04-14 22:36:41 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:36:41 | INFO | Validación: BUY → CORRECT
+2026-04-14 22:36:41 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:37:10 | INFO | [2024-01-15 04:00] [BNBUSDT] BUY @ 80% | RSI is relatively high (69) but within a bullish regime and trend strength is moderate. The MACD cross is bullish, suggesting continued upward momentum. Considering the historical patterns and focusing on BUY_RSI62_bullish, a $100 buy at $314.30 seems reasonable.
+2026-04-14 22:37:10 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:37:10 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:37:10 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:37:37 | INFO | [2024-01-15 05:00] [BNBUSDT] SELL @ 90% | RSI is overbought (71.74) and the trend is strong, suggesting a potential correction. Also, the RSI55_bullish pattern has historically been successful.
+2026-04-14 22:37:37 | INFO | Outcome registrado para decision 145
+2026-04-14 22:37:37 | INFO | [341] CERRAR BUY | Entry: $309.60 → Exit: $317.20 | WIN | PnL: +2.35%
+2026-04-14 22:37:37 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:37:37 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:37:37 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:38:03 | INFO | [2024-01-15 05:00] [BNBUSDT] SELL @ 90% | RSI is overbought (71.74) and the MACD cross is bullish, suggesting a potential reversal. Leveraging the 'Sell_RSI55_bullish' pattern reference.
+2026-04-14 22:38:03 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:38:03 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:38:03 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:38:30 | INFO | [2024-01-15 06:00] [BNBUSDT] SELL @ 85% | RSI is overbought (71.64) and the trend is strong with a bullish MACD cross, suggesting a potential correction. 'Sell_RSI72_bullish' pattern aligns well.
+2026-04-14 22:38:30 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:38:30 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:38:30 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:38:56 | INFO | [2024-01-15 07:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish. Recent sells were high risk, so a buy at this level with a moderate risk feels appropriate.
+2026-04-14 22:38:56 | INFO | [343] ABRIR BUY @ 85% | ID: 8c084aa0 | Precio: $314.90
+2026-04-14 22:38:56 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:38:56 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:38:56 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:39:22 | INFO | [2024-01-15 08:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish. Given the strong trend, a buy order aligns well with current conditions.
+2026-04-14 22:39:22 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:39:22 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:39:22 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:39:48 | INFO | [2024-01-15 09:00] [BNBUSDT] SELL @ 90% | RSI is overbought (71.97) and the market regime is bullish, suggesting a potential correction. The strong trend could be nearing its peak, making a sell position appropriate.
+2026-04-14 22:39:48 | INFO | Outcome registrado para decision 150
+2026-04-14 22:39:48 | INFO | [345] CERRAR BUY | Entry: $314.90 → Exit: $316.70 | WIN | PnL: +0.47%
+2026-04-14 22:39:48 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:39:48 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:39:48 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:40:15 | INFO | [2024-01-15 09:00] [BNBUSDT] SELL @ 90% | RSI is overbought (71.97) and the trend is strong, suggesting a potential pullback. The bullish MACD cross confirms the upward momentum, but we'll capitalize on it with a sell.
+2026-04-14 22:40:15 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:40:15 | INFO | Validación: SELL → CORRECT
+2026-04-14 22:40:15 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:40:41 | INFO | [2024-01-15 10:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish. Considering recent trends, a buy position aligns well with the current outlook.
+2026-04-14 22:40:41 | INFO | [346] ABRIR BUY @ 85% | ID: 39d2fb1d | Precio: $313.30
+2026-04-14 22:40:41 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:40:41 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:40:41 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:41:06 | INFO | [2024-01-15 11:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish. Considering recent successful buys with similar RSI levels, a buy order seems appropriate.
+2026-04-14 22:41:06 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:41:06 | INFO | Validación: BUY → CORRECT
+2026-04-14 22:41:06 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:41:32 | INFO | [2024-01-15 12:00] [BNBUSDT] SELL @ 85% | RSI is overbought (70.18) and the trend is strong, suggesting a potential pullback. Selling now aligns with the SELL_RSI72_bullish pattern success.
+2026-04-14 22:41:32 | INFO | Outcome registrado para decision 154
+2026-04-14 22:41:32 | INFO | [348] CERRAR BUY | Entry: $313.30 → Exit: $317.10 | WIN | PnL: +1.11%
+2026-04-14 22:41:32 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:41:32 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:41:32 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:41:59 | INFO | [2024-01-15 12:00] [BNBUSDT] SELL @ 90% | RSI is overbought (70.18) and the trend is strong, suggesting a potential pullback. The bullish MACD cross confirms the upward momentum, making it a good time to take profits.
+2026-04-14 22:41:59 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:41:59 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:41:59 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:42:27 | INFO | [2024-01-15 13:00] [BNBUSDT] SELL @ 90% | RSI is overbought (80.12) and the market regime is bullish, combined with a strong trend and bullish MACD cross suggests a potential pullback. Selling now aligns with the SELL_RSI72_bullish pattern.
+2026-04-14 22:42:27 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:42:27 | INFO | Validación: SELL → CORRECT
+2026-04-14 22:42:27 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:42:53 | INFO | [2024-01-15 14:00] [BNBUSDT] BUY @ 75% | RSI is relatively high (67.61) but within a bullish market regime and trend strength with a bullish MACD cross. A buy trade can be executed.
+2026-04-14 22:42:53 | INFO | [350] ABRIR BUY @ 75% | ID: 7eb050e8 | Precio: $315.00
+2026-04-14 22:42:53 | INFO | [60%] Balance: $105.65
+2026-04-14 22:42:53 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:42:53 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:42:53 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:43:19 | INFO | [2024-01-15 15:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. Given the strong trend, a buy position aligns well with the current conditions.
+2026-04-14 22:43:19 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:43:19 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:43:19 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:43:44 | INFO | [2024-01-15 16:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish. Considering recent successes with similar conditions, a buy order aligns well.
+2026-04-14 22:43:44 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:43:44 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:43:44 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:44:09 | INFO | [2024-01-15 17:00] [BNBUSDT] BUY @ 80% | RSI is neutral but the market regime and MACD cross are bullish. Given the strong trend, a buy position aligns with current conditions.
+2026-04-14 22:44:09 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:44:09 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:44:09 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:44:35 | INFO | [2024-01-15 18:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish, suggesting continued upward momentum. Given the recent trend, a buy order aligns well with the current conditions.
+2026-04-14 22:44:35 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:44:35 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:44:35 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:45:01 | INFO | [2024-01-15 19:00] [BNBUSDT] BUY @ 85% | RSI is neutral but the market regime and MACD cross are bullish. Considering recent successful buys, a buy order aligns well with the current trend.
+2026-04-14 22:45:01 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:45:01 | INFO | Validación: BUY → SUBOPTIMAL
+2026-04-14 22:45:01 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:45:27 | INFO | [2024-01-15 20:00] [BNBUSDT] SELL @ 85% | RSI is neutral but the MACD cross is bearish and market regime is bullish. Considering recent trends, a sell trade aligns with the RSI and the potential for a minor correction.
+2026-04-14 22:45:27 | INFO | Outcome registrado para decision 159
+2026-04-14 22:45:27 | INFO | [356] CERRAR BUY | Entry: $315.00 → Exit: $316.80 | WIN | PnL: +0.47%
+2026-04-14 22:45:27 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:45:27 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:45:27 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:45:53 | INFO | [2024-01-15 20:00] [BNBUSDT] SELL @ 75% | RSI is neutral but the MACD cross is bearish and we have a strong bullish market regime. Let's sell to take some profit before a potential reversal.
+2026-04-14 22:45:53 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:45:53 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:45:53 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:46:18 | INFO | [2024-01-15 21:00] [BNBUSDT] SELL @ 75% | RSI is neutral but the MACD cross is bearish and we have a moderate trend. Considering recent sell trades with successful RSI patterns, a SELL strategy aligns best.
+2026-04-14 22:46:18 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:46:18 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:46:18 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:46:44 | INFO | [2024-01-15 22:00] [BNBUSDT] SELL @ 80% | RSI is relatively neutral but the MACD cross is bearish and we have a bullish market regime. Let's capitalize on potential resistance with a SELL.
+2026-04-14 22:46:44 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:46:44 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:46:44 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:47:10 | INFO | [2024-01-15 23:00] [BNBUSDT] SELL @ 80% | RSI is approaching 60 and the MACD cross is bearish, suggesting a potential pullback in the bullish regime. Let's capitalize on this with a SELL.
+2026-04-14 22:47:10 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:47:10 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:47:10 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:47:36 | INFO | [2024-01-16 00:00] [BNBUSDT] SELL @ 85% | RSI is relatively neutral but the MACD cross is bearish and the market regime is bullish suggesting a potential pullback. Let's capitalize on this with a SELL.
+2026-04-14 22:47:36 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:47:36 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:47:36 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:48:03 | INFO | [2024-01-16 01:00] [BNBUSDT] SELL @ 85% | RSI is relatively high (58.89) and the MACD cross is bearish, suggesting a potential pullback within the bullish market regime. Using SELL_RSI72_bullish pattern reference.
+2026-04-14 22:48:03 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:48:03 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:48:03 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:48:30 | INFO | [2024-01-16 02:00] [BNBUSDT] SELL @ 80% | RSI is relatively low (44.96) and the market regime is bullish, suggesting a potential pullback. The MACD cross is bearish, confirming a possible short-term trend reversal.
+2026-04-14 22:48:30 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:48:30 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:48:30 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:48:56 | INFO | [2024-01-16 03:00] [BNBUSDT] SELL @ 80% | RSI is relatively neutral but the MACD cross is bearish and we have a bullish market regime. Combining this with recent selling pressure suggests a potential pullback.
+2026-04-14 22:48:56 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:48:56 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:48:56 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:49:21 | INFO | [2024-01-16 04:00] [BNBUSDT] SELL @ 75% | RSI is neutral but the MACD cross is bearish and the market regime is bullish, suggesting a potential pullback. Let's sell to capitalize on this.
+2026-04-14 22:49:21 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:49:21 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:49:21 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:49:47 | INFO | [2024-01-16 05:00] [BNBUSDT] SELL @ 75% | RSI is relatively neutral but the MACD cross is bearish and the market regime is bullish, suggesting a potential pullback. Let's capitalize on this with a SELL.
+2026-04-14 22:49:47 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:49:47 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:49:47 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:50:13 | INFO | [2024-01-16 06:00] [BNBUSDT] SELL @ 85% | RSI is neutral but the MACD cross is bearish and market regime is bullish, suggesting a potential pullback. Utilizing SELL_RSI72_bullish pattern reference.
+2026-04-14 22:50:13 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:50:13 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:50:13 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:50:40 | INFO | [2024-01-16 07:00] [BNBUSDT] SELL @ 80% | RSI is relatively neutral but the MACD cross is bearish and we have a bullish market regime. Recent sells were successful. Let's capitalize on the potential for a pullback.
+2026-04-14 22:50:40 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:50:40 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:50:40 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:51:05 | INFO | [2024-01-16 08:00] [BNBUSDT] SELL @ 80% | RSI is relatively neutral but the MACD cross is bearish and the market regime is bullish suggesting a potential pullback. Let's capitalize on this with a SELL.
+2026-04-14 22:51:05 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:51:05 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:51:05 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:51:31 | INFO | [2024-01-16 09:00] [BNBUSDT] SELL @ 75% | RSI is relatively neutral but the MACD cross is bearish and we have a moderate trend. The historical patterns suggest selling when RSI is above certain levels in a bullish regime.
+2026-04-14 22:51:31 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:51:32 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:51:32 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:51:58 | INFO | [2024-01-16 10:00] [BNBUSDT] SELL @ 85% | RSI is approaching 60 and the MACD is bearish, suggesting a potential reversal within the bullish market regime. The historical SELL_RSI72_bullish pattern aligns well with current conditions.
+2026-04-14 22:51:58 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:51:58 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:51:58 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:52:24 | INFO | [2024-01-16 11:00] [BNBUSDT] SELL @ 85% | RSI is above 60 and the MACD cross is bearish, indicating a potential reversal in the bullish trend. The recent sell trades align with this analysis.
+2026-04-14 22:52:24 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:52:24 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:52:24 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:52:51 | INFO | [2024-01-16 12:00] [BNBUSDT] SELL @ 80% | RSI is relatively high (57.75) and the MACD cross is bearish, suggesting a potential pullback within the bullish market regime. This aligns with the SELL_RSI72_bullish pattern.
+2026-04-14 22:52:51 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:52:51 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:52:51 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:53:18 | INFO | [2024-01-16 13:00] [BNBUSDT] SELL @ 80% | RSI is relatively neutral but the MACD cross is bearish and the market regime is bullish suggesting a potential pullback. Let's capitalize on this with an RSI based sell strategy.
+2026-04-14 22:53:18 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:53:18 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:53:18 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:53:44 | INFO | [2024-01-16 14:00] [BNBUSDT] SELL @ 75% | RSI is relatively neutral but the MACD cross is bearish and the market regime is bullish suggesting a potential pullback. Let's capitalize on this with a SELL.
+2026-04-14 22:53:44 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:53:44 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:53:44 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:54:09 | INFO | [2024-01-16 15:00] [BNBUSDT] SELL @ 85% | RSI is relatively neutral but the MACD cross is bearish and the market regime is bullish suggesting a potential pullback. Let's capitalize on this with a SELL.
+2026-04-14 22:54:09 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:54:09 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:54:10 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:54:35 | INFO | [2024-01-16 16:00] [BNBUSDT] SELL @ 85% | RSI is relatively high (62.86) suggesting a potential pullback within the bullish regime. The bearish MACD cross adds to this signal.
+2026-04-14 22:54:35 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:54:35 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:54:36 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:55:02 | INFO | [2024-01-16 17:00] [BNBUSDT] SELL @ 80% | RSI is relatively high (57) and the MACD cross is bearish, suggesting a potential pullback within the bullish market regime. Let's capitalize on this with a SELL.
+2026-04-14 22:55:02 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:55:02 | INFO | Validación: SELL → CORRECT
+2026-04-14 22:55:02 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:55:29 | INFO | [2024-01-16 18:00] [BNBUSDT] SELL @ 80% | RSI is relatively neutral but the MACD cross is bearish and combined with a moderate trend strength suggests a potential pullback. Also, the recent sell trades align with the RSI72 bullish pattern.
+2026-04-14 22:55:29 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:55:29 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:55:29 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:55:55 | INFO | [2024-01-16 19:00] [BNBUSDT] SELL @ 85% | RSI is neutral but the market regime is bearish and MACD cross is bearish. Considering recent trends, a sell trade aligns with the current outlook.
+2026-04-14 22:55:55 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:55:55 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:55:56 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:56:26 | INFO | [2024-01-16 20:00] [BNBUSDT] SELL @ 85% | RSI is neutral but the market regime is bearish and MACD cross is bearish. Considering recent sell trades with high confidence, a SELL position aligns well.
+2026-04-14 22:56:26 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:56:26 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:56:26 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:56:54 | INFO | [2024-01-16 21:00] [BNBUSDT] SELL @ 85% | RSI is relatively high (52.67) and the MACD cross is bearish, suggesting a potential pullback within the bullish market regime. Following the SELL_RSI72_bullish pattern.
+2026-04-14 22:56:54 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:56:54 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:56:54 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:57:19 | INFO | [2024-01-16 22:00] [BNBUSDT] SELL @ 80% | RSI is neutral but the market regime is bearish and MACD cross is bearish, aligning with a potential sell opportunity.
+2026-04-14 22:57:19 | DEBUG | Tabla prediction_validations verificada en F:\Desktop\Binance_crypto-ai-agent\trained_models\BNBUSDT_backtest.db
+2026-04-14 22:57:19 | INFO | Validación: SELL → ACCEPTABLE
+2026-04-14 22:57:19 | INFO | [BNBUSDT] Analizando mercado...
+2026-04-14 22:57:45 | INFO | [2024-01-16 23:00] [BNBUSDT] SELL @ 80% | RSI is neutral but the market regime is bearish and MACD cross is bearish, suggesting a continued downward trend. Given recent selling pressure, it's prudent to sell.
+2026-04-14 22:57:45 | INFO | Sesión cerrada: BACKTEST_827008e0 | PnL: +6.12%
+2026-04-14 22:57:45 | INFO | 
+================================================================================
+2026-04-14 22:57:45 | INFO | RESULTADOS DEL BACKTESTING
+2026-04-14 22:57:45 | INFO | ================================================================================
+2026-04-14 22:57:45 | INFO | Sesión: BACKTEST_827008e0
+2026-04-14 22:57:45 | INFO | Capital inicial: $100.00
+2026-04-14 22:57:45 | INFO | Capital final: $106.12
+2026-04-14 22:57:45 | INFO | Retorno: +6.12%
+2026-04-14 22:57:45 | INFO | Trades: 9 | Wins: 6 | Losses: 3
+2026-04-14 22:57:45 | INFO | Win Rate: 66.7%
+2026-04-14 22:57:45 | INFO | ================================================================================
+2026-04-14 22:57:45 | INFO | Backtesting completado
+2026-04-14 22:57:45 | INFO | Retorno: +6.12%
+2026-04-14 22:57:45 | INFO | Win Rate: 66.7%
+2026-04-14 22:57:45 | INFO | Trades: 9
