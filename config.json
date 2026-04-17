@@ -7,12 +7,12 @@
   },
   "binance": {
     "mainnet": {
-      "api_key": "XCIBWtQzvJlgvj6H6HMN9znXBSaesUYVH4zh13AilKPPTyIXeEG8arhnqS66qjW4",
-      "secret_key": "VpOvSs7UuGTc8xgq9wPJmqbAwbzNKf9NbJOVQvtUy4SGpudVNZQCP0OXyqGfeMUJ"
+      "api_key": "",
+      "secret_key": ""
     },
     "testnet": {
-      "api_key": "G3T7oqdzm7m2wgZ02AIUlohOHVcpPeR5RYFti89fpj6lTcqOrEzgN9uE24TVNDQA",
-      "secret_key": "IJ4i1ydyJm1fMczAqXYLjPUagAm0pRNGPUobkWw7B7kVnm4XWEjFZpdlVkUiQeUm"
+      "api_key": "",
+      "secret_key": ""
     },
     "use_testnet": true
   },
