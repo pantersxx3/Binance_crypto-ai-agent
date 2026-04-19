@@ -1,161 +1,299 @@
-# Binance_crypto-ai-agent
-Crypto AI Trading Bot - Sistema de Trading Automatizado con IA
+# ?? Crypto AI Trading Bot
 
-Sistema avanzado de trading automatizado para criptomonedas que combina an√°lisis t√©cnico con inteligencia artificial (LLMs locales) para tomar decisiones de trading informadas en tiempo real.
-üåü Caracter√≠sticas Principales
-ü§ñ Inteligencia Artificial
-Modelos LLM locales (Ollama/LM Studio) - Sin dependencia de APIs externas
-Aprendizaje continuo - El sistema aprende de cada operaci√≥n realizada
-An√°lisis contextual - Considera patrones hist√≥ricos y condiciones de mercado
-M√∫ltiples modelos - Soporte para diferentes modelos (Qwen2.5, Llama3.2, DeepSeek)
-üìä An√°lisis T√©cnico Multi-Timeframe
-Timeframe Principal: 1h (an√°lisis detallado)
-Timeframe Confirmaci√≥n: 4h (tendencia general)
-Indicadores Implementados:
-RSI (14 per√≠odos) - Detecci√≥n de sobrecompra/sobreventa
-EMA 9/20 - Cruce para determinar r√©gimen de mercado
-MACD (12,26,9) - Confirmaci√≥n de momentum
-Trend Strength - Fuerza de la tendencia actual
-üéØ Gesti√≥n de Riesgo Avanzada
-Stop Loss din√°mico: 1.0% configurable
-Take Profit: 1.5% configurable
-√ìrdenes OCO (One-Cancels-Other) - Protecci√≥n autom√°tica
-M√°ximo de slots: Control de posiciones simult√°neas
-Detecci√≥n de balance m√≠nimo: Prevenci√≥n de liquidaci√≥n
-Confianza m√≠nima: 70% para ejecutar operaciones
-üìà Backtesting y Live Trading
-Backtesting hist√≥rico: Datos reales de Binance Mainnet
-Live Trading: Ejecuci√≥n en tiempo real (Testnet/Mainnet)
-Modo Dry Run: Simulaci√≥n sin riesgo
-Soporte SPOT y FUTURES: Con apalancamiento configurable
-üíæ Base de Datos y Persistencia
-SQLite para almacenamiento local
-Decisiones registradas: Timestamp, direcci√≥n, confianza, hip√≥tesis
-Outcomes tracking: Entry/Exit, PnL, precisi√≥n
-Model Stats: Estad√≠sticas agregadas por modelo
-üñ•Ô∏è Dashboard en Tiempo Real
-FastAPI backend moderno y r√°pido
-WebSocket para logs en vivo
-Visualizaci√≥n de:
-Modelos entrenados
-Sesiones de trading
-Decisiones hist√≥ricas
-Estad√≠sticas de precisi√≥n
-Posiciones abiertas
-Trades recientes
-üß† Sistema de Aprendizaje Autom√°tico
-Feedback loop: √öltimas 3 decisiones en cada an√°lisis
-Horizonte temporal: An√°lisis de precisi√≥n a 1h, 4h, 24h
-Pattern recognition: Identificaci√≥n de patrones exitosos/fallidos
-Insights autom√°ticos:
-Suficiencia de datos
-Limitaciones del modelo
-Recomendaciones accionables
-Brechas de datos
-üìã Requisitos
-Software
-Python 3.11+
-SQLite3
-Ollama o LM Studio (para LLM local)
-Dependencias Python
-bash
-1
-Modelos Recomendados
-Qwen2.5-3B (recomendado - balance calidad/rendimiento)
-Llama3.2-3B (alternativa)
-DeepSeek-R1 (m√°xima calidad)
-üöÄ Instalaci√≥n
-Clonar repositorio
-bash
-12
-Configurar variables de entorno
-bash
-12
-Configurar LLM local
-bash
-12345
-Instalar dependencias
-bash
-1
-üìñ Uso
-Backtesting
-bash
-1
-Live Trading
-bash
-1
-Dashboard
-bash
-123
-‚öôÔ∏è Configuraci√≥n
-config.json - Par√°metros Principales
-json
-12345678910111213141516171819202122
-üìä Estructura del Proyecto
-123456789101112131415161718
-üîç C√≥mo Funciona
-Flujo de Decisi√≥n
-Recolecci√≥n de Datos: Obtiene velas 1h y 4h de Binance
-C√°lculo de Indicadores: RSI, EMA, MACD, Trend Strength
-An√°lisis IA: Env√≠a snapshot al LLM con:
-Datos t√©cnicos actuales
-√öltimas 3 decisiones y resultados
-Reglas de trading
-Decisi√≥n: BUY/SELL/HOLD con nivel de confianza
-Validaci√≥n de Riesgo: Verifica:
-Confianza >= m√≠nimo configurado
-Balance suficiente
-Slots disponibles
-Ejecuci√≥n:
-Si AUTO_EXIT_ENABLED=false: Coloca √≥rdenes OCO (TP/SL)
-Si AUTO_EXIT_ENABLED=true: IA decide cu√°ndo cerrar
-Registro: Guarda decisi√≥n y outcome en SQLite
-Aprendizaje: Pr√≥xima decisi√≥n incluye feedback
-Sistema de Aprendizaje
-Cada decisi√≥n se almacena con:
-Timestamp y contexto de mercado
-Direcci√≥n (BUY/SELL) y confianza
-Indicadores en el momento (RSI, regime, trend)
-Resultado (PnL, was_correct)
-El sistema analiza:
-Precisi√≥n por horizonte (1h, 4h, 24h)
-Patrones exitosos (ej: BUY con RSI<40 en bullish)
-Patrones fallidos (ej: SELL en bullish fuerte)
-Calibraci√≥n de confianza (¬ø80% confianza = 80% aciertos?)
-üìà M√©tricas y Estad√≠sticas
-El dashboard muestra:
-Win Rate: % de operaciones ganadoras
-PnL Total: Ganancia/p√©rdida acumulada
-Precisi√≥n por RSI: Rendimiento por zona de RSI
-Precisi√≥n por Tendencia: Rendimiento por tipo de tendencia
-Buy/Sell Analysis: Comparativa BUY vs SELL
-Horizonte Temporal: Precisi√≥n a 1h, 4h, 24h
-‚ö†Ô∏è Advertencias de Riesgo
-IMPORTANTE: Este software es solo para fines educativos y de investigaci√≥n.
-El trading de criptomonedas conlleva alto riesgo de p√©rdida
-Nunca inviertas m√°s de lo que puedas permitirte perder
-El rendimiento pasado no garantiza resultados futuros
-Prueba exhaustivamente en Testnet antes de usar Mainnet
-El autor no se responsabiliza por p√©rdidas financieras
-ü§ù Contribuciones
-Las contribuciones son bienvenidas:
-Fork el proyecto
-Crea una rama (git checkout -b feature/AmazingFeature)
-Commit tus cambios (git commit -m 'Add AmazingFeature')
-Push a la rama (git push origin feature/AmazingFeature)
-Abre un Pull Request
-üìù Roadmap
-Soporte para m√∫ltiples pares simult√°neos
-Estrategias personalizables via YAML
-Telegram/Discord notifications
-An√°lisis de sentimiento de noticias
-Machine Learning avanzado (scikit-learn)
-Optimizaci√≥n de par√°metros gen√©tica
-Soporte para m√°s exchanges (KuCoin, Bybit)
-üìÑ Licencia
-Distribuido bajo la licencia MIT. Ver LICENSE para m√°s informaci√≥n.
-üìû Contacto
-GitHub Issues: Para bugs y feature requests
-Discussions: Para preguntas generales
-Desarrollado con ‚ù§Ô∏è para la comunidad crypto
-‚≠ê Si te gusta este proyecto, dale una estrella!
+Sistema avanzado de trading automatizado para criptomonedas que combina **an®¢lisis t®¶cnico** con **inteligencia artificial** (LLMs locales y remotos) para tomar decisiones de trading informadas.
+
+[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
+[![Binance](https://img.shields.io/badge/Binance-API-yellow.svg)](https://www.binance.com/)
+
+---
+
+## ?? Caracter®™sticas Principales
+
+### ?? Inteligencia Artificial Flexible
+- **Multi-Provider LLM**: Soporte para modelos locales (LM Studio/Ollama) y remotos (OllamaFreeAPI)
+- **10+ Modelos Disponibles**: Qwen2.5, Llama3, DeepSeek-R1, Mistral, GPT-OSS, etc.
+- **Fallback Autom®¢tico**: Si la API remota falla, usa modelo local autom®¢ticamente
+- **Aprendizaje Continuo**: Valida y aprende de cada decisi®Æn tomada
+
+### ?? An®¢lisis T®¶cnico Avanzado
+
+| Indicador | Configuraci®Æn | Prop®Æsito |
+|-----------|--------------|-----------|
+| RSI | 14 per®™edos | Sobrecompra/sobreventa |
+| MACD | 12,26,9 | Momentum y cruces |
+| Bollinger Bands | 20,2 | Volatilidad y posici®Æn relativa |
+| ATR | 14 per®™odos | Volatilidad absoluta |
+| Stochastic | 14,3 | Momentum corto plazo |
+| Volumen | vs SMA 20 | Confirmaci®Æn de movimientos |
+| EMA | 9/20 | Regimen de mercado |
+
+### ?? Gesti®Æn de Riesgo
+- ? Stop Loss configurable (default: 1.0%)
+- ? Take Profit configurable (default: 2.5%)
+- ? trailing Stop (opcional)
+- ? M®¢ximo de posiciones simult®¢neas
+- ? Confianza m®™nima para operar
+- ? Hard Stop Loss de seguridad (5%)
+
+### y Sistema de Aprendizaje
+```
+1. IA decide °˙ 2. Se ejecuta °˙ 3. Se valida ? 4. Se aprende ? 5. Mejora pr®Æxima decisi®Æn
+
+```
+
+Cada validaci®Æn genera patrones aprendidos que se inyectan en futuras decisiones.
+
+### ? Checkpoint & Resume
+- **Backtesting**: Si cortas+ La fjecuci®Æn, continu®¢ desde donde quedaste
+- **Live Trading**: Recupera posiciones abiertas al reiniciar
+- **Fresh Start**: Opci®Æn `--fresh` para empezar desde cero
+
+---
+
+## ?? Requisitos
+
+### Software
+- Python 3.11+
+- SQLite3
+- LM Studio u Ollama (para modelos locales)
+- OllamaFreeAPI (opcional, para modelos remotos gratuitos)
+
+### Hardware Recomendado
+
+| Componente | M®™n | Recomendado |
+|------------|--------|-------------|
+| RAM | 8GB | 16GB |
+| CPU | 4 cores | 8 cores |
+| Almacenamiento | 10GB | 50GB SSD |
+| GPU | No requerida | NVIDIA 6GB+ (opcional) |
+
+---
+
+## ?? Instalaci®Æn
+
+### 1. Clonar repositorio
+```bash
+git clone https://github.com/tuusuario/crypto-ai-trading-bot.git
+cd crypto-ai-trading-bot
+```
+
+### 2. Instalar dependencias
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Configurar
+```bash
+cp config.example.json config.json
+nano config.json
+```
+
+### 4. Configurar LLM
+
+**Opci®Æn A: OllamaFreeAPI (Gratis, sin hardware local)**
+`` `json
+{
+  "llm_provider": {
+    "use_ollama_free": true,
+    "ollama_free_model": "gpt-oss:20b",
+    "fallback_to_local": true
+  }
+}
+````
+
+**Opci®Æn B: Local (LM Studio)**
+````json
+{
+  "llm_provider": {
+    "use_ollama_free": false
+  },
+  "llm": {
+    "model": "qwen2.5-7b-instruct",
+    "base_url": "http://localhost:1234/v1"
+  }
+}
+````
+
+---
+
+## ?? Uso
+
+### Backtesting
+```bash
+# Con fechas de config.json
+python main.py --backtest
+
+# Con fechas personalizadas
+python main.py --backtest --start "1 Jan 2026" --end "1 Mar 2026"
+
+# Forzar inicio fresco
+python main.py --backtest --fresh
+
+# Con modelo espec®™fico
+python main.py --backtest --model gpt-oss:20b
+```
+
+### Live Trading
+```bash
+# Modo simulaci®Æn (dry run)
+python main.py
+
+# Modo real (cambiar dry_run: false en config.json)
+python main.py
+
+# Forzar API remota
+python main.py --use-ollamafree
+
+# Forzar modelo local
+python main.py --use-local
+```
+
+### Listar Modelos Disponibles
+```bash
+python main.py --list-models
+```
+
+### Ayuda Completa
+```bash
+python main.py --help
+```
+
+---
+
+## ? Configuraci®Æn
+
+### Par®¢metros Principales (config.json)
+
+````json
+{
+  "binance": {
+    "use_testnet": true
+  },
+  "llm_provider": {
+    "use_ollama_free": true,
+    "ollama_free_model": "gpt-oss:20b",
+    "fallback_to_local": true
+  },
+  "trading": {
+    "trading_pairs": ["BNBUSDT"],
+    "cycle_interval_seconds": 3600,
+    "min_confidence": 65,
+    "dry_run": true,
+    "trade_mode": "spot"
+  },
+  "position_management": {
+    "trade_amount_usdt": 100,
+    "max_slots": 1,
+    "use_tp_sl": true,
+    "stop_loss_pct": 1.0,
+    "take_profit_pct": 2.5
+  }
+}
+````
+
+### Modelos Soportados (OllamaFreeAPI)
+
+| Modelo | Tama?o | Velocidad | Recomendado |
+|--------|--------|-----------|--------------|
+| gpt-oss:20b | 20B | ?? Lenta | M®¢xima calidad |
+| deepseek-r1:latest | -7B | ? Media | Razonamiento |
+| llama3.2:3b | 3B | ?? R®¢pida | Testing r®¢pido |
+| mistral:latest | 7B | ? Media | Balance |
+| llama3:latest | 8B | ? Media | General |
+
+---
+
+## ?? Arquitectura
+
+```
+crypto-ai-trading-bot/
+? agents/
+?  brain.py                  # Cerebro IA
+Ä llm_adapter.py        # Adaptador multi-provider
+°∞ validator.py          # Validaci®Æn
+Ä data/
+?  collector.py          # Datos + indicadores
+°∞ market_data.db         # OHLCV hist®Æricos
+? execution/
+?  executor.py           # Ordenes Binance
+?risk/
+?  manager.py           # Gesti®Æn de riesgo
+Ä main.py                         # Punto de entrada
+?config.json                   # Configuraci®Æn
+Ärequirements.txt           # Dependencias
+```
+
+---
+
+## °ı Advertencias de Riesgo
+
+> **IMPORTANTE**: Este software es solo para fines educativos.
+
+- ? El trading de criptomonedas conlleva **alto riesgo**
+- °ı Nunca inviertas m®¢s de lo que puedas perder
+- °ˆ El rendimiento pasado **no garantiza** resultados futuros
+- ? prueba en **Testnet/Dry Run** antes de Mainnet
+- °ˆ El autor **no se responsabiliza** por p®¶rdidas
+
+### Checklist Antes de Live Trading
+
+| Requisito | Estado M®™nimo |
+|------------|-----------------|
+| Backtesting | 50+ trades |
+| Win Rate | >55% estable |
+| Profit Factor | >1.5 |
+| Paper trading | 2-4 semanas |
+| Hard Stop Loss | 5% m®¢ximo |
+
+---
+
+## ?? Roadmap
+
+- [ ] Dashboard web en tiempo real
+- [ ] M®≤ltiples pares simult®¢neos
+- [ ] Telegram/Discord notifications
+- [ ] An®¢lisis de sentimiento
+- [ ] M®¢s exchanges (KuCoin, Bybit)
+- [ ] M?tricas avanzadas (Sharpe, Sortino)
+
+---
+
+## ?? Resultados de Testing
+
+| Modelo | Trades | Win Rate | PnL | Per®™edo |
+|--------|--------|-----------|------|-----------|
+| gpt-oss:20b | 40 | 60.0% | -39.7%* | Jan-Mar 2026 |
+| qwen2.5-7b | 14 | 69.2% | +6.68% | Jan 2024 |
+
+*Sin optimizaci®Æn de gesti®Æn de riesgo
+
+---
+
+## ?? Licencia
+
+MIT License - Ver `LICENSE` para m®¢s informaci®Æn.
+
+---
+
+## ?? Contacto
+
+- **GitHub Issues**: Bugs y features
+- **Email**: tuemail@ejemplo.com
+
+---
+
+<div align="center">
+
+**Desarrollado con ? para la comunidad crypto**
+
+°Ô **Si te gusta, dale una estrella!**
+
+---
+
+### ?? Disclaimer
+
+Este proyecto es **educativo**. El trading de criptomonedas es riesgoso y puedes perder todo tu capital.
+
+**Usa bajo tu propio riesgo.**
+</div>
