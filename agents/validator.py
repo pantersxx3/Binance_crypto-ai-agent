@@ -19,7 +19,7 @@ class PredictionValidator:
     
     def __init__(self, db_path: str):
         self.db_path = db_path
-        self._init_table()  # Crear tabla si no existe
+        self._init_table()
     
     def _init_table(self):
         """Crea la tabla de validaciones si no existe"""
@@ -59,13 +59,6 @@ class PredictionValidator:
     def validate_previous_prediction(self, current_snapshot: dict, previous_decision: dict) -> dict:
         """
         Valida la predicción anterior basada en los datos actuales.
-        
-        Args:
-            current_snapshot: Datos actuales del mercado
-            previous_decision: Decisión anterior del modelo
-        
-        Returns:
-            dict con validación y análisis
         """
         validation = {
             'previous_decision_id': previous_decision.get('id'),
@@ -90,7 +83,6 @@ class PredictionValidator:
             'pattern_learned': ''
         }
         
-        # Calcular cambio de precio
         previous_price = previous_decision.get('price', 0)
         current_price = current_snapshot.get('current_price', 0)
         
@@ -99,7 +91,6 @@ class PredictionValidator:
                 (current_price - previous_price) / previous_price * 100, 2
             )
         
-        # Validar según dirección anterior
         prev_direction = previous_decision.get('direction', 'HOLD')
         
         if prev_direction == 'BUY':
@@ -109,7 +100,6 @@ class PredictionValidator:
         elif prev_direction == 'HOLD':
             validation = self._validate_hold(validation, current_snapshot)
         
-        # Identificar patrón aprendido
         validation['pattern_learned'] = self._identify_pattern(validation)
         
         return validation
@@ -120,31 +110,26 @@ class PredictionValidator:
         current_regime = current_snapshot.get('indicators_1h', {}).get('market_regime', 'neutral')
         price_change = validation['price_change_pct']
         
-        # Si el precio subió >= 1%, la predicción fue correcta
         if price_change >= 1.0:
             validation['validation_result'] = 'CORRECT'
             validation['success'] = True
             validation['reason'] = f'Precio subió {price_change}%, BUY fue correcto'
-        # Si el precio bajó >= 1%, la predicción fue incorrecta
         elif price_change <= -1.0:
             validation['validation_result'] = 'INCORRECT'
             validation['success'] = False
             validation['reason'] = f'Precio bajó {price_change}%, BUY fue incorrecto'
             
-            # Analizar por qué falló
             prev_regime = validation['previous_indicators']['regime']
             if prev_regime == 'bearish':
                 validation['reason'] += ' | Entró en régimen bajista'
             if validation['previous_indicators']['rsi'] and validation['previous_indicators']['rsi'] > 50:
                 validation['reason'] += ' | RSI no estaba en sobreventa'
-        # Si el precio se mantuvo lateral, HOLD hubiera sido mejor
         elif -1.0 < price_change < 1.0:
             validation['validation_result'] = 'SUBOPTIMAL'
             validation['success'] = False
             validation['reason'] = f'Precio lateral ({price_change}%), HOLD hubiera evitado comisiones'
-            validation['opportunity_cost'] = abs(price_change) + 0.2  # Comisión estimada
+            validation['opportunity_cost'] = abs(price_change) + 0.2
         
-        # Verificar si debería haber cerrado antes
         if current_rsi and current_rsi > 70:
             validation['reason'] += ' | RSI > 70: debería haber cerrado en sobrecompra'
         if current_regime == 'bearish':
@@ -156,16 +141,12 @@ class PredictionValidator:
         """Valida predicción SELL anterior"""
         price_change = validation['price_change_pct']
         
-        # En SPOT, SELL es para cerrar, no para abrir
-        # Validamos si fue buen momento para cerrar
         if price_change >= 1.0:
-            # El precio subió después de vender → vendió muy pronto
             validation['validation_result'] = 'PREMATURE'
             validation['success'] = False
             validation['reason'] = f'Precio subió {price_change}% después de vender, vendió muy pronto'
             validation['opportunity_cost'] = price_change
         elif price_change <= -1.0:
-            # El precio bajó después de vender → buen timing
             validation['validation_result'] = 'CORRECT'
             validation['success'] = True
             validation['reason'] = f'Precio bajó {price_change}%, SELL fue correcto'
@@ -179,22 +160,17 @@ class PredictionValidator:
     def _validate_hold(self, validation: dict, current_snapshot: dict) -> dict:
         """Valida predicción HOLD anterior"""
         price_change = validation['price_change_pct']
-        current_rsi = current_snapshot.get('indicators_1h', {}).get('rsi', 50)
-        current_regime = current_snapshot.get('indicators_1h', {}).get('market_regime', 'neutral')
         
-        # HOLD fue correcto si no había señal clara
         if abs(price_change) < 1.0:
             validation['validation_result'] = 'CORRECT'
             validation['success'] = True
             validation['reason'] = f'Precio lateral ({price_change}%), HOLD evitó operación innecesaria'
-        # HOLD fue incorrecto si hubo movimiento claro
         elif price_change >= 2.0:
             validation['validation_result'] = 'MISSED_OPPORTUNITY'
             validation['success'] = False
             validation['reason'] = f'Precio subió {price_change}%, HOLD perdió oportunidad de BUY'
-            validation['opportunity_cost'] = price_change - 0.2  # Comisión estimada
+            validation['opportunity_cost'] = price_change - 0.2
             
-            # Analizar por qué no compró
             prev_rsi = validation['previous_indicators']['rsi']
             prev_regime = validation['previous_indicators']['regime']
             if prev_rsi and prev_rsi < 40 and prev_regime == 'bullish':

@@ -1,6 +1,6 @@
 """
-agents/brain.py - Trading Brain con Aprendizaje MEJORATIVO
-CORREGIDO: Usa patrones para AJUSTAR decisiones, no BLOQUEARLAS
+agents/brain.py - Trading Brain con LLMAdapter unificado
+CORRECCIONES: Regex sin espacios, max_tokens razonable, prompt flexible, indicadores RAW
 """
 import json
 import re
@@ -9,29 +9,29 @@ import sqlite3
 import os
 from datetime import datetime
 from pathlib import Path
-from openai import OpenAI
 from loguru import logger
 import config
+from agents.llm_adapter import LLMAdapter
 from agents.validator import PredictionValidator
 
 class TradingBrain:
     def __init__(self, model_name: str = None):
-        self.client = OpenAI(
-            base_url=config.LLM_BASE_URL,
-            api_key=config.LLM_API_KEY,
-            timeout=600.0
-        )
-        self.model_name = model_name or config.LLM_MODEL.replace(":", "_").replace("/", "_")
-        self.db_path = config.get_model_db_path(self.model_name)
+        if config.USE_OLLAMAFREE:
+            self.llm = LLMAdapter(use_ollamafree=True)
+        else:
+            self.llm = LLMAdapter(model_name=model_name, use_ollamafree=False)
+        
+        self.model_name = self.llm.model_name
+        self.db_path = config.get_model_db_path(self.model_name.replace(":", "_").replace("/", "_"))
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
-        self.model = config.LLM_MODEL
         
         self._init_database()
+        
         self.validator = PredictionValidator(str(self.db_path))
         self.previous_decision = None
         
-        logger.info(f"Brain inicializado | Modelo: {self.model} | DB: {self.db_path}")
-    
+        logger.info(f"Brain inicializado | Modelo: {self.model_name} | DB: {self.db_path}")
+
     def _init_database(self):
         try:
             conn = sqlite3.connect(str(self.db_path))
@@ -112,7 +112,7 @@ class TradingBrain:
             cursor.execute('''
                 INSERT OR REPLACE INTO model_stats (id, updated_at, llm_model)
                 VALUES (1, ?, ?)
-            ''', (datetime.now().isoformat(), self.model))
+            ''', (datetime.now().isoformat(), self.model_name))
             
             conn.commit()
             conn.close()
@@ -152,83 +152,142 @@ class TradingBrain:
     def _build_prompt(self, snapshot: dict, current_indicators: dict) -> str:
         pair = snapshot.get("pair", "Unknown")
         price = snapshot.get("current_price", 0)
-        ind_1h = snapshot.get("indicators_1h", {})
         
         trade_mode = snapshot.get("trade_mode", config.TRADE_MODE)
         capital_per_slot = snapshot.get("capital_per_slot", float(config.TRADE_AMOUNT_USDT))
         
-        rsi = ind_1h.get('rsi', 50)
-        regime = ind_1h.get('market_regime', 'neutral')
-        trend_strength = ind_1h.get('trend_strength', 'weak')
-        macd_cross = ind_1h.get('macd_cross', 'none')
+        # === Indicadores RAW (sin interpretaciones) ===
+        rsi = current_indicators.get('rsi', 50)
         
-        if rsi < 30:
-            rsi_zone = "OVERSOLD"
-        elif rsi > 70:
-            rsi_zone = "OVERBOUGHT"
-        else:
-            rsi_zone = "NEUTRAL"
+        # MACD RAW
+        macd_line = current_indicators.get('macd_line', 0)
+        macd_signal = current_indicators.get('macd_signal', 0)
+        macd_histogram = current_indicators.get('macd_histogram', 0)
         
-        # === OBTENER PATRONES EXITOSOS (Solo sugerencias, no reglas) ===
+        # Bollinger Bands
+        bb_position = current_indicators.get('bb_position_pct', 50)
+        bb_width = current_indicators.get('bb_width_pct', 0)
+        
+        # Volumen y volatilidad
+        volume_ratio = current_indicators.get('volume_ratio', 1.0)
+        atr_pct = current_indicators.get('atr_pct', 0)
+        
+        # Stochastic
+        stoch_k = current_indicators.get('stoch_k', 50)
+        stoch_d = current_indicators.get('stoch_d', 50)
+        
+        # Price Action
+        price_1h = current_indicators.get('price_change_1h', 0)
+        price_4h = current_indicators.get('price_change_4h', 0)
+        
+        # Contexto (solo referencia, no reglas)
+        regime = current_indicators.get('market_regime', 'neutral')
+        trend_strength = current_indicators.get('trend_strength', 'weak')
+        macd_cross = current_indicators.get('macd_cross', 'none')
+        
+        # Patrones aprendidos
         learned_patterns = self._get_learned_patterns(limit=3)
         
         learning_section = ""
         if learned_patterns:
-            learning_section += "\n\n## HISTORICAL SUCCESSFUL PATTERNS (Optional guidance):\n"
+            learning_section += "\n\n## HISTORICAL SUCCESSFUL PATTERNS (Priority over general guidelines):\n"
             for i, p in enumerate(learned_patterns, 1):
                 learning_section += f"- {p['pattern']} (Success: {p['success_rate']}% in {p['occurrences']} cases)\n"
             learning_section += "→ Use these as REFERENCE, not strict rules. Market conditions change.\n"
         
-        prompt = f"""You are a crypto trader. Analyze and decide: BUY, SELL, or HOLD.
+        prompt = f"""You are an experienced crypto trader with full autonomy to analyze RAW indicator data and decide: BUY, SELL, or HOLD.
 
-## MARKET DATA
+MARKET DATA
 Pair: {pair}
+TECHNICAL INDICATORS (RAW VALUES - Analyze and Interpret)
 Price: ${price:,.2f}
-Trading Mode: {trade_mode.upper()}
-Capital per Operation: ${capital_per_slot:.2f}
-
-## TECHNICAL ANALYSIS
-RSI: {rsi} ({rsi_zone})
-Market Regime: {regime}
-Trend Strength: {trend_strength}
-MACD Cross: {macd_cross}
-{learning_section}
-## BASE RULES (Always follow these)
-1. BUY when: RSI < 40 and regime is bullish
-2. SELL when: RSI > 60 and regime is bearish (FUTURES only)
-3. HOLD otherwise
-4. In SPOT mode: Only BUY to open, SELL to close
-5. **ALWAYS make a decision** - Do not skip trades due to past patterns
-
-## OUTPUT FORMAT (JSON only):
-{{"direction": "BUY/SELL/HOLD", "confidence": 0-100, "market_regime": "bullish/bearish/neutral", "risk_level": "low/medium/high", "hypothesis": "reason"}}
+RSI(14): {rsi}
+MACD: Line={macd_line:.4f}, Signal={macd_signal:.4f}, Histogram={macd_histogram:.4f}
+Bollinger: Position={bb_position}% (0=lower band, 100=upper band), Width={bb_width}%
+Volume: {volume_ratio}x 20-period average
+ATR: {atr_pct}% of price
+Stochastic: K={stoch_k}, D={stoch_d}
+Price Action: 1h={price_1h:+.2f}%, 4h={price_4h:+.2f}%
+General Principles
+Look for HIGH-PROBABILITY setups, not just indicator thresholds
+Consider ALL factors together (RSI + MACD + Bollinger + Volume + Trend + Stochastic + ATR + Price Action)
+Risk/Reward should favor the trade (potential gain > potential loss)
+When in doubt, HOLD is acceptable but don't miss clear opportunities
+Exit Considerations
+In SPOT mode: SELL only to close existing BUY positions
+Take profits when indicators show extreme opposite conditions
+Cut losses if market regime changes against your position
+Use learned patterns to identify good exit timing
+Risk Management
+Never force a trade if signals are unclear
+Confidence should reflect certainty level (0-100)
+Higher confidence = clearer signals across multiple indicators
+OUTPUT FORMAT (JSON only):
+{{"direction": "BUY/SELL/HOLD", "confidence": 0-100, "market_regime": "bullish/bearish/neutral", "risk_level": "low/medium/high", "hypothesis": "brief reason"}}
+CRITICAL INSTRUCTIONS
+You may think step-by-step in <think> tags FIRST
+AFTER </think>, output ONLY the JSON object
+Do NOT include any text after the JSON
+Hypothesis must be under 100 characters
+ALWAYS close all strings with quotes (")
+Example:
+<think>
+Analyzing RSI, MACD, Bollinger, volume...
+</think>
+{{"direction": "BUY", "confidence": 75, "market_regime": "bullish", "risk_level": "medium", "hypothesis": "RSI 35 + bullish + volume spike"}}
 """
         return prompt
 
     def _clean_json_response(self, raw_text: str) -> str:
+        """Limpia la respuesta del LLM para extraer JSON válido"""
         if not raw_text or not isinstance(raw_text, str):
             return "{}"
         
-        cleaned = re.sub(r'```json\s*', '', raw_text, flags=re.IGNORECASE)
+        # Debug: mostrar raw completo
+        #logger.debug(f"Respuesta raw: {raw_text}...")
+        #logger.debug(f"Últimos 500 chars de respuesta: {raw_text[-500:]}...")
+        
+        # 1. Remover etiquetas de pensamiento de DeepSeek R1 (SIN ESPACIOS en regex)
+        cleaned = re.sub(r'<think>.*?</think>', '', raw_text, flags=re.DOTALL | re.IGNORECASE)
+        
+        #logger.debug(f"Después de remover <think>: {cleaned}...")
+        
+        # 2. Remover cualquier otro tag HTML/XML (SIN ESPACIOS)
+        cleaned = re.sub(r'<[^>]+>', '', cleaned)
+        
+        # 3. Remover code blocks de markdown
+        cleaned = re.sub(r'```json\s*', '', cleaned, flags=re.IGNORECASE)
         cleaned = re.sub(r'```\s*', '', cleaned)
         
+        # 4. Extraer solo el JSON entre llaves
         json_match = re.search(r'\{.*\}', cleaned, re.DOTALL)
         if json_match:
             cleaned = json_match.group(0)
+        else:
+            logger.warning("No se encontró estructura JSON en la respuesta")
+            logger.debug(f"Respuesta completa después de limpiar: {cleaned}...")
+            return '{"direction": "HOLD", "confidence": 50, "market_regime": "neutral", "risk_level": "medium", "hypothesis": "No JSON found in response"}'
         
+        # 5. Remover caracteres no imprimibles
         cleaned = ''.join(char for char in cleaned if ord(char) >= 32 or char in '\n\r\t')
         
-        if cleaned.count('{') > cleaned.count('}'):
-            cleaned += '}' * (cleaned.count('{') - cleaned.count('}'))
+        # 6. Balancear llaves
+        open_braces = cleaned.count('{')
+        close_braces = cleaned.count('}')
+        if open_braces > close_braces:
+            cleaned += '}' * (open_braces - close_braces)
         
+        # 7. Remover comas antes de llaves de cierre
         cleaned = re.sub(r',\s*}', '}', cleaned)
         
+        # 8. Validar JSON antes de retornar
         try:
             json.loads(cleaned)
             return cleaned.strip()
         except json.JSONDecodeError as e:
             logger.warning(f"JSON inválido después de limpiar: {e}")
-            return "{}"
+            logger.debug(f"JSON problematico: {cleaned}...")
+            return '{"direction": "HOLD", "confidence": 50, "market_regime": "neutral", "risk_level": "medium", "hypothesis": "JSON parse error, using fallback"}'
 
     def _fallback_decision(self, snapshot: dict) -> dict:
         ind_1h = snapshot.get("indicators_1h", {})
@@ -236,7 +295,6 @@ MACD Cross: {macd_cross}
         regime = ind_1h.get('market_regime', 'neutral')
         trend_strength = ind_1h.get('trend_strength', 'weak')
         
-        # Fallback SIEMPRE genera una decisión, nunca HOLD por defecto
         if rsi < 35 and regime == 'bullish':
             direction = "BUY"
             confidence = 55
@@ -254,7 +312,6 @@ MACD Cross: {macd_cross}
             confidence = 50
             hypothesis = f"Fallback: RSI extremely overbought ({rsi})"
         else:
-            # Solo HOLD si realmente no hay señal
             direction = "HOLD"
             confidence = 40
             hypothesis = f"Fallback: No clear signal (RSI={rsi}, regime={regime})"
@@ -272,7 +329,8 @@ MACD Cross: {macd_cross}
             "hypothesis": hypothesis
         }
 
-    def _log_decision(self, data: dict) -> int:
+    def _log_decision(self, decision_data: dict) -> int:
+        """Guarda una decisión en SQLite y retorna el ID"""
         conn = sqlite3.connect(str(self.db_path))
         cursor = conn.cursor()
         
@@ -283,21 +341,21 @@ MACD Cross: {macd_cross}
                 macd_cross, raw_response, error
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
-            data.get('timestamp', datetime.now().isoformat()),
-            data.get('historical_timestamp'),
-            data.get('source', 'live'),
-            data.get('pair', ''),
-            data.get('direction', ''),
-            data.get('confidence', 0),
-            data.get('hypothesis', '')[:2000],
-            data.get('response_time', 0),
-            data.get('rsi', 0),
-            data.get('price', 0),
-            data.get('market_regime', ''),
-            data.get('trend_strength', ''),
-            data.get('macd_cross', ''),
-            data.get('raw_response', '')[:2000],
-            data.get('error', '')[:2000]
+            decision_data.get('timestamp', datetime.now().isoformat()),
+            decision_data.get('historical_timestamp'),
+            decision_data.get('source', 'live'),
+            decision_data.get('pair', ''),
+            decision_data.get('direction', ''),
+            decision_data.get('confidence', 0),
+            decision_data.get('hypothesis', '')[:2000],
+            decision_data.get('response_time', 0),
+            decision_data.get('rsi', 0),
+            decision_data.get('price', 0),
+            decision_data.get('market_regime', ''),
+            decision_data.get('trend_strength', ''),
+            decision_data.get('macd_cross', ''),
+            decision_data.get('raw_response', '')[:2000],
+            decision_data.get('error', '')[:2000]
         ))
         
         decision_id = cursor.lastrowid
@@ -360,7 +418,7 @@ MACD Cross: {macd_cross}
             trend_strength = snapshot.get("indicators_1h", {}).get('trend_strength', 'weak')
             macd_cross = snapshot.get("indicators_1h", {}).get('macd_cross', 'none')
             
-            # === VALIDAR DECISIÓN ANTERIOR (Solo guarda, no bloquea) ===
+            # Validar decisión anterior (aprendizaje)
             if self.previous_decision is not None:
                 try:
                     from agents.validator import validate_and_save
@@ -373,7 +431,7 @@ MACD Cross: {macd_cross}
                 except Exception as e:
                     logger.debug(f"Error en validación: {e}")
             
-            # Feedback de decisiones recientes (solo informativo)
+            # Feedback de decisiones recientes
             recent = self._get_recent_decisions(pair, limit=3)
             feedback = ""
             if recent:
@@ -387,22 +445,32 @@ MACD Cross: {macd_cross}
             if feedback:
                 prompt += feedback
             
+            # Debug: Mostrar prompt enviado
+            #logger.debug(f"PROMPT ENVIADO ({len(prompt)} chars):")
+            #logger.debug(f"{'='*80}")
+            #logger.debug(f"{prompt}") #[:2000]}{'...' if len(prompt) > 2000 else ''}")
+            #logger.debug(f"{'='*80}")
+            
             historical_ts = snapshot.get("historical_timestamp")
             ts_display = historical_ts.strftime("%Y-%m-%d %H:%M") if historical_ts else datetime.now().strftime("%Y-%m-%d %H:%M")
             
             logger.info(f"[{pair}] Analizando mercado...")
             
-            response = self.client.chat.completions.create(
-                model=self.model,
+            # Usar LLMAdapter para chat completion
+            raw_response = self.llm.chat_completion(
                 messages=[
                     {"role": "system", "content": "You are a trading expert. Respond with valid JSON only. ALWAYS make a decision (BUY/SELL/HOLD)."},
                     {"role": "user", "content": prompt},
                 ],
-                temperature=0.3,
-                max_tokens=300,
+                temperature=0.2,
+                max_tokens=4000,
             )
             
-            raw_response = response.choices[0].message.content
+            # Debug: Mostrar respuesta recibida
+            #logger.debug(f"RESPUESTA RECIBIDA ({len(raw_response)} chars):")
+            #logger.debug(f"{'='*80}")
+            #logger.debug(f"{raw_response}") #{'...' if len(raw_response) > 1000 else ''}")
+            #logger.debug(f"{'='*80}")
             
             cleaned = self._clean_json_response(raw_response)
             
@@ -458,7 +526,7 @@ MACD Cross: {macd_cross}
             
             reasoning["_decision_id"] = decision_id
             
-            logger.info(f"[{ts_display}] [{pair}] {reasoning['direction']} @ {reasoning['confidence']}% | {reasoning['hypothesis'][:2000]}")
+            logger.info(f"[{ts_display}] [{pair}] {reasoning['direction']} @ {reasoning['confidence']}% | {reasoning['hypothesis']}")
             
             # Guardar para validar en próxima iteración
             self.previous_decision = {
@@ -540,7 +608,7 @@ MACD Cross: {macd_cross}
             INSERT OR REPLACE INTO model_stats (id, updated_at, total_decisions, total_trades,
                                                 correct_trades, win_rate, total_pnl, avg_confidence, llm_model)
             VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (datetime.now().isoformat(), total_decisions, total_trades, correct, win_rate, total_pnl, avg_confidence, self.model))
+        ''', (datetime.now().isoformat(), total_decisions, total_trades, correct, win_rate, total_pnl, avg_confidence, self.model_name))
         
         conn.commit()
         conn.close()
@@ -561,6 +629,6 @@ MACD Cross: {macd_cross}
                 'win_rate': row[5],
                 'total_pnl': row[6],
                 'avg_confidence': row[7],
-                'llm_model': row[8] if len(row) > 8 else self.model
+                'llm_model': row[8] if len(row) > 8 else self.model_name
             }
         return {}

@@ -169,16 +169,17 @@ class DataCollector:
         conn.commit()
         conn.close()
 
-    def compute_indicators(self, df: pd.DataFrame, interval: str = "1h") -> dict:
-        """Calcula indicadores tecnicos para la vela mas reciente"""
-        if df.empty or len(df) < 50:
-            return self._default_indicators()
+    # En el método compute_indicators(), AGREGAR estos cálculos:
+
+    def compute_indicators(self, df: pd.DataFrame, timeframe: str) -> dict:
+        """Calcula indicadores técnicos con datos RAW para el LLM"""
         
         close = df['close']
         high = df['high']
         low = df['low']
         volume = df['volume']
         
+        # === RSI ===
         delta = close.diff()
         gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
         loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
@@ -186,61 +187,74 @@ class DataCollector:
         rsi = 100 - (100 / (1 + rs))
         current_rsi = round(rsi.iloc[-1], 2) if not np.isnan(rsi.iloc[-1]) else 50
         
+        # === EMA para Market Regime ===
         ema9 = close.ewm(span=9, adjust=False).mean()
         ema20 = close.ewm(span=20, adjust=False).mean()
         ema_cross = "BULLISH" if ema9.iloc[-1] > ema20.iloc[-1] else "BEARISH"
         
+        # === MACD ===
         ema12 = close.ewm(span=12, adjust=False).mean()
         ema26 = close.ewm(span=26, adjust=False).mean()
         macd_line = ema12 - ema26
         signal_line = macd_line.ewm(span=9, adjust=False).mean()
-        macd_cross = "BULLISH" if macd_line.iloc[-1] > signal_line.iloc[-1] else "BEARISH"
+        macd_histogram = macd_line - signal_line
         
-        volume_sma = volume.rolling(20).mean()
-        volume_ratio = round(volume.iloc[-1] / volume_sma.iloc[-1], 2) if volume_sma.iloc[-1] > 0 else 1.0
-        volume_trend = "HIGH" if volume_ratio > 1.5 else "LOW" if volume_ratio < 0.5 else "NORMAL"
+        # === Bollinger Bands ===
+        sma20 = close.rolling(window=20).mean()
+        std20 = close.rolling(window=20).std()
+        bb_upper = sma20 + (std20 * 2)
+        bb_lower = sma20 - (std20 * 2)
+        bb_width = (bb_upper - bb_lower) / sma20 * 100
         
-        high_low = high - low
-        high_close = np.abs(high - close.shift())
-        low_close = np.abs(low - close.shift())
-        ranges = pd.concat([high_low, high_close, low_close], axis=1)
-        true_range = ranges.max(axis=1)
-        atr = true_range.rolling(14).mean().iloc[-1]
-        atr_pct = round((atr / close.iloc[-1]) * 100, 2)
+        current_price = close.iloc[-1]
+        bb_position = (current_price - bb_lower.iloc[-1]) / (bb_upper.iloc[-1] - bb_lower.iloc[-1]) * 100
+        bb_position = round(bb_position, 1)
         
-        bb_middle = close.rolling(20).mean()
-        bb_std = close.rolling(20).std()
-        bb_upper = bb_middle + (bb_std * 2)
-        bb_lower = bb_middle - (bb_std * 2)
-        bb_position = round(
-            (close.iloc[-1] - bb_lower.iloc[-1]) / 
-            (bb_upper.iloc[-1] - bb_lower.iloc[-1]) * 100, 1
-        ) if bb_upper.iloc[-1] != bb_lower.iloc[-1] else 50
+        # === Volumen ===
+        volume_sma20 = volume.rolling(window=20).mean()
+        volume_ratio = round(volume.iloc[-1] / volume_sma20.iloc[-1], 2) if volume_sma20.iloc[-1] > 0 else 1.0
         
-        recent_high = high.rolling(50).max().iloc[-1]
-        recent_low = low.rolling(50).min().iloc[-1]
-        distance_to_high = round((recent_high - close.iloc[-1]) / close.iloc[-1] * 100, 2)
-        distance_to_low = round((close.iloc[-1] - recent_low) / close.iloc[-1] * 100, 2)
+        # === ATR (Volatilidad) ===
+        tr = np.maximum(
+            high - low,
+            np.maximum(
+                abs(high - close.shift(1)),
+                abs(low - close.shift(1))
+            )
+        )
+        atr14 = tr.rolling(window=14).mean()
+        atr_pct = round(atr14.iloc[-1] / current_price * 100, 2) if current_price > 0 else 0
         
-        price_change_20 = (close.iloc[-1] - close.iloc[-20]) / close.iloc[-20] * 100 if len(close) >= 20 else 0
-        if abs(price_change_20) > 3:
-            trend_strength = "STRONG"
-        elif abs(price_change_20) > 1:
-            trend_strength = "MODERATE"
-        else:
-            trend_strength = "WEAK"
+        # === Stochastic ===
+        lowest_low = low.rolling(window=14).min()
+        highest_high = high.rolling(window=14).max()
+        stoch_k = 100 * (close - lowest_low) / (highest_high - lowest_low)
+        stoch_d = stoch_k.rolling(window=3).mean()
+        current_stoch_k = round(stoch_k.iloc[-1], 2) if not np.isnan(stoch_k.iloc[-1]) else 50
+        current_stoch_d = round(stoch_d.iloc[-1], 2) if not np.isnan(stoch_d.iloc[-1]) else 50
         
+        # === Price Action ===
+        price_change_1h = round((close.iloc[-1] - close.iloc[-2]) / close.iloc[-2] * 100, 2)
+        price_change_4h = round((close.iloc[-1] - close.iloc[-5]) / close.iloc[-5] * 100, 2) if len(close) >= 5 else 0
+        
+        # === Retornar TODOS los indicadores RAW ===
         return {
             "rsi": current_rsi,
-            "market_regime": ema_cross.lower(),
-            "trend_strength": trend_strength.lower(),
-            "macd_cross": macd_cross.lower(),
-            "volume_trend": volume_trend,
+            "price": current_price,
+            "macd_line": round(macd_line.iloc[-1], 4),
+            "macd_signal": round(signal_line.iloc[-1], 4),
+            "macd_histogram": round(macd_histogram.iloc[-1], 4),
+            "bb_position_pct": bb_position,
+            "bb_width_pct": round(bb_width.iloc[-1], 2),
             "volume_ratio": volume_ratio,
             "atr_pct": atr_pct,
-            "bb_position": bb_position,
-            "distance_to_support": distance_to_low,
-            "distance_to_resistance": distance_to_high
+            "stoch_k": current_stoch_k,
+            "stoch_d": current_stoch_d,
+            "price_change_1h": price_change_1h,
+            "price_change_4h": price_change_4h,
+            "market_regime": ema_cross.lower(),
+            "trend_strength": "strong" if abs(price_change_4h) > 3 else "moderate" if abs(price_change_4h) > 1 else "weak",
+            "macd_cross": "bullish" if macd_histogram.iloc[-1] > 0 else "bearish"
         }
 
     def _default_indicators(self) -> dict:
