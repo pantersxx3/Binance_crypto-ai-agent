@@ -233,7 +233,8 @@ class ModelTrainer:
             self._save_model_summary(model_name, result)
             
             logger.info(f"\n{'='*60}")
-            logger.info(f"Entrenamiento completado para {model_name}")logger.info(f"Período: {df['timestamp'].iloc[50]} {df['timestamp'].iloc[-2]}")            
+            logger.info(f"Entrenamiento completado para {model_name}")
+            logger.info(f"Período: {df['timestamp'].iloc[50]} {df['timestamp'].iloc[-2]}")            
             logger.info(f"  Total trades: {total} | Win rate: {win_rate:.1f}% | PnL: {result['total_pnl_pct']:+.2f}%")
             logger.info(f"{'='*60}\n")
 

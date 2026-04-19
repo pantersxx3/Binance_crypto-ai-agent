@@ -87,7 +87,45 @@ class TradingBot:
         logger.info(f"TRADE_AMOUNT_USDT: ${config.TRADE_AMOUNT_USDT:.2f} | MAX_SLOTS: {self.max_slots}")
         logger.info(f"ORDER_TYPE: {config.ORDER_TYPE} | Multi-TF: {config.PRIMARY_TF}+{config.CONFIRMATION_TF}")
         logger.info(f"Cycle Interval: {config.CYCLE_INTERVAL}s | Timeframe: {config.PRIMARY_TF}")
-
+        
+        self._recover_open_positions()
+        
+    def _recover_open_positions(self):
+        """Recupera posiciones abiertas de la base de datos"""
+        try:
+            conn = sqlite3.connect(str(config.TRADES_DB))
+            cursor = conn.cursor()
+            
+            # Buscar trades abiertos (sin exit_price)
+            cursor.execute('''
+                SELECT trade_id, pair, side, entry_price, quantity, confidence
+                FROM trades
+                WHERE exit_price IS NULL AND is_dry_run = ?
+            ''', (config.DRY_RUN,))
+            
+            for row in cursor.fetchall():
+                position = Position(
+                    trade_id=row[0],
+                    direction=row[2],
+                    entry_price=row[3],
+                    quantity=row[4],
+                    confidence=row[5],
+                    decision_id=0,
+                    entry_time=datetime.now()
+                )
+                self.positions.append(position)
+                logger.info(f"Posición recuperada: {position.direction} {position.entry_price}")
+            
+            conn.close()
+            
+            if self.positions:
+                logger.info(f"{len(self.positions)} posición(es) recuperada(s)")
+            else:
+                logger.info("No hay posiciones abiertas pendientes")
+                
+        except Exception as e:
+            logger.error(f"Error recuperando posiciones: {e}")
+    
     def _signal_handler(self, sig, frame):
         self.shutdown_flag = True
         logger.warning("Bot interrumpido por el usuario.")
@@ -324,9 +362,20 @@ class BacktestEngine:
         self.current_balance = self.total_capital
         self.shutdown_flag = False
         
-        logger.info(f"Backtest Engine | Modelo: {self.model_name}")
+        self.last_processed_index = 0
+        self.checkpoint_file = config.DATA_DIR / f"checkpoint_{self.session_id}.json"
+        
+        logger.info(f"Backtest Engine | Modelo: {self.brain.model_name}")
         logger.info(f"Sesión: {self.session_id}")
         logger.info(f"Periodo: {start_date} → {end_date}")
+        
+        self.checkpoint_file = config.DATA_DIR / f"checkpoint_{self.session_id}.json"
+        self.resume_from_checkpoint = self._check_for_checkpoint()
+        
+        if self.resume_from_checkpoint:
+            logger.info(f"Sesión incompleta detectada. ¿Resumir desde vela {self.last_processed_index}?")
+            logger.info(f"Presiona Ctrl+C en los próximos 5s para empezar de cero")
+            time.sleep(5)
 
     def load_data(self) -> pd.DataFrame:
         logger.info(f"Cargando datos para {self.pair}...")
@@ -397,12 +446,126 @@ class BacktestEngine:
         pnl = price_change - config.COMMISSION
         return {"executed": True, "pnl": pnl, "hit": hit}
 
+    def _check_for_checkpoint(self) -> bool:
+        """Verifica si existe checkpoint de sesión anterior"""
+        if not self.checkpoint_file.exists():
+            return False
+        
+        try:
+            with open(self.checkpoint_file, 'r') as f:
+                checkpoint = json.load(f)
+            
+            # Validar que el checkpoint sea de esta sesión
+            if checkpoint.get('session_id') != self.session_id:
+                return False
+            
+            # Restaurar estado
+            self.last_processed_index = checkpoint.get('last_index', 0)
+            self.current_balance = checkpoint.get('balance', self.total_capital)
+            self.positions = checkpoint.get('positions', [])
+            self.wins = checkpoint.get('wins', 0)
+            self.losses = checkpoint.get('losses', 0)
+            
+            logger.info(f"Checkpoint cargado: vela {self.last_processed_index}, balance: ${self.current_balance:.2f}")
+            return True
+            
+        except Exception as e:
+            logger.warning(f"Error leyendo checkpoint: {e}. Empezando de cero.")
+            return False
+    
+    def _save_checkpoint(self):
+        """Guarda checkpoint del estado actual"""
+        try:
+            checkpoint = {
+                'session_id': self.session_id,
+                'last_index': self.last_processed_index,
+                'balance': self.current_balance,
+                'positions': [{
+                    'id': p.id,
+                    'direction': p.direction,
+                    'entry_price': p.entry_price,
+                    'quantity': p.quantity,
+                    'confidence': p.confidence,
+                    'decision_id': p.decision_id,
+                    'entry_time': p.entry_time.isoformat() if hasattr(p.entry_time, 'isoformat') else str(p.entry_time)
+                } for p in self.positions],
+                'wins': self.wins,
+                'losses': self.losses,
+                'timestamp': datetime.now().isoformat()
+            }
+            
+            with open(self.checkpoint_file, 'w', encoding='utf-8') as f:
+                json.dump(checkpoint, f, indent=2)
+            
+            logger.info(f"Checkpoint guardado: vela {self.last_processed_index}, balance: ${self.current_balance:.2f}")
+            
+        except Exception as e:
+            logger.error(f"Error guardando checkpoint: {e}")
+    
+    def _load_checkpoint(self) -> bool:
+        """Carga checkpoint si existe y es válido"""
+        if not self.checkpoint_file.exists():
+            return False
+        
+        try:
+            with open(self.checkpoint_file, 'r', encoding='utf-8') as f:
+                checkpoint = json.load(f)
+            
+            # Validar que el checkpoint sea de esta sesión
+            if checkpoint.get('session_id') != self.session_id:
+                logger.warning("Checkpoint de sesión diferente. Ignorando.")
+                return False
+            
+            # Restaurar estado
+            self.last_processed_index = checkpoint.get('last_index', 0)
+            self.current_balance = checkpoint.get('balance', self.total_capital)
+            self.wins = checkpoint.get('wins', 0)
+            self.losses = checkpoint.get('losses', 0)
+            
+            # Restaurar posiciones (reconstruir objetos Position)
+            self.positions = []
+            for p_data in checkpoint.get('positions', []):
+                pos = Position(
+                    trade_id=p_data['id'],
+                    direction=p_data['direction'],
+                    entry_price=p_data['entry_price'],
+                    quantity=p_data['quantity'],
+                    confidence=p_data['confidence'],
+                    decision_id=p_data['decision_id'],
+                    entry_time=datetime.fromisoformat(p_data['entry_time']) if isinstance(p_data['entry_time'], str) else p_data['entry_time']
+                )
+                self.positions.append(pos)
+            
+            logger.info(f"Checkpoint cargado: vela {self.last_processed_index}, balance: ${self.current_balance:.2f}, {len(self.positions)} posiciones abiertas")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error cargando checkpoint: {e}")
+            return False
+    
     def run(self) -> dict:
         original_handler = signal.signal(signal.SIGINT, self._signal_handler)
         
         try:
+            if self._load_checkpoint():
+                logger.info("Resumiendo desde checkpoint anterior...")
+                # Preguntar si quiere continuar
+                logger.info("Presiona Ctrl+C en 5s para empezar de cero")
+                try:
+                    time.sleep(5)
+                except KeyboardInterrupt:
+                    logger.info("Reiniciando desde cero...")
+                    self.last_processed_index = 0
+                    self.current_balance = self.total_capital
+                    self.wins = 0
+                    self.losses = 0
+                    self.positions = []
+                    if self.checkpoint_file.exists():
+                        self.checkpoint_file.unlink()
+                        
             df = self.load_data()
-            start_idx = self.lookback_period
+            #start_idx = self.lookback_period
+            start_idx = max(self.lookback_period, self.last_processed_index)  # ← Usar checkpoint
             total_velas = len(df) - start_idx - 1
             
             logger.info(f"Simulando {total_velas} velas...")
@@ -410,6 +573,9 @@ class BacktestEngine:
             
             for i in range(start_idx, len(df) - 1):
                 if self.shutdown_flag:
+                    logger.warning("Interrupción detectada. Guardando checkpoint...")
+                    self._save_checkpoint()
+                    logger.warning(f"Checkpoint guardado. Ejecuta de nuevo para continuar.")
                     break
                 
                 window_start = i - self.lookback_period
@@ -533,8 +699,15 @@ class BacktestEngine:
                         )
                         self.positions.append(new_position)
                 
+                self.last_processed_index = i
+                
                 if (i - start_idx) % 50 == 0:
                     logger.info(f"[{(i - start_idx) / total_velas * 100:.0f}%] Balance: ${self.current_balance:.2f}")
+                    self._save_checkpoint()
+            
+            if self.checkpoint_file.exists():
+                self.checkpoint_file.unlink()
+                logger.info("Checkpoint eliminado (sesión completada)")
             
             if self.positions:
                 last_price = df.iloc[-1]['close']
@@ -593,7 +766,7 @@ class BacktestEngine:
             logger.info("\n" + "=" * 80)
             logger.info("RESULTADOS DEL BACKTESTING")
             logger.info("=" * 80)
-            logger.info(f"Modelo: {self.model_name}")
+            logger.info(f"Modelo: {self.brain.model_name}")
             logger.info(f"Sesión: {self.session_id}")
             logger.info(f"Capital inicial: ${self.total_capital:.2f}")
             logger.info(f"Capital final: ${self.current_balance:.2f}")
@@ -640,6 +813,24 @@ Ejemplos de uso:
         """
     )
     
+    parser.add_argument(
+        '--fresh', '-f',
+        action='store_true',
+        help='Forzar inicio desde cero (ignorar checkpoint existente)'
+    )
+
+    parser.add_argument(
+        '--use-ollamafree',
+        action='store_true',
+        help='Usar OllamaFreeAPI en lugar de servidor local (override config)'
+    )
+
+    parser.add_argument(
+        '--use-local',
+        action='store_true',
+        help='Forzar uso de servidor local (override config)'
+    )
+
     parser.add_argument(
         '--backtest', '-b',
         action='store_true',
@@ -768,6 +959,20 @@ def main():
         list_available_models()
         return
     
+    if args.use_ollamafree:
+        config.USE_OLLAMAFREE = True
+        logger.info("Usando OllamaFreeAPI (por argumento)")
+    elif args.use_local:
+        config.USE_OLLAMAFREE = False
+        logger.info("Usando servidor local (por argumento)")
+    
+    if args.fresh:
+        # Eliminar cualquier checkpoint existente
+        checkpoint_file = config.DATA_DIR / f"checkpoint_*.json"
+        for cp in config.DATA_DIR.glob("checkpoint_*.json"):
+            cp.unlink()
+        logger.info("Checkpoints eliminados. Inicio fresco.")
+        
     # Validar configuración
     config.validate()
     
@@ -775,7 +980,7 @@ def main():
     model_name = args.model if args.model else config.get_model_name_for_db()
     
     # Determinar modo de ejecución
-    if args.backtest:
+    if args.backtest or (not args.live and config.TRAIN_MODE):
         logger.info(f"Iniciando backtesting")
         
         # Usar fechas de argumentos o de config
@@ -783,7 +988,10 @@ def main():
         end_date = args.end or config.TRAIN_END
         pair = args.pair or config.TRADING_PAIRS[0]
         
-        logger.info(f"Modelo: {model_name}")
+        if args.backtest:
+            logger.info(f"Modelo: {engine.brain.model_name}")
+        else:
+            logger.info(f"Modelo: {model_name}")
         logger.info(f"Período: {start_date} → {end_date}")
         logger.info(f"Par: {pair}")
         
@@ -802,7 +1010,10 @@ def main():
         logger.info(f"Trades: {results.get('total_trades', 0)}")
     else:
         logger.info("Iniciando trading en LIVE")
-        logger.info(f"Modelo: {model_name}")
+        if args.backtest:
+            logger.info(f"Modelo: {engine.brain.model_name}")
+        else:
+            logger.info(f"Modelo: {model_name}")
         bot = TradingBot(model_name=model_name)
         bot.run_live()
 

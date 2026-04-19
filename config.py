@@ -1,9 +1,10 @@
 """
-config.py - Central configuration loader.
-CORREGIDO: Credenciales duales Mainnet/Testnet, BACKTESTING_MODE automatico
+config.py — Central configuration loader.
+Carga desde config.json con validaciones completas
 """
 import json
 from pathlib import Path
+from loguru import logger
 
 BASE_DIR = Path(__file__).parent
 CONFIG_FILE = BASE_DIR / "config.json"
@@ -16,7 +17,7 @@ LOGS_DIR.mkdir(exist_ok=True)
 DATA_DIR.mkdir(exist_ok=True)
 
 def load_config() -> dict:
-    """Carga la configuracion desde config.json"""
+    """Carga la configuración desde config.json"""
     if not CONFIG_FILE.exists():
         raise FileNotFoundError(
             f"No se encontro {CONFIG_FILE}\n"
@@ -34,14 +35,27 @@ CONFIG = load_config()
 MARKET_DATA_DB = DATA_DIR / "market_data.db"
 
 def get_model_db_path(model_name: str = "default") -> Path:
-    safe_name = model_name.replace(":", "").replace("/", "")
+    """
+    Genera path para DB del modelo.
+    Usa el nombre del modelo LLM, no el par
+    """
+    safe_name = model_name.replace(":", "_").replace("/", "_").replace(" ", "_")
     return MODELS_DIR / f"{safe_name}.db"
 
+def get_model_name_for_db() -> str:
+    """
+    Genera nombre consistente para la base de datos del modelo.
+    Usa el nombre del modelo LLM, sin sufijo backtest/live
+    """
+    model_name = CONFIG["llm"].get("model", "default")
+    safe_name = model_name.replace(":", "_").replace("/", "_").replace(" ", "_")
+    return safe_name
+
 # Binance: Credenciales duales
-BINANCE_MAINNET_KEY = CONFIG["binance"]["mainnet"]["api_key"]
-BINANCE_MAINNET_SECRET = CONFIG["binance"]["mainnet"]["secret_key"]
-BINANCE_TESTNET_KEY = CONFIG["binance"]["testnet"]["api_key"]
-BINANCE_TESTNET_SECRET = CONFIG["binance"]["testnet"]["secret_key"]
+BINANCE_MAINNET_KEY = CONFIG["binance"]["mainnet"]["api_key"] if "mainnet" in CONFIG["binance"] else CONFIG["binance"].get("api_key", "")
+BINANCE_MAINNET_SECRET = CONFIG["binance"]["mainnet"]["secret_key"] if "mainnet" in CONFIG["binance"] else CONFIG["binance"].get("secret_key", "")
+BINANCE_TESTNET_KEY = CONFIG["binance"]["testnet"]["api_key"] if "testnet" in CONFIG["binance"] else CONFIG["binance"].get("api_key", "")
+BINANCE_TESTNET_SECRET = CONFIG["binance"]["testnet"]["secret_key"] if "testnet" in CONFIG["binance"] else CONFIG["binance"].get("secret_key", "")
 BINANCE_USE_TESTNET = CONFIG["binance"].get("use_testnet", True)
 
 # TRAIN_MODE activa backtesting, que requiere Mainnet para datos historicos
@@ -63,12 +77,19 @@ else:
         BINANCE_SECRET_KEY = BINANCE_MAINNET_SECRET
         BINANCE_TESTNET = False
 
-# LLM
+# LLM Settings
 LLM_API_KEY = CONFIG["llm"].get("api_key", "lm-studio")
-LLM_MODEL = CONFIG["llm"].get("model", "deepseek-r1-distill-llama-8b-abliterated")
+LLM_MODEL = CONFIG["llm"].get("model", "qwen2.5-7b-instruct")
 LLM_BASE_URL = CONFIG["llm"].get("base_url", "http://localhost:1234/v1")
 
 USING_LOCAL_LLM = "localhost" in LLM_BASE_URL or LLM_API_KEY.lower() == "lm-studio"
+
+# LLM Provider Settings (OllamaFreeAPI vs Local)
+LLM_PROVIDER_CONFIG = CONFIG.get("llm_provider", {})
+USE_OLLAMAFREE = LLM_PROVIDER_CONFIG.get("use_ollama_free", False)
+OLLAMAFREE_MODEL = LLM_PROVIDER_CONFIG.get("ollama_free_model", "qwen2.5:7b")
+OLLAMAFREE_FALLBACK = LLM_PROVIDER_CONFIG.get("fallback_to_local", True)
+OLLAMAFREE_TIMEOUT = LLM_PROVIDER_CONFIG.get("timeout_seconds", 120)
 
 # Trading Settings
 TRADING_PAIRS = CONFIG["trading"].get("trading_pairs", ["BNBUSDT"])
@@ -107,6 +128,36 @@ COMMISSION = CONFIG["backtesting"].get("commission", 0.001)
 MIN_BALANCE_USDT = CONFIG["risk_management"].get("min_balance_usdt", 100)
 MAX_DAILY_LOSS_PCT = CONFIG["risk_management"].get("max_daily_loss_pct", -6.0)
 MAX_POSITION_PCT = CONFIG["risk_management"].get("max_position_pct", 20) / 100
+
+def validate_llm_provider():
+    """Valida configuración del provider de LLM"""
+    #Evitar: smollm2:135m (muy pequeño), bakllava (visión, no texto), plutotext-emotional (no aplica a trading)
+    if USE_OLLAMAFREE:
+        #Lista REAL de modelos disponibles en OllamaFreeAPI (actualizada)
+        valid_models = [
+            "gpt-oss:20b",
+            "mistral-nemo:custom",
+            "lukashabtoch/plutotext-r3-emotional:latest",
+            "bakllava:latest",
+            "llama3:latest",
+            "mistral:latest",
+            "llama3.2:3b",
+            "llama3.2:latest",
+            "smollm2:135m",
+            "deepseek-r1:latest"
+        ]
+        if OLLAMAFREE_MODEL not in valid_models:
+            logger.warning(
+                f"Modelo OllamaFree no verificado: {OLLAMAFREE_MODEL}. "
+                f"Modelos disponibles: {', '.join(valid_models)}"
+            )
+        else:
+            logger.info(f"Modelo OllamaFree verificado: {OLLAMAFREE_MODEL}")
+    
+    if USE_OLLAMAFREE and USING_LOCAL_LLM:
+        logger.info("Usando OllamaFreeAPI (remoto) en lugar de servidor local")
+    elif not USE_OLLAMAFREE and not USING_LOCAL_LLM:
+        logger.warning("Ni OllamaFree ni servidor local configurados. Verifica config.json")
 
 def validate():
     global TRADE_MODE, FUTURES_LEVERAGE, ORDER_TYPE, SPOT_ORDER_TYPE
@@ -148,10 +199,13 @@ def validate():
         except ValueError as e:
             raise ValueError(f"Formato de fecha invalido. Usa: '1 Jan 2024'. Error: {e}")
     
+    # Validar LLM provider
+    validate_llm_provider()
+    
     if USING_LOCAL_LLM:
         print(f"Using LOCAL server with model: {LLM_MODEL}")
     else:
-        print(f"Using Groq cloud with {len(GROQ_API_KEYS)} keys")
+        print(f"Using Groq cloud with {len([LLM_API_KEY])} keys")
     
     print(f"Config OK | Mode: {TRADE_MODE.upper()} | Dry run: {DRY_RUN}")
     print(f"TRADE_AMOUNT_USDT: ${TRADE_AMOUNT_USDT:.2f} | MAX_SLOTS: {MAX_SLOTS}")
@@ -160,43 +214,12 @@ def validate():
     print(f"Train Mode: {TRAIN_MODE} | {TRAIN_START} -> {TRAIN_END}")
     print(f"Spot Order Type: {SPOT_ORDER_TYPE}")
     print(f"Binance: {'TESTNET' if BINANCE_TESTNET else 'MAINNET'} (Backtesting: {BACKTESTING_MODE})")
+    print(f"LLM Provider: {'OllamaFreeAPI' if USE_OLLAMAFREE else 'Local'} | Model: {OLLAMAFREE_MODEL if USE_OLLAMAFREE else LLM_MODEL}")
 
-# Agregar esta función en config.py
-
-def get_model_db_path(model_name: str = "default") -> Path:
-    """
-    Genera path para DB del modelo.
-    CORREGIDO: Usa el nombre del modelo LLM, no el par
-    """
-    # Limpiar nombre para usar como filename
-    safe_name = model_name.replace(":", "_").replace("/", "_").replace(" ", "_")
-    return MODELS_DIR / f"{safe_name}.db"
-    
 def save_config(config_dict: dict):
     """Guarda la configuracion actual a config.json"""
     with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
         json.dump(config_dict, f, indent=2, ensure_ascii=False)
 
-# Agregar al final de config.py
-
-def get_model_name_for_db() -> str:
-    """
-    Genera nombre consistente para la base de datos del modelo.
-    Usa el nombre del modelo LLM, no el par de trading.
-    """
-    # Obtener nombre del modelo LLM
-    model_name = LLM_MODEL
-    
-    # Limpiar caracteres especiales para nombre de archivo
-    safe_name = model_name.replace(":", "_").replace("/", "_").replace(" ", "_")
-    
-    # Agregar sufijo según modo
-    # if TRAIN_MODE:
-        # safe_name += "_backtest"
-    # else:
-        # safe_name += "_live"
-    
-    return safe_name
-    
 if __name__ == "__main__":
     validate()

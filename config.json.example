@@ -1,0 +1,65 @@
+{
+  "directories": {
+    "base_dir": ".",
+    "models_dir": "trained_models",
+    "logs_dir": "logs",
+    "data_dir": "data"
+  },
+  "binance": {
+    "mainnet": {
+      "api_key": "API_BINANCE",
+      "secret_key": "SECRET_KEY_BINANCE"
+    },
+    "testnet": {
+      "api_key": "API_TESNET_BINANCE",
+      "secret_key": "SECRET_KEY_TESTNET_BINANCE"
+    },
+    "use_testnet": true
+  },
+  "llm": {
+    "api_key": "lm-studio",
+    "model": "qwen2.5-7b-instruct",
+    "base_url": "http://localhost:1234/v1"
+  },
+  "llm_provider": {
+    "use_ollama_free": true,
+    "ollama_free_model": "llama3:latest",
+    "fallback_to_local": false,
+    "timeout_seconds": 120
+  },
+  "trading": {
+    "trading_pairs": ["BNBUSDT"],
+    "cycle_interval_seconds": 3600,
+    "min_confidence": 70,
+    "dry_run": true,
+    "trade_mode": "spot",
+    "futures_leverage": 1,
+    "log_level": "INFO",
+    "train": true,
+    "train_start": "1 Jan 2026",
+    "train_end": "31 Mar 2026",
+    "spot_order_type": "MARKET"
+  },
+  "position_management": {
+    "trade_amount_usdt": 100,
+    "max_slots": 1,
+    "use_tp_sl": false,
+    "auto_exit_enabled": false,
+    "stop_loss_pct": 1.0,
+    "take_profit_pct": 1.5
+  },
+  "order_type": "MARKET",
+  "multi_timeframe": {
+    "primary_tf": "1h",
+    "confirmation_tf": "4h"
+  },
+  "backtesting": {
+    "initial_balance": 100.0,
+    "commission": 0.001
+  },
+  "risk_management": {
+    "min_balance_usdt": 100,
+    "max_daily_loss_pct": -6.0,
+    "max_position_pct": 20
+  }
+}
