@@ -1,7 +1,6 @@
-<<<<<<< HEAD
 # Crypto AI Trading Bot
 
-Sistema avanzado de trading automatizado para criptomonedas que combina **an®¢lisis t®¶cnico** con **inteligencia artificial** (LLMs locales y remotos) para tomar decisiones de trading informadas.
+Sistema avanzado de trading automatizado para criptomonedas que combina an®¢lisis t®¶cnico con inteligencia artificial (LLMs locales y remotos) para tomar decisiones de trading informadas.
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
@@ -12,10 +11,10 @@ Sistema avanzado de trading automatizado para criptomonedas que combina **an®¢li
 ## Caracter®™sticas Principales
 
 ### Inteligencia Artificial Flexible
-- **Multi-Provider LLM**: Soporte para modelos locales (LM Studio/Ollama) y remotos (OllamaFreeAPI)
-- **10+ Modelos Disponibles**: Qwen2.5, Llama3, DeepSeek-R1, Mistral, GPT-OSS, etc.
-- **Fallback Autom®¢tico**: Si la API remota falla, usa modelo local autom®¢ticamente
-- **Aprendizaje Continuo**: Valida y aprende de cada decisi®Æn tomada
+- Multi-Provider LLM: Soporte para modelos locales (LM Studio/Ollama) y remotos (OllamaFreeAPI)
+- 10+ Modelos Disponibles: Qwen2.5, Llama3, DeepSeek-R1, Mistral, GPT-OSS, etc.
+- Fallback Autom®¢tico: Si la API remota falla, usa modelo local autom®¢ticamente
+- Aprendizaje Continuo: Valida y aprende de cada decisi®Æn tomada
 
 ### An®¢lisis T®¶cnico Avanzado
 
@@ -46,9 +45,9 @@ Sistema avanzado de trading automatizado para criptomonedas que combina **an®¢li
 Cada validaci®Æn genera patrones aprendidos que se inyectan en futuras decisiones.
 
 ### Checkpoint & Resume
-- **Backtesting**: Si cortas+ La fjecuci®Æn, continu®¢ desde donde quedaste
-- **Live Trading**: Recupera posiciones abiertas al reiniciar
-- **Fresh Start**: Opci®Æn `--fresh` para empezar desde cero
+- Backtesting: Si cortas+ La fjecuci®Æn, continu®¢ desde donde quedaste
+- Live Trading: Recupera posiciones abiertas al reiniciar
+- Fresh Start: Opci®Æn `--fresh` para empezar desde cero
 
 ---
 
@@ -92,7 +91,7 @@ nano config.json
 
 ### 4. Configurar LLM
 
-**Opci®Æn A: OllamaFreeAPI (Gratis, sin hardware local)**
+Opci®Æn A: OllamaFreeAPI (Gratis, sin hardware local)
 `` `json
 {
   "llm_provider": {
@@ -103,7 +102,7 @@ nano config.json
 }
 ````
 
-**Opci®Æn B: Local (LM Studio)**
+Opci®Æn B: Local (LM Studio)
 ````json
 {
   "llm_provider": {
@@ -229,13 +228,13 @@ crypto-ai-trading-bot/
 
 ## Advertencias de Riesgo
 
-> **IMPORTANTE**: Este software es solo para fines educativos.
+> IMPORTANTE: Este software es solo para fines educativos.
 
-- El trading de criptomonedas conlleva **alto riesgo**
+- El trading de criptomonedas conlleva alto riesgo
 - Nunca inviertas m®¢s de lo que puedas perder
-- El rendimiento pasado **no garantiza** resultados futuros
-- prueba en **Testnet/Dry Run** antes de Mainnet
-- El autor **no se responsabiliza** por p®¶rdidas
+- El rendimiento pasado no garantiza resultados futuros
+- prueba en Testnet/Dry Run antes de Mainnet
+- El autor no se responsabiliza por p®¶rdidas
 
 ### Checklist Antes de Live Trading
 
@@ -279,29 +278,29 @@ MIT License - Ver `LICENSE` para m®¢s informaci®Æn.
 
 ## Contacto
 
-- **GitHub Issues**: Bugs y features
-- **Email**: tuemail@ejemplo.com
+- GitHub Issues: Bugs y features
+- Email: tuemail@ejemplo.com
 
 ---
 
 <div align="center">
 
-**Desarrollado con amor para la comunidad crypto**
+Desarrollado con amor para la comunidad crypto
 
-°Ô **Si te gusta, dale una estrella!**
+°Ô Si te gusta, dale una estrella!
 
 ---
 
 ### Disclaimer
 
-Este proyecto es **educativo**. El trading de criptomonedas es riesgoso y puedes perder todo tu capital.
+Este proyecto es educativo. El trading de criptomonedas es riesgoso y puedes perder todo tu capital.
 
-**Usa bajo tu propio riesgo.**
+Usa bajo tu propio riesgo.
 </div>
 =======
 # Crypto AI Trading Bot
 
-Sistema avanzado de trading automatizado para criptomonedas que combina **an√°lisis t√âcnico** con **inteligencia artificial** (LLMs locales y remotos) para tomar decisiones de trading informadas.
+Sistema avanzado de trading automatizado para criptomonedas que combina an√°lisis t√âcnico con inteligencia artificial (LLMs locales y remotos) para tomar decisiones de trading informadas.
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
@@ -312,10 +311,10 @@ Sistema avanzado de trading automatizado para criptomonedas que combina **an√°li
 ## Caracter√≠sticas Principales
 
 ### Inteligencia Artificial Flexible
-- **Multi-Provider LLM**: Soporte para modelos locales (LM Studio/Ollama) y remotos (OllamaFreeAPI)
-- **10+ Modelos Disponibles**: Qwen2.5, Llama3, DeepSeek-R1, Mistral, GPT-OSS, etc.
-- **Fallback Autom√°tico**: Si la API remota falla, usa modelo local autom√°ticamente
-- **Aprendizaje Continuo**: Valida y aprende de cada decisi√≥n tomada
+- Multi-Provider LLM: Soporte para modelos locales (LM Studio/Ollama) y remotos (OllamaFreeAPI)
+- 10+ Modelos Disponibles: Qwen2.5, Llama3, DeepSeek-R1, Mistral, GPT-OSS, etc.
+- Fallback Autom√°tico: Si la API remota falla, usa modelo local autom√°ticamente
+- Aprendizaje Continuo: Valida y aprende de cada decisi√≥n tomada
 
 ### An√°lisis T√âcnico Avanzado
 
@@ -330,25 +329,25 @@ Sistema avanzado de trading automatizado para criptomonedas que combina **an√°li
 | EMA | 9/20 | Regimen de mercado |
 
 ### Gesti√≥n de Riesgo
-- ‚úÖ Stop Loss configurable (default: 1.0%)
-- ‚úÖ Take Profit configurable (default: 2.5%)
-- ‚úÖ trailing Stop (opcional)
-- ‚úÖ M√°ximo de posiciones simult√°neas
-- ‚úÖ Confianza m√≠nima para operar
-- ‚úÖ Hard Stop Loss de seguridad (5%)
+- ‚ú?Stop Loss configurable (default: 1.0%)
+- ‚ú?Take Profit configurable (default: 2.5%)
+- ‚ú?trailing Stop (opcional)
+- ‚ú?M√°ximo de posiciones simult√°neas
+- ‚ú?Confianza m√≠nima para operar
+- ‚ú?Hard Stop Loss de seguridad (5%)
 
 ### y Sistema de Aprendizaje
 ```
-1. IA decide ‚Üí 2. Se ejecuta ‚Üí 3. Se valida ‚Äí 4. Se aprende ‚Äí 5. Mejora pr√≥xima decisi√≥n
+1. IA decide ‚Ü?2. Se ejecuta ‚Ü?3. Se valida ‚Ä?4. Se aprende ‚Ä?5. Mejora pr√≥xima decisi√≥n
 
 ```
 
 Cada validaci√≥n genera patrones aprendidos que se inyectan en futuras decisiones.
 
 ### Checkpoint & Resume
-- **Backtesting**: Si cortas+ La fjecuci√≥n, continu√° desde donde quedaste
-- **Live Trading**: Recupera posiciones abiertas al reiniciar
-- **Fresh Start**: Opci√≥n `--fresh` para empezar desde cero
+- Backtesting: Si cortas+ La fjecuci√≥n, continu√° desde donde quedaste
+- Live Trading: Recupera posiciones abiertas al reiniciar
+- Fresh Start: Opci√≥n `--fresh` para empezar desde cero
 
 ---
 
@@ -392,7 +391,7 @@ nano config.json
 
 ### 4. Configurar LLM
 
-**Opci√≥n A: OllamaFreeAPI (Gratis, sin hardware local)**
+Opci√≥n A: OllamaFreeAPI (Gratis, sin hardware local)
 `` `json
 {
   "llm_provider": {
@@ -403,7 +402,7 @@ nano config.json
 }
 ````
 
-**Opci√≥n B: Local (LM Studio)**
+Opci√≥n B: Local (LM Studio)
 ````json
 {
   "llm_provider": {
@@ -498,10 +497,10 @@ python main.py --help
 | Modelo | Tama√±o | Velocidad | Recomendado |
 |--------|--------|-----------|--------------|
 | gpt-oss:20b | 20B | Lenta | M√°xima calidad |
-| deepseek-r1:latest | -7B | ‚öÅ Media | Razonamiento |
+| deepseek-r1:latest | -7B | ‚ö?Media | Razonamiento |
 | llama3.2:3b | 3B | R√°pida | Testing r√°pido |
-| mistral:latest | 7B | ‚öÅ Media | Balance |
-| llama3:latest | 8B | ‚öÅ Media | General |
+| mistral:latest | 7B | ‚ö?Media | Balance |
+| llama3:latest | 8B | ‚ö?Media | General |
 
 ---
 
@@ -510,16 +509,16 @@ python main.py --help
 ```
 crypto-ai-trading-bot/
 ‚îú‚îÄ‚îÄ agents/
-‚îÇ   ‚îú‚îÄ‚îÄ brain.py              # Cerebro IA
-‚îÇ   ‚îú‚îÄ‚îÄ llm_adapter.py        # Adaptador multi-provider
-‚îÇ   ‚îî‚îÄ‚îÄ validator.py          # Validaci√≥n
+‚î?  ‚îú‚îÄ‚îÄ brain.py              # Cerebro IA
+‚î?  ‚îú‚îÄ‚îÄ llm_adapter.py        # Adaptador multi-provider
+‚î?  ‚îî‚îÄ‚îÄ validator.py          # Validaci√≥n
 ‚îú‚îÄ‚îÄ data/
-‚îÇ   ‚îú‚îÄ‚îÄ collector.py          # Datos + indicadores
-‚îÇ   ‚îî‚îÄ‚îÄ market_data.db        # OHLCV hist√≥ricos
+‚î?  ‚îú‚îÄ‚îÄ collector.py          # Datos + indicadores
+‚î?  ‚îî‚îÄ‚îÄ market_data.db        # OHLCV hist√≥ricos
 ‚îú‚îÄ‚îÄ execution/
-‚îÇ   ‚îî‚îÄ‚îÄ executor.py           # √ìrdenes Binance
+‚î?  ‚îî‚îÄ‚îÄ executor.py           # √ìrdenes Binance
 ‚îú‚îÄ‚îÄ risk/
-‚îÇ   ‚îî‚îÄ‚îÄ manager.py            # Gesti√≥n de riesgo
+‚î?  ‚îî‚îÄ‚îÄ manager.py            # Gesti√≥n de riesgo
 ‚îú‚îÄ‚îÄ main.py                   # Punto de entrada
 ‚îú‚îÄ‚îÄ config.json               # Configuraci√≥n
 ‚îî‚îÄ‚îÄ requirements.txt          # Dependencias
@@ -529,13 +528,13 @@ crypto-ai-trading-bot/
 
 ## Advertencias de Riesgo
 
-> **IMPORTANTE**: Este software es solo para fines educativos.
+> IMPORTANTE: Este software es solo para fines educativos.
 
-- El trading de criptomonedas conlleva **alto riesgo**
+- El trading de criptomonedas conlleva alto riesgo
 - Nunca inviertas m√°s de lo que puedas perder
-- El rendimiento pasado **no garantiza** resultados futuros
-- prueba en **Testnet/Dry Run** antes de Mainnet
-- El autor **no se responsabiliza** por p√©rdidas
+- El rendimiento pasado no garantiza resultados futuros
+- prueba en Testnet/Dry Run antes de Mainnet
+- El autor no se responsabiliza por p√©rdidas
 
 ### Checklist Antes de Live Trading
 
@@ -579,23 +578,23 @@ MIT License - Ver `LICENSE` para m√°s informaci√≥n.
 
 ## Contacto
 
-- **GitHub Issues**: Bugs y features
-- **Email**: tuemail@ejemplo.com
+- GitHub Issues: Bugs y features
+- Email: tuemail@ejemplo.com
 
 ---
 
 <div align="center">
 
-**Desarrollado con amor para la comunidad crypto**
+Desarrollado con amor para la comunidad crypto
 
-‚òÖ **Si te gusta, dale una estrella!**
+‚ò?Si te gusta, dale una estrella!
 
 ---
 
 ### Disclaimer
 
-Este proyecto es **educativo**. El trading de criptomonedas es riesgoso y puedes perder todo tu capital.
+Este proyecto es educativo. El trading de criptomonedas es riesgoso y puedes perder todo tu capital.
 
-**Usa bajo tu propio riesgo.**
+Usa bajo tu propio riesgo.
 </div>
 >>>>>>> fb24ba45e033b337c5e839a7aeb7c5889fd7c793
