@@ -1,6 +1,6 @@
-# ?? Crypto AI Trading Bot
+# Crypto AI Trading Bot
 
-Sistema avanzado de trading automatizado para criptomonedas que combina **an®¢lisis t®¶cnico** con **inteligencia artificial** (LLMs locales y remotos) para tomar decisiones de trading informadas.
+Sistema avanzado de trading automatizado para criptomonedas que combina **an√°lisis t√âcnico** con **inteligencia artificial** (LLMs locales y remotos) para tomar decisiones de trading informadas.
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
@@ -8,50 +8,50 @@ Sistema avanzado de trading automatizado para criptomonedas que combina **an®¢li
 
 ---
 
-## ?? Caracter®™sticas Principales
+## Caracter√≠sticas Principales
 
-### ?? Inteligencia Artificial Flexible
+### Inteligencia Artificial Flexible
 - **Multi-Provider LLM**: Soporte para modelos locales (LM Studio/Ollama) y remotos (OllamaFreeAPI)
 - **10+ Modelos Disponibles**: Qwen2.5, Llama3, DeepSeek-R1, Mistral, GPT-OSS, etc.
-- **Fallback Autom®¢tico**: Si la API remota falla, usa modelo local autom®¢ticamente
-- **Aprendizaje Continuo**: Valida y aprende de cada decisi®Æn tomada
+- **Fallback Autom√°tico**: Si la API remota falla, usa modelo local autom√°ticamente
+- **Aprendizaje Continuo**: Valida y aprende de cada decisi√≥n tomada
 
-### ?? An®¢lisis T®¶cnico Avanzado
+### An√°lisis T√âcnico Avanzado
 
-| Indicador | Configuraci®Æn | Prop®Æsito |
+| Indicador | Configuraci√≥n | Prop√≥sito |
 |-----------|--------------|-----------|
-| RSI | 14 per®™edos | Sobrecompra/sobreventa |
+| RSI | 14 per√≠edos | Sobrecompra/sobreventa |
 | MACD | 12,26,9 | Momentum y cruces |
-| Bollinger Bands | 20,2 | Volatilidad y posici®Æn relativa |
-| ATR | 14 per®™odos | Volatilidad absoluta |
+| Bollinger Bands | 20,2 | Volatilidad y posici√≥n relativa |
+| ATR | 14 per√≠odos | Volatilidad absoluta |
 | Stochastic | 14,3 | Momentum corto plazo |
-| Volumen | vs SMA 20 | Confirmaci®Æn de movimientos |
+| Volumen | vs SMA 20 | Confirmaci√≥n de movimientos |
 | EMA | 9/20 | Regimen de mercado |
 
-### ?? Gesti®Æn de Riesgo
-- ? Stop Loss configurable (default: 1.0%)
-- ? Take Profit configurable (default: 2.5%)
-- ? trailing Stop (opcional)
-- ? M®¢ximo de posiciones simult®¢neas
-- ? Confianza m®™nima para operar
-- ? Hard Stop Loss de seguridad (5%)
+### Gesti√≥n de Riesgo
+- ‚úÖ Stop Loss configurable (default: 1.0%)
+- ‚úÖ Take Profit configurable (default: 2.5%)
+- ‚úÖ trailing Stop (opcional)
+- ‚úÖ M√°ximo de posiciones simult√°neas
+- ‚úÖ Confianza m√≠nima para operar
+- ‚úÖ Hard Stop Loss de seguridad (5%)
 
 ### y Sistema de Aprendizaje
 ```
-1. IA decide °˙ 2. Se ejecuta °˙ 3. Se valida ? 4. Se aprende ? 5. Mejora pr®Æxima decisi®Æn
+1. IA decide ‚Üí 2. Se ejecuta ‚Üí 3. Se valida ‚Äí 4. Se aprende ‚Äí 5. Mejora pr√≥xima decisi√≥n
 
 ```
 
-Cada validaci®Æn genera patrones aprendidos que se inyectan en futuras decisiones.
+Cada validaci√≥n genera patrones aprendidos que se inyectan en futuras decisiones.
 
-### ? Checkpoint & Resume
-- **Backtesting**: Si cortas+ La fjecuci®Æn, continu®¢ desde donde quedaste
+### Checkpoint & Resume
+- **Backtesting**: Si cortas+ La fjecuci√≥n, continu√° desde donde quedaste
 - **Live Trading**: Recupera posiciones abiertas al reiniciar
-- **Fresh Start**: Opci®Æn `--fresh` para empezar desde cero
+- **Fresh Start**: Opci√≥n `--fresh` para empezar desde cero
 
 ---
 
-## ?? Requisitos
+## Requisitos
 
 ### Software
 - Python 3.11+
@@ -61,7 +61,7 @@ Cada validaci®Æn genera patrones aprendidos que se inyectan en futuras decisione
 
 ### Hardware Recomendado
 
-| Componente | M®™n | Recomendado |
+| Componente | M√≠n | Recomendado |
 |------------|--------|-------------|
 | RAM | 8GB | 16GB |
 | CPU | 4 cores | 8 cores |
@@ -70,7 +70,7 @@ Cada validaci®Æn genera patrones aprendidos que se inyectan en futuras decisione
 
 ---
 
-## ?? Instalaci®Æn
+## Instalaci√≥n
 
 ### 1. Clonar repositorio
 ```bash
@@ -91,7 +91,7 @@ nano config.json
 
 ### 4. Configurar LLM
 
-**Opci®Æn A: OllamaFreeAPI (Gratis, sin hardware local)**
+**Opci√≥n A: OllamaFreeAPI (Gratis, sin hardware local)**
 `` `json
 {
   "llm_provider": {
@@ -102,7 +102,7 @@ nano config.json
 }
 ````
 
-**Opci®Æn B: Local (LM Studio)**
+**Opci√≥n B: Local (LM Studio)**
 ````json
 {
   "llm_provider": {
@@ -117,7 +117,7 @@ nano config.json
 
 ---
 
-## ?? Uso
+## Uso
 
 ### Backtesting
 ```bash
@@ -130,13 +130,13 @@ python main.py --backtest --start "1 Jan 2026" --end "1 Mar 2026"
 # Forzar inicio fresco
 python main.py --backtest --fresh
 
-# Con modelo espec®™fico
+# Con modelo espec√≠fico
 python main.py --backtest --model gpt-oss:20b
 ```
 
 ### Live Trading
 ```bash
-# Modo simulaci®Æn (dry run)
+# Modo simulaci√≥n (dry run)
 python main.py
 
 # Modo real (cambiar dry_run: false en config.json)
@@ -161,9 +161,9 @@ python main.py --help
 
 ---
 
-## ? Configuraci®Æn
+## Configuraci√≥n
 
-### Par®¢metros Principales (config.json)
+### Par√°metros Principales (config.json)
 
 ````json
 {
@@ -194,89 +194,89 @@ python main.py --help
 
 ### Modelos Soportados (OllamaFreeAPI)
 
-| Modelo | Tama?o | Velocidad | Recomendado |
+| Modelo | Tama√±o | Velocidad | Recomendado |
 |--------|--------|-----------|--------------|
-| gpt-oss:20b | 20B | ?? Lenta | M®¢xima calidad |
-| deepseek-r1:latest | -7B | ? Media | Razonamiento |
-| llama3.2:3b | 3B | ?? R®¢pida | Testing r®¢pido |
-| mistral:latest | 7B | ? Media | Balance |
-| llama3:latest | 8B | ? Media | General |
+| gpt-oss:20b | 20B | Lenta | M√°xima calidad |
+| deepseek-r1:latest | -7B | ‚öÅ Media | Razonamiento |
+| llama3.2:3b | 3B | R√°pida | Testing r√°pido |
+| mistral:latest | 7B | ‚öÅ Media | Balance |
+| llama3:latest | 8B | ‚öÅ Media | General |
 
 ---
 
-## ?? Arquitectura
+## Arquitectura
 
 ```
 crypto-ai-trading-bot/
-? agents/
-?  brain.py                  # Cerebro IA
-Ä llm_adapter.py        # Adaptador multi-provider
-°∞ validator.py          # Validaci®Æn
-Ä data/
-?  collector.py          # Datos + indicadores
-°∞ market_data.db         # OHLCV hist®Æricos
-? execution/
-?  executor.py           # Ordenes Binance
-?risk/
-?  manager.py           # Gesti®Æn de riesgo
-Ä main.py                         # Punto de entrada
-?config.json                   # Configuraci®Æn
-Ärequirements.txt           # Dependencias
+‚îú‚îÄ‚îÄ agents/
+‚îÇ   ‚îú‚îÄ‚îÄ brain.py              # Cerebro IA
+‚îÇ   ‚îú‚îÄ‚îÄ llm_adapter.py        # Adaptador multi-provider
+‚îÇ   ‚îî‚îÄ‚îÄ validator.py          # Validaci√≥n
+‚îú‚îÄ‚îÄ data/
+‚îÇ   ‚îú‚îÄ‚îÄ collector.py          # Datos + indicadores
+‚îÇ   ‚îî‚îÄ‚îÄ market_data.db        # OHLCV hist√≥ricos
+‚îú‚îÄ‚îÄ execution/
+‚îÇ   ‚îî‚îÄ‚îÄ executor.py           # √ìrdenes Binance
+‚îú‚îÄ‚îÄ risk/
+‚îÇ   ‚îî‚îÄ‚îÄ manager.py            # Gesti√≥n de riesgo
+‚îú‚îÄ‚îÄ main.py                   # Punto de entrada
+‚îú‚îÄ‚îÄ config.json               # Configuraci√≥n
+‚îî‚îÄ‚îÄ requirements.txt          # Dependencias
 ```
 
 ---
 
-## °ı Advertencias de Riesgo
+## Advertencias de Riesgo
 
 > **IMPORTANTE**: Este software es solo para fines educativos.
 
-- ? El trading de criptomonedas conlleva **alto riesgo**
-- °ı Nunca inviertas m®¢s de lo que puedas perder
-- °ˆ El rendimiento pasado **no garantiza** resultados futuros
-- ? prueba en **Testnet/Dry Run** antes de Mainnet
-- °ˆ El autor **no se responsabiliza** por p®¶rdidas
+- El trading de criptomonedas conlleva **alto riesgo**
+- Nunca inviertas m√°s de lo que puedas perder
+- El rendimiento pasado **no garantiza** resultados futuros
+- prueba en **Testnet/Dry Run** antes de Mainnet
+- El autor **no se responsabiliza** por p√©rdidas
 
 ### Checklist Antes de Live Trading
 
-| Requisito | Estado M®™nimo |
+| Requisito | Estado M√≠nimo |
 |------------|-----------------|
 | Backtesting | 50+ trades |
 | Win Rate | >55% estable |
 | Profit Factor | >1.5 |
 | Paper trading | 2-4 semanas |
-| Hard Stop Loss | 5% m®¢ximo |
+| Hard Stop Loss | 5% m√°ximo |
 
 ---
 
-## ?? Roadmap
+## Roadmap
 
 - [ ] Dashboard web en tiempo real
-- [ ] M®≤ltiples pares simult®¢neos
+- [ ] M√∫ltiples pares simult√°neos
 - [ ] Telegram/Discord notifications
-- [ ] An®¢lisis de sentimiento
-- [ ] M®¢s exchanges (KuCoin, Bybit)
-- [ ] M?tricas avanzadas (Sharpe, Sortino)
+- [ ] An√°lisis de sentimiento
+- [ ] M√°s exchanges (KuCoin, Bybit)
+- [ ] M√£tricas avanzadas (Sharpe, Sortino)
 
 ---
 
-## ?? Resultados de Testing
+## Resultados de Testing
 
-| Modelo | Trades | Win Rate | PnL | Per®™edo |
+| Modelo | Trades | Win Rate | PnL | Per√≠edo |
 |--------|--------|-----------|------|-----------|
 | gpt-oss:20b | 40 | 60.0% | -39.7%* | Jan-Mar 2026 |
 | qwen2.5-7b | 14 | 69.2% | +6.68% | Jan 2024 |
 
-*Sin optimizaci®Æn de gesti®Æn de riesgo
+*Sin optimizaci√≥n de gesti√≥n de riesgo
 
 ---
 
-## ?? Licencia
+## Licencia
 
-MIT License - Ver `LICENSE` para m®¢s informaci®Æn.
+MIT License - Ver `LICENSE` para m√°s informaci√≥n.
 
 ---
 
-## ?? Contacto
+## Contacto
 
 - **GitHub Issues**: Bugs y features
 - **Email**: tuemail@ejemplo.com
@@ -285,13 +285,13 @@ MIT License - Ver `LICENSE` para m®¢s informaci®Æn.
 
 <div align="center">
 
-**Desarrollado con ? para la comunidad crypto**
+**Desarrollado con amor para la comunidad crypto**
 
-°Ô **Si te gusta, dale una estrella!**
+‚òÖ **Si te gusta, dale una estrella!**
 
 ---
 
-### ?? Disclaimer
+### Disclaimer
 
 Este proyecto es **educativo**. El trading de criptomonedas es riesgoso y puedes perder todo tu capital.
 
