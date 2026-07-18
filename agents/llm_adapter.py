@@ -77,7 +77,16 @@ class LLMAdapter:
         
         try:
             if self.use_ollamafree and isinstance(self.client, OllamaFreeAPI):
-                prompt = "\n".join([m["content"] for m in messages if m["role"] == "user"])
+                #prompt = "\n".join([m["content"] for m in messages if m["role"] == "user"])
+                system_content = ""
+                user_content = ""                
+                for m in messages:
+                    if m["role"] == "system":
+                        system_content = m["content"] + "\n\n"
+                    elif m["role"] == "user":
+                        user_content = m["content"]
+                prompt = system_content + user_content
+            
                 response = self.client.chat(
                     model=self.model_name,
                     prompt=prompt,

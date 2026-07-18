@@ -1,6 +1,9 @@
 """
 trainer.py - Sistema de entrenamiento y backtesting offline
-CORREGIDO: Respeta trade_mode (spot/futures) en entrenamiento
+FIXES:
+  - logger.info de progreso estaba fuera del loop (indentación incorrecta)
+  - compute_indicators ahora requiere timeframe arg (pasado correctamente)
+  - _save_model_summary: logger.debug estaba fuera de la función
 """
 import os
 import sys
@@ -17,15 +20,16 @@ from agents.brain import TradingBrain
 from data.collector import DataCollector
 import config
 
+
 class ModelTrainer:
     """Entrenador de modelos con backtesting offline"""
     
     def __init__(self, models_dir: str = "trained_models"):
         self.models_dir = models_dir
         os.makedirs(models_dir, exist_ok=True)
-        self.training_results = {}        
+        self.training_results = {}
         logger.info(f"ModelTrainer inicializado | Directorio: {models_dir}")
-        
+
     def _get_model_db_path(self, model_name: str) -> str:
         safe_name = model_name.replace(":", "_").replace("/", "_")
         db_path = os.path.join(self.models_dir, f"{safe_name}.db")
@@ -38,8 +42,9 @@ class ModelTrainer:
         brain.db_path = db_path
         return brain
 
-    def load_historical_data(self, pair: str, start_date: str, end_date: str, interval: str = "1h") -> pd.DataFrame:
-        logger.info(f"Cargando datos históricos para {pair} ({start_date} - {end_date})")        
+    def load_historical_data(self, pair: str, start_date: str, end_date: str,
+                             interval: str = "1h") -> pd.DataFrame:
+        logger.info(f"Cargando datos históricos para {pair} ({start_date} - {end_date})")
         collector = DataCollector(db_path=config.MARKET_DATA_DB)
         df = collector.get_historical_klines(pair, interval, start_date=start_date, end_date=end_date)
         
@@ -47,10 +52,10 @@ class ModelTrainer:
         end_ts = pd.to_datetime(end_date)
         df = df[(df['timestamp'] >= start_ts) & (df['timestamp'] <= end_ts)]
         
-        logger.info(f"Cargadas {len(df)} velas para entrenamiento")        
+        logger.info(f"Cargadas {len(df)} velas para entrenamiento")
         return df
 
-    def train_model(self, pair: str, df: pd.DataFrame, model_name: str, 
+    def train_model(self, pair: str, df: pd.DataFrame, model_name: str,
                     min_confidence: int = 70, trade_mode: str = 'spot') -> dict:
         """Entrena un modelo específico con posibilidad de interrupción limpia"""
         import signal
@@ -61,18 +66,18 @@ class ModelTrainer:
         def signal_handler(sig, frame):
             nonlocal stop_training
             print("\n")
-            logger.warning(" Entrenamiento interrumpido por usuario. Guardando progreso...")            
+            logger.warning("Entrenamiento interrumpido por usuario. Guardando progreso...")
             stop_training = True
         
         original_handler = signal.signal(signal.SIGINT, signal_handler)
         signal.signal(signal.SIGINT, signal_handler)
         
         try:
-            logger.info(f"Entrenando modelo: {model_name}")            
+            logger.info(f"Entrenando modelo: {model_name}")
             logger.info(f"  Modo de trading: {trade_mode.upper()}")
             
             brain = self._get_brain_for_model(model_name)
-            collector = DataCollector(db_path="historical_data.db")
+            collector = DataCollector(db_path=str(config.MARKET_DATA_DB))
             
             trades = []
             correct = 0
@@ -93,17 +98,19 @@ class ModelTrainer:
             }
             
             start_time = time.time()
+            total_steps = len(df) - 51  # pasos totales para progreso
             
             for i in range(50, len(df) - 1):
                 if stop_training:
-                    logger.info(" Entrenamiento detenido por el usuario")                    
+                    logger.info("Entrenamiento detenido por el usuario")
                     break
-                    
+                
                 current_row = df.iloc[i]
                 next_row = df.iloc[i + 1]
                 
-                historical_data = df.iloc[max(0, i-50):i+1]
-                indicators = collector.compute_indicators(historical_data)
+                historical_data = df.iloc[max(0, i - 50):i + 1]
+                # FIX: compute_indicators requiere timeframe como segundo arg
+                indicators = collector.compute_indicators(historical_data, "1h")
                 
                 snapshot = {
                     "pair": pair,
@@ -121,9 +128,9 @@ class ModelTrainer:
                 confidence = analysis.get("confidence", 0)
                 hypothesis = analysis.get("hypothesis", "")
                 
-                # === VALIDACIÓN SPOT: SELL SOLO EN FUTURES ===
+                # En modo spot, SELL no tiene sentido (no hay posición corta)
                 if direction == "SELL" and self.trade_mode == 'spot':
-                    logger.debug(f"[{i}] SELL ignorado en entrenamiento SPOT")                    
+                    logger.debug(f"[{i}] SELL ignorado en entrenamiento SPOT")
                     direction = "HOLD"
                 
                 if direction != "HOLD" and confidence >= min_confidence:
@@ -185,17 +192,21 @@ class ModelTrainer:
                         'was_correct': was_correct,
                         'pnl': pnl,
                         'response_time': elapsed,
-                        'hypothesis': hypothesis[:2000]
+                        'hypothesis': hypothesis
                     })
                 
+                # FIX: este log de progreso estaba FUERA del loop (indentación incorrecta)
                 if (i - 50) % 100 == 0 and i > 50:
-                    progress = (i - 50) / (len(df) - 51) * 100
+                    progress = (i - 50) / max(total_steps, 1) * 100
                     win_rate = (correct / total * 100) if total > 0 else 0
-            logger.info(f"[{progress:.0f}%] Fecha: {current_row['timestamp'].strftime('%Y-%m-%d %H:%M')} | Precio: ${current_row['close']:.2f} | Trades: {total} | Win: {win_rate:.1f}%")
+                    logger.info(
+                        f"[{progress:.0f}%] {current_row['timestamp'].strftime('%Y-%m-%d %H:%M')} | "
+                        f"Precio: ${current_row['close']:.2f} | Trades: {total} | Win: {win_rate:.1f}%"
+                    )
             
             if stop_training and total > 0:
                 logger.info(f"Guardando resultados parciales ({total} trades procesados)")
-                
+            
             elapsed_total = time.time() - start_time
             
             win_rate = (correct / total * 100) if total > 0 else 0
@@ -234,10 +245,11 @@ class ModelTrainer:
             
             logger.info(f"\n{'='*60}")
             logger.info(f"Entrenamiento completado para {model_name}")
-            logger.info(f"Período: {df['timestamp'].iloc[50]} {df['timestamp'].iloc[-2]}")            
+            if len(df) > 51:
+                logger.info(f"Período: {df['timestamp'].iloc[50]} → {df['timestamp'].iloc[-2]}")
             logger.info(f"  Total trades: {total} | Win rate: {win_rate:.1f}% | PnL: {result['total_pnl_pct']:+.2f}%")
             logger.info(f"{'='*60}\n")
-
+            
             return result
         
         finally:
@@ -265,4 +277,5 @@ class ModelTrainer:
         with open(summary_path, 'w') as f:
             json.dump(summary, f, indent=2, default=str)
         
-logger.debug(f"Resumen guardado: {summary_path}")
+        # FIX: este logger estaba fuera de la función (indentación incorrecta)
+        logger.debug(f"Resumen guardado: {summary_path}")

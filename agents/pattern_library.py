@@ -52,7 +52,7 @@ class PatternLibrary:
         
         conn.commit()
         conn.close()
-        logger.debug(f"✅ Pattern Library inicializada: {self.db_path}")
+        logger.debug(f"Pattern Library inicializada: {self.db_path}")
     
     def record_pattern(self, decision: dict, outcome: dict, pattern_type: str = None):
         """
@@ -115,7 +115,7 @@ class PatternLibrary:
                 WHERE id = ?
             ''', (new_occurrences, new_win_rate, new_avg_conf, now, pattern_id))
             
-            logger.debug(f"📚 Patrón actualizado: {pattern['direction']} {pattern_type} (#{pattern_id})")
+            logger.debug(f"Patrón actualizado: {pattern['direction']} {pattern_type} (#{pattern_id})")
         else:
             # Insertar nuevo patrón
             cursor.execute('''
@@ -140,7 +140,7 @@ class PatternLibrary:
                 json.dumps(pattern, sort_keys=True)
             ))
             
-            logger.debug(f"📚 Nuevo patrón registrado: {pattern['direction']} {pattern_type}")
+            logger.debug(f"Nuevo patrón registrado: {pattern['direction']} {pattern_type}")
         
         conn.commit()
         conn.close()
@@ -306,7 +306,7 @@ class PatternLibrary:
                 'patterns': patterns
             }, f, indent=2, ensure_ascii=False)
         
-        logger.info(f"📤 {len(patterns)} patrones exportados a {output_file}")
+        logger.info(f"{len(patterns)} patrones exportados a {output_file}")
     
     def import_patterns(self, input_file: str):
         """Importa patrones desde archivo JSON"""
@@ -345,7 +345,7 @@ class PatternLibrary:
         
         conn.commit()
         conn.close()
-        logger.info(f"📥 {imported} patrones importados desde {input_file}")
+        logger.info(f"{imported} patrones importados desde {input_file}")
     
     def _categorize_rsi(self, rsi: float) -> str:
         """Categoriza RSI en rangos"""
@@ -398,16 +398,16 @@ if __name__ == "__main__":
     if db_path.exists():
         library = PatternLibrary(str(db_path))
         
-        print("\n📊 ESTADÍSTICAS DE PATRONES:")
+        print("\nESTADÍSTICAS DE PATRONES:")
         stats = library.get_pattern_stats()
         print(f"   Total: {stats['total_patterns']}")
         print(f"   Success: {stats['success_patterns']}")
         print(f"   Failure: {stats['failure_patterns']}")
         print(f"   Avg Win Rate: {stats['avg_win_rate']}%")
         
-        print("\n🏆 MEJORES PATRONES (BUY):")
+        print("\nMEJORES PATRONES (BUY):")
         best = library.get_best_patterns(direction='BUY', limit=3)
         for p in best:
             print(f"   - {p['direction']} | RSI:{p['rsi_range']} | Regime:{p['regime']} | Win:{p['win_rate']:.1f}% ({p['occurrences']}x)")
     else:
-        print(f"❌ DB no encontrada: {db_path}")
+        print(f"DB no encontrada: {db_path}")

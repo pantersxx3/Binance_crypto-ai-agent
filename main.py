@@ -1,1022 +1,289 @@
 """
-main.py - Punto de entrada unificado para trading en vivo y backtesting
-ACTUALIZADO: Soporte para --model, --backtest, --live y más argumentos
+main.py - Versión Final con Resume funcional + Guardado de progreso
 """
+
 import argparse
-import pandas as pd
-import numpy as np
 import time
 import uuid
 import signal
 import sys
-import json
 from datetime import datetime
 from pathlib import Path
 from loguru import logger
+
 import config
 from data.collector import DataCollector
 from agents.brain import TradingBrain
-from risk.manager import RiskManager, TradeOrder
+from risk.manager import RiskManager
 from execution.executor import TradeExecutor
-from db import client as db
+from db.client import client as db
 
-# Configurar logger
-#logger.remove()
-logger.add(
-    sys.stdout,
-    format="{time:HH:mm:ss} | {level} | {message}",
-    level=config.LOG_LEVEL,
-    colorize=False
-)
-logger.add(
-    config.LOGS_DIR / "trading_{time:YYYY-MM-DD}.log",
-    format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}",
-    level=config.LOG_LEVEL,
-    rotation="1 day",
-    retention="7 days"
-)
+from colorama import Fore, Style, init
+init(autoreset=True)
+
+logger.remove()
+logger.add(sys.stdout, format="<green>{time:HH:mm:ss}</green> | <level>{level}</level> | <cyan>{message}</cyan>",    level=config.LOG_LEVEL, colorize=True)
+logger.add(config.LOGS_DIR / "trading_{time:YYYY-MM-DD}.log", level=config.LOG_LEVEL, rotation="1 day")
+
+showresponce = True
 
 class Position:
-    def __init__(self, trade_id: str, direction: str, entry_price: float,
-                 quantity: float, confidence: int, decision_id: int, entry_time):
-        self.id = trade_id
+    def __init__(self, trade_id: str, direction: str, entry_price: float, quantity: float, confidence: int, decision_id: int, entry_time):
+        self.trade_id = trade_id
         self.direction = direction
         self.entry_price = entry_price
         self.quantity = quantity
         self.confidence = confidence
         self.decision_id = decision_id
         self.entry_time = entry_time
-        self.exit_price = None
-        self.exit_time = None
-        self.pnl = None
-        self.result = None
-        self.binance_order_id = None
-
-    def close(self, exit_price: float, exit_time, pnl: float, result: str):
-        self.exit_price = exit_price
-        self.exit_time = exit_time
-        self.pnl = pnl
-        self.result = result
-
-
-class TradingBot:
-    def __init__(self, model_name: str = None):
-        self.collector = DataCollector(db_path=config.MARKET_DATA_DB)
-        
-        # Usar modelo desde argumento o desde config
-        self.model_name = model_name or config.get_model_name_for_db()
-        self.brain = TradingBrain(model_name=self.model_name)
-        
-        self.risk_manager = RiskManager()
-        self.executor = TradeExecutor()
-        
-        self.positions = []
-        self.max_slots = config.MAX_SLOTS
-        self.total_capital = config.INITIAL_BALANCE
-        self.current_balance = self.total_capital
-        self.shutdown_flag = False
-        
-        self.previous_decision = None
-        
-        signal.signal(signal.SIGINT, self._signal_handler)
-        signal.signal(signal.SIGTERM, self._signal_handler)
-        
-        logger.info("Trading Bot inicializado")
-        logger.info(f"Modelo LLM: {self.model_name}")
-        logger.info(f"Mode: {config.TRADE_MODE.upper()} | Dry run: {config.DRY_RUN}")
-        logger.info(f"TRADE_AMOUNT_USDT: ${config.TRADE_AMOUNT_USDT:.2f} | MAX_SLOTS: {self.max_slots}")
-        logger.info(f"ORDER_TYPE: {config.ORDER_TYPE} | Multi-TF: {config.PRIMARY_TF}+{config.CONFIRMATION_TF}")
-        logger.info(f"Cycle Interval: {config.CYCLE_INTERVAL}s | Timeframe: {config.PRIMARY_TF}")
-        
-        self._recover_open_positions()
-        
-    def _recover_open_positions(self):
-        """Recupera posiciones abiertas de la base de datos"""
-        try:
-            conn = sqlite3.connect(str(config.TRADES_DB))
-            cursor = conn.cursor()
-            
-            # Buscar trades abiertos (sin exit_price)
-            cursor.execute('''
-                SELECT trade_id, pair, side, entry_price, quantity, confidence
-                FROM trades
-                WHERE exit_price IS NULL AND is_dry_run = ?
-            ''', (config.DRY_RUN,))
-            
-            for row in cursor.fetchall():
-                position = Position(
-                    trade_id=row[0],
-                    direction=row[2],
-                    entry_price=row[3],
-                    quantity=row[4],
-                    confidence=row[5],
-                    decision_id=0,
-                    entry_time=datetime.now()
-                )
-                self.positions.append(position)
-                logger.info(f"Posición recuperada: {position.direction} {position.entry_price}")
-            
-            conn.close()
-            
-            if self.positions:
-                logger.info(f"{len(self.positions)} posición(es) recuperada(s)")
-            else:
-                logger.info("No hay posiciones abiertas pendientes")
-                
-        except Exception as e:
-            logger.error(f"Error recuperando posiciones: {e}")
-    
-    def _signal_handler(self, sig, frame):
-        self.shutdown_flag = True
-        logger.warning("Bot interrumpido por el usuario.")
-
-    def get_market_snapshot(self, pair: str) -> dict:
-        try:
-            klines = self.collector.get_historical_klines(
-                pair, 
-                config.PRIMARY_TF,
-                start_date=(datetime.now().strftime("%d %b %Y")),
-                limit=300
-            )
-            
-            if klines.empty or len(klines) < 50:
-                logger.warning(f"No hay suficientes datos para {pair}")
-                return None
-            
-            indicators = self.collector.compute_indicators(klines, config.PRIMARY_TF)
-            current_price = self.collector.get_latest_price(pair)
-            
-            return {
-                "pair": pair,
-                "current_price": current_price,
-                "usdt_balance": self.current_balance,
-                "indicators_1h": indicators,
-                "historical_timestamp": datetime.now(),
-                "open_positions_count": len(self.positions),
-                "max_slots": self.max_slots,
-                "trade_mode": config.TRADE_MODE,
-                "capital_per_slot": config.TRADE_AMOUNT_USDT
-            }
-        except Exception as e:
-            logger.error(f"Error obteniendo snapshot: {e}")
-            return None
-
-    def should_close_position(self, position: Position, current_rsi: float, new_direction: str) -> tuple:
-        should_close = False
-        reason = ""
-        
-        if position.direction == "BUY" and new_direction == "SELL":
-            should_close = True
-            reason = "IA recomienda SELL"
-        elif position.direction == "SELL" and new_direction == "BUY":
-            should_close = True
-            reason = "IA recomienda BUY"
-        
-        if not should_close and position.direction == "BUY" and current_rsi > 70:
-            should_close = True
-            reason = f"Take profit: RSI={current_rsi} > 70"
-        elif not should_close and position.direction == "SELL" and current_rsi < 30:
-            should_close = True
-            reason = f"Take profit: RSI={current_rsi} < 30"
-        
-        return should_close, reason
-
-    def run_live(self):
-        logger.info("Iniciando trading en LIVE")
-        pair = config.TRADING_PAIRS[0]
-        
-        while not self.shutdown_flag:
-            try:
-                snapshot = self.get_market_snapshot(pair)
-                if not snapshot:
-                    logger.warning("No hay datos de mercado, esperando...")
-                    time.sleep(config.CYCLE_INTERVAL)
-                    continue
-                
-                current_candle_time = snapshot["historical_timestamp"]
-                if current_candle_time == self.previous_decision:
-                    logger.debug("Misma vela, esperando nueva vela...")
-                    time.sleep(min(300, config.CYCLE_INTERVAL))
-                    continue
-                
-                self.previous_decision = current_candle_time
-                current_rsi = snapshot["indicators_1h"].get("rsi", 50)
-                
-                positions_to_close = []
-                for pos in self.positions[:]:
-                    analysis = self.brain.analyze(snapshot, source="live")
-                    new_direction = analysis.get("direction", "HOLD")
-                    should_close, reason = self.should_close_position(pos, current_rsi, new_direction)
-                    if should_close:
-                        positions_to_close.append((pos, reason))
-                
-                for pos, reason in positions_to_close:
-                    exit_price = self.collector.get_latest_price(pair)
-                    pnl_pct = (exit_price - pos.entry_price) / pos.entry_price * 100
-                    if pos.direction == "SELL":
-                        pnl_pct = -pnl_pct
-                    
-                    pnl_dollars = config.TRADE_AMOUNT_USDT * (pnl_pct / 100)
-                    self.current_balance += pnl_dollars
-                    
-                    result = "WIN" if pnl_pct > 0 else "LOSS"
-                    
-                    self.brain.record_outcome(pos.decision_id, {
-                        "entry_price": pos.entry_price,
-                        "exit_price": exit_price,
-                        "pnl": pnl_pct,
-                        "was_correct": pnl_pct > 0,
-                        "actual_move": "UP" if exit_price > pos.entry_price else "DOWN",
-                        "actual_move_pct": pnl_pct
-                    })
-                    
-                    trade_record = {
-                        "pair": pair,
-                        "side": pos.direction,
-                        "entry_price": pos.entry_price,
-                        "exit_price": exit_price,
-                        "quantity": pos.quantity,
-                        "usdt_value": config.TRADE_AMOUNT_USDT,
-                        "pnl_pct": pnl_pct,
-                        "outcome": result,
-                        "prediction_correct": pnl_pct > 0,
-                        "confidence": pos.confidence,
-                        "reasoning_id": pos.decision_id,
-                        "binance_order_id": f"LIVE_{pos.id[:8]}",
-                        "is_dry_run": config.DRY_RUN
-                    }
-                    db.log_trade(trade_record)
-                    
-                    pos.close(exit_price, datetime.now(), pnl_pct, result)
-                    self.positions.remove(pos)
-                    
-                    logger.info(f"CERRAR {pos.direction} | Entry: ${pos.entry_price:.2f} → Exit: ${exit_price:.2f} | {result} | PnL: {pnl_pct:+.2f}%")
-                
-                available_slots = self.max_slots - len(self.positions)
-                if available_slots > 0:
-                    analysis = self.brain.analyze(snapshot, source="live")
-                    direction = analysis.get("direction", "HOLD")
-                    confidence = analysis.get("confidence", 0)
-                    decision_id = analysis.get("_decision_id")
-                    
-                    if direction == "SELL" and config.TRADE_MODE == "spot":
-                        logger.warning(f"SELL ignorado en modo SPOT")
-                        direction = "HOLD"
-                    
-                    if direction in ("BUY", "SELL") and confidence >= config.MIN_CONFIDENCE:
-                        order = self.risk_manager.evaluate(
-                            direction=direction,
-                            confidence=confidence,
-                            snapshot=snapshot,
-                            reasoning=analysis
-                        )
-                        
-                        if order and order.approved:
-                            if config.DRY_RUN:
-                                quantity = config.TRADE_AMOUNT_USDT / snapshot["current_price"]
-                                trade_id = str(uuid.uuid4())
-                                
-                                new_position = Position(
-                                    trade_id=trade_id,
-                                    direction=direction,
-                                    entry_price=snapshot["current_price"],
-                                    quantity=quantity,
-                                    confidence=confidence,
-                                    decision_id=decision_id,
-                                    entry_time=datetime.now()
-                                )
-                                self.positions.append(new_position)
-                                
-                                logger.info(f"ABRIR {direction} @ {confidence}% | Precio: ${snapshot['current_price']:.2f}")
-                            else:
-                                result = self.executor.execute(order)
-                                if result.get("binance_order_id") and not result.get("binance_order_id", "").startswith("FAILED"):
-                                    trade_id = str(uuid.uuid4())
-                                    new_position = Position(
-                                        trade_id=trade_id,
-                                        direction=direction,
-                                        entry_price=result.get("entry_price", snapshot["current_price"]),
-                                        quantity=result.get("quantity", 0),
-                                        confidence=confidence,
-                                        decision_id=decision_id,
-                                        entry_time=datetime.now()
-                                    )
-                                    new_position.binance_order_id = result.get("binance_order_id")
-                                    self.positions.append(new_position)
-                                    
-                                    logger.info(f"Orden ejecutada: {result.get('binance_order_id')}")
-                
-                logger.info(f"Balance: ${self.current_balance:.2f} | Posiciones: {len(self.positions)}/{self.max_slots}")
-                
-            except Exception as e:
-                logger.error(f"Error en ciclo de trading: {e}")
-            
-            time.sleep(config.CYCLE_INTERVAL)
-        
-        logger.info("Bot detenido.")
 
 
 class BacktestEngine:
-    def __init__(self, pair: str, start_date: str, end_date: str,
-                 lookback_period: int = 300, model_name: str = None,
-                 trade_mode: str = 'spot'):
+    def __init__(self, pair: str, start_date: str, end_date: str, model_name: str = None):
+        self.model_name = model_name or config.get_model_name_for_db()
+        self.brain = TradingBrain(model_name=self.model_name)
+        self.risk_manager = RiskManager()
+        self.executor = TradeExecutor()
+        self.collector = DataCollector()
+        
         self.pair = pair
         self.start_date = start_date
         self.end_date = end_date
-        self.lookback_period = lookback_period
-        
-        # Usar modelo desde argumento o desde config
-        self.model_name = model_name or config.get_model_name_for_db()
-        self.trade_mode = trade_mode
-        
         self.session_id = f"BACKTEST_{uuid.uuid4().hex[:8]}"
-        db.create_session(
-            session_id=self.session_id,
-            session_type='backtest',
-            model_name=self.model_name,
-            initial_balance=config.INITIAL_BALANCE,
-            pair=pair,
-            config_snapshot=json.dumps({
-                'start_date': start_date,
-                'end_date': end_date,
-                'trade_mode': trade_mode,
-                'model': self.model_name
-            })
-        )
-        
-        self.collector = DataCollector(db_path=config.MARKET_DATA_DB)
-        self.brain = TradingBrain(model_name=self.model_name)
-        
-        self.max_slots = config.MAX_SLOTS
-        self.total_capital = config.INITIAL_BALANCE
-        
-        if hasattr(config, 'TRADE_AMOUNT_USDT') and config.TRADE_AMOUNT_USDT > 0:
-            self.capital_per_slot = float(config.TRADE_AMOUNT_USDT)
-        else:
-            self.capital_per_slot = self.total_capital / max(self.max_slots, 1)
-        
+
         self.positions = []
-        self.closed_trades = []
+        self.current_balance = config.INITIAL_BALANCE
         self.wins = 0
         self.losses = 0
-        self.current_balance = self.total_capital
+        self.Buys = 0
+        self.Sells = 0
+        self.last_action_vela = 0
+        self.current_vela = 50
         self.shutdown_flag = False
-        
-        self.last_processed_index = 0
-        self.checkpoint_file = config.DATA_DIR / f"checkpoint_{self.session_id}.json"
-        
-        logger.info(f"Backtest Engine | Modelo: {self.brain.model_name}")
-        logger.info(f"Sesión: {self.session_id}")
-        logger.info(f"Periodo: {start_date} → {end_date}")
-        
-        self.checkpoint_file = config.DATA_DIR / f"checkpoint_{self.session_id}.json"
-        self.resume_from_checkpoint = self._check_for_checkpoint()
-        
-        if self.resume_from_checkpoint:
-            logger.info(f"Sesión incompleta detectada. ¿Resumir desde vela {self.last_processed_index}?")
-            logger.info(f"Presiona Ctrl+C en los próximos 5s para empezar de cero")
-            time.sleep(5)
+        self.usable_slots = config.MAX_SLOTS
 
-    def load_data(self) -> pd.DataFrame:
-        logger.info(f"Cargando datos para {self.pair}...")
-        
-        start_date_obj = pd.to_datetime(self.start_date)
-        end_date_obj = pd.to_datetime(self.end_date)
-        buffer_start = start_date_obj - pd.Timedelta(hours=self.lookback_period + 50)
-        
-        df = self.collector.get_historical_klines(
-            self.pair, "1h",
-            start_date=buffer_start,
-            end_date=end_date_obj,
-            limit=int((end_date_obj - buffer_start).total_seconds() / 3600) + 100
-        )
+        db.init_model_db(self.model_name)
 
-        df = df[(df['timestamp'] >= pd.to_datetime(self.start_date)) & 
-                (df['timestamp'] <= pd.to_datetime(self.end_date))].copy()
-        
-        logger.info(f"Cargadas {len(df)} velas totales")
-        return df
+        # Cargar progreso
+        self._load_progress()
 
-    def calculate_indicators_with_window(self, df_window: pd.DataFrame) -> dict:
-        if len(df_window) < 50:
-            return self._default_indicators()
-        
-        close = df_window['close']
-        
-        delta = close.diff()
-        gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
-        loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
-        rs = gain / loss
-        rsi = 100 - (100 / (1 + rs))
-        current_rsi = round(rsi.iloc[-1], 2) if not np.isnan(rsi.iloc[-1]) else 50
-        
-        ema9 = close.ewm(span=9, adjust=False).mean()
-        ema20 = close.ewm(span=20, adjust=False).mean()
-        ema_cross = "BULLISH" if ema9.iloc[-1] > ema20.iloc[-1] else "BEARISH"
-        
-        ema12 = close.ewm(span=12, adjust=False).mean()
-        ema26 = close.ewm(span=26, adjust=False).mean()
-        macd_line = ema12 - ema26
-        signal_line = macd_line.ewm(span=9, adjust=False).mean()
-        macd_cross = "BULLISH" if macd_line.iloc[-1] > signal_line.iloc[-1] else "BEARISH"
-        
-        price_change_20 = (close.iloc[-1] - close.iloc[-20]) / close.iloc[-20] * 100 if len(close) >= 20 else 0
-        trend_strength = "STRONG" if abs(price_change_20) > 3 else "MODERATE" if abs(price_change_20) > 1 else "WEAK"
-        
-        return {
-            "rsi": current_rsi,
-            "market_regime": ema_cross.lower(),
-            "trend_strength": trend_strength.lower(),
-            "macd_cross": macd_cross.lower()
-        }
+        logger.info(f"BacktestEngine listo | Modelo: {self.model_name} | Vela inicial: {self.current_vela}")
 
-    def _default_indicators(self) -> dict:
-        return {"rsi": 50, "market_regime": "neutral", "trend_strength": "weak", "macd_cross": "none"}
+    def _load_progress(self):
+        progress = db.get_progress(self.model_name, self.session_id)
+        if progress:
+            self.current_vela = progress.get('last_vela', 50)
+            self.current_balance = progress.get('balance', config.INITIAL_BALANCE)
+            self.wins = progress.get('wins', 0)
+            self.losses = progress.get('losses', 0)
+            logger.info(f"Reanudando desde vela {self.current_vela}")
 
-    def simulate_trade(self, direction: str, entry_price: float, exit_price: float) -> dict:
-        if direction == "BUY":
-            price_change = (exit_price - entry_price) / entry_price
-            hit = exit_price > entry_price
-        elif direction == "SELL":
-            price_change = (entry_price - exit_price) / entry_price
-            hit = exit_price < entry_price
-        else:
-            return {"executed": False, "pnl": 0, "hit": None}
-        
-        pnl = price_change - config.COMMISSION
-        return {"executed": True, "pnl": pnl, "hit": hit}
+    def run(self):
+        count_hold = 0
+        logger.info(f"Iniciando BACKTESTING | {self.start_date} → {self.end_date}")
 
-    def _check_for_checkpoint(self) -> bool:
-        """Verifica si existe checkpoint de sesión anterior"""
-        if not self.checkpoint_file.exists():
-            return False
-        
-        try:
-            with open(self.checkpoint_file, 'r') as f:
-                checkpoint = json.load(f)
+        df = self.collector.get_historical_klines(self.pair, "1h", start_date=self.start_date, end_date=self.end_date)
+        if df.empty:
+            logger.error("No se cargaron datos")
+            return
+
+        logger.info(f"Cargadas {len(df)} velas | Iniciando desde vela {self.current_vela}\n")
+
+        for i in range(self.current_vela, len(df) - 1):
+            if self.shutdown_flag:
+                logger.info(f"Pausado en vela {i}. Guardando progreso...")
+                db.save_progress(self.model_name, self.session_id, i, self.current_balance, self.wins, self.losses)
+                break
+
+            current_row = df.iloc[i]
+            #open_pos = self.positions[0] if self.positions else None
+            #pos = self.positions[0] if self.positions else None
+            exit_price = current_row['close']
+
+            indicators = self.collector.compute_indicators(
+                df.iloc[max(0, i-100):i+1], "1h" #, open_position=open_pos_dict
+            )
             
-            # Validar que el checkpoint sea de esta sesión
-            if checkpoint.get('session_id') != self.session_id:
-                return False
-            
-            # Restaurar estado
-            self.last_processed_index = checkpoint.get('last_index', 0)
-            self.current_balance = checkpoint.get('balance', self.total_capital)
-            self.positions = checkpoint.get('positions', [])
-            self.wins = checkpoint.get('wins', 0)
-            self.losses = checkpoint.get('losses', 0)
-            
-            logger.info(f"Checkpoint cargado: vela {self.last_processed_index}, balance: ${self.current_balance:.2f}")
-            return True
-            
-        except Exception as e:
-            logger.warning(f"Error leyendo checkpoint: {e}. Empezando de cero.")
-            return False
-    
-    def _save_checkpoint(self):
-        """Guarda checkpoint del estado actual"""
-        try:
-            checkpoint = {
-                'session_id': self.session_id,
-                'last_index': self.last_processed_index,
-                'balance': self.current_balance,
-                'positions': [{
-                    'id': p.id,
-                    'direction': p.direction,
-                    'entry_price': p.entry_price,
-                    'quantity': p.quantity,
-                    'confidence': p.confidence,
-                    'decision_id': p.decision_id,
-                    'entry_time': p.entry_time.isoformat() if hasattr(p.entry_time, 'isoformat') else str(p.entry_time)
-                } for p in self.positions],
-                'wins': self.wins,
-                'losses': self.losses,
-                'timestamp': datetime.now().isoformat()
-            }
-            
-            with open(self.checkpoint_file, 'w', encoding='utf-8') as f:
-                json.dump(checkpoint, f, indent=2)
-            
-            logger.info(f"Checkpoint guardado: vela {self.last_processed_index}, balance: ${self.current_balance:.2f}")
-            
-        except Exception as e:
-            logger.error(f"Error guardando checkpoint: {e}")
-    
-    def _load_checkpoint(self) -> bool:
-        """Carga checkpoint si existe y es válido"""
-        if not self.checkpoint_file.exists():
-            return False
-        
-        try:
-            with open(self.checkpoint_file, 'r', encoding='utf-8') as f:
-                checkpoint = json.load(f)
-            
-            # Validar que el checkpoint sea de esta sesión
-            if checkpoint.get('session_id') != self.session_id:
-                logger.warning("Checkpoint de sesión diferente. Ignorando.")
-                return False
-            
-            # Restaurar estado
-            self.last_processed_index = checkpoint.get('last_index', 0)
-            self.current_balance = checkpoint.get('balance', self.total_capital)
-            self.wins = checkpoint.get('wins', 0)
-            self.losses = checkpoint.get('losses', 0)
-            
-            # Restaurar posiciones (reconstruir objetos Position)
-            self.positions = []
-            for p_data in checkpoint.get('positions', []):
-                pos = Position(
-                    trade_id=p_data['id'],
-                    direction=p_data['direction'],
-                    entry_price=p_data['entry_price'],
-                    quantity=p_data['quantity'],
-                    confidence=p_data['confidence'],
-                    decision_id=p_data['decision_id'],
-                    entry_time=datetime.fromisoformat(p_data['entry_time']) if isinstance(p_data['entry_time'], str) else p_data['entry_time']
+            positions = []
+            if not self.positions:
+                dummy_pos = Position(
+                    trade_id=0, 
+                    direction=None, 
+                    entry_price=0.0, 
+                    quantity=0, 
+                    confidence=0, 
+                    decision_id=0, 
+                    entry_time=None
                 )
-                self.positions.append(pos)
-            
-            logger.info(f"Checkpoint cargado: vela {self.last_processed_index}, balance: ${self.current_balance:.2f}, {len(self.positions)} posiciones abiertas")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error cargando checkpoint: {e}")
-            return False
-    
-    def run(self) -> dict:
-        original_handler = signal.signal(signal.SIGINT, self._signal_handler)
-        
-        try:
-            if self._load_checkpoint():
-                logger.info("Resumiendo desde checkpoint anterior...")
-                # Preguntar si quiere continuar
-                logger.info("Presiona Ctrl+C en 5s para empezar de cero")
-                try:
-                    time.sleep(5)
-                except KeyboardInterrupt:
-                    logger.info("Reiniciando desde cero...")
-                    self.last_processed_index = 0
-                    self.current_balance = self.total_capital
-                    self.wins = 0
-                    self.losses = 0
-                    self.positions = []
-                    if self.checkpoint_file.exists():
-                        self.checkpoint_file.unlink()
-                        
-            df = self.load_data()
-            #start_idx = self.lookback_period
-            start_idx = max(self.lookback_period, self.last_processed_index)  # ← Usar checkpoint
-            total_velas = len(df) - start_idx - 1
-            
-            logger.info(f"Simulando {total_velas} velas...")
-            start_time = time.time()
-            
-            for i in range(start_idx, len(df) - 1):
-                if self.shutdown_flag:
-                    logger.warning("Interrupción detectada. Guardando checkpoint...")
-                    self._save_checkpoint()
-                    logger.warning(f"Checkpoint guardado. Ejecuta de nuevo para continuar.")
-                    break
+                positions.append(dummy_pos)
+            else:
+                positions = self.positions[:]
                 
-                window_start = i - self.lookback_period
-                df_window = df.iloc[window_start:i+1]
-                current_row = df.iloc[i]
-                
-                indicators = self.calculate_indicators_with_window(df_window)
-                current_rsi = indicators.get('rsi', 50)
-                
+            for pos in positions:
+                pnl_pct = round((((exit_price - pos.entry_price) / pos.entry_price) * 100), 2) if not pos.trade_id == 0 else 0
+                open_pos_dict = {"direction": pos.direction, "entry_price": pos.entry_price, "pnl_pct": pnl_pct} if not pos.trade_id == 0 else None          
                 snapshot = {
                     "pair": self.pair,
                     "current_price": current_row['close'],
                     "usdt_balance": self.current_balance,
                     "indicators_1h": indicators,
-                    "historical_timestamp": current_row['timestamp'],
-                    "open_positions_count": len(self.positions),
-                    "max_slots": self.max_slots,
-                    "trade_mode": self.trade_mode,
-                    "capital_per_slot": self.capital_per_slot
+                    "open_position": open_pos_dict,
+                    "vela_actual": i
                 }
+
+                analysis = self.brain.analyze(snapshot, source="backtest", show_responce=showresponce)
+                direction = analysis.get("direction", "HOLD")
+                confidence = analysis.get("confidence", 0)
                 
-                positions_to_close = []
-                for pos in self.positions[:]:
-                    analysis = self.brain.analyze(snapshot, source="backtest")
-                    new_direction = analysis.get("direction", "HOLD")
-                    if (pos.direction == "BUY" and new_direction == "SELL") or \
-                       (pos.direction == "SELL" and new_direction == "BUY") or \
-                       (pos.direction == "BUY" and current_rsi > 70) or \
-                       (pos.direction == "SELL" and current_rsi < 30):
-                        positions_to_close.append(pos)
-                
-                for pos in positions_to_close:
-                    exit_price = current_row['close']
-                    trade_result = self.simulate_trade(pos.direction, pos.entry_price, exit_price)
+                # === Calcular resultado a corto plazo (siguiente vela) ===
+                next_candle_change = None
+                if i + 1 < len(df):
+                    next_price = df.iloc[i + 1]['close']
+                    next_candle_change = (next_price - current_row['close']) / current_row['close'] * 100
+
+                # Guardar decisión con resultado short-term
+                decision_id = self.brain._save_decision(snapshot, analysis, "backtest", next_candle_change)
+                analysis["_decision_id"] = decision_id
+                # if i - self.last_action_vela < 6 and self.positions:
+                    # self.current_vela = i + 1
+                    # continue
+
+                # === APERTURA ===
+                #print(f"Debug if BUY?: {direction} {confidence} {config.MIN_CONFIDENCE} {self.usable_slots}")
+                # if direction in "HOLD":
+                    # count_hold += 1
+                    # if count_hold == 50:
+                        # print("El modelo es midioso y no quiere operar, saliendo...")
+                        # sys.exit()
+                if direction == "BUY" and confidence >= config.MIN_CONFIDENCE and self.usable_slots > 0:
+                    self.usable_slots = self.usable_slots - 1 
+                    qty = config.TRADE_AMOUNT_USDT / current_row['close']
+                    trade_id = str(uuid.uuid4())
+                    new_pos = Position(
+                        trade_id=trade_id,
+                        direction=direction,
+                        entry_price=exit_price,
+                        quantity=qty,
+                        confidence=confidence,
+                        decision_id=None,
+                        entry_time=current_row['timestamp']
+                    )
+                    self.positions.append(new_pos)
                     
-                    if trade_result["executed"]:
-                        pnl_dollars = self.capital_per_slot * trade_result["pnl"]
-                        self.current_balance += pnl_dollars
-                        
-                        result = "WIN" if trade_result["hit"] else "LOSS"
-                        if trade_result["hit"]:
-                            self.wins += 1
-                        else:
-                            self.losses += 1
-                        
-                        self.brain.record_outcome(pos.decision_id, {
+                    db.log_trade(self.model_name, {
+                        "trade_id": trade_id,
+                        'pair': self.pair,
+                        'direction': direction,
+                        'entry_price': exit_price,
+                        'exit_price': 0,
+                        'quantity': qty,
+                        'pnl_pct': 0,
+                        'confidence': confidence,
+                        'outcome': "",
+                        'session_id': self.session_id
+                    })
+                    
+                    logger.info(f"{Fore.GREEN}Vela: [{i}] Comprando @ {confidence}%{Fore.RESET} | {Fore.GREEN}Precio: ${current_row['close']:.2f}{Fore.RESET}")
+                    
+                    self.last_action_vela = i
+                    self.Buys += 1
+
+                # === CIERRE ===
+                for pos in self.positions[:]:
+                    #print(pos.__dict__)
+                #if self.positions:
+                    #current_dir = self.positions[0].direction
+                    #if direction in "SELL" and direction != current_dir and confidence >= config.MIN_CONFIDENCE:
+                    #print(pos.__dict__) 
+                    if pos.direction == "BUY" and direction == "SELL" and confidence >= config.MIN_CONFIDENCE:
+                        #pnl_pct = -pnl_pct
+                        #pnl_pct = (((exit_price - pos.entry_price) / pos.entry_price) * 100)
+                        #logger.info(f"[VELA {i}] Cerrando {pos.direction} → IA recomienda {direction} | PnL: {pnl_pct:+.2f}%")
+                        #trade = db.get_trade_by_id(self.model_name, trade_id="")
+                        db.log_trade(self.model_name, {
+                            'trade_id': pos.trade_id,
+                            'pair': self.pair,
+                            'direction': "SELL",
                             'entry_price': pos.entry_price,
                             'exit_price': exit_price,
-                            'pnl': trade_result['pnl'] * 100,
-                            'was_correct': trade_result["hit"],
-                            'actual_move': 'UP' if exit_price > pos.entry_price else 'DOWN',
-                            'actual_move_pct': (exit_price - pos.entry_price) / pos.entry_price * 100
+                            'quantity': pos.quantity * exit_price,
+                            'pnl_pct': pnl_pct,
+                            'confidence': pos.confidence,
+                            'outcome': "WIN" if pnl_pct > 0 else "LOSS",
+                            'session_id': self.session_id
                         })
-                        
-                        db.log_trade({
-                            "session_id": self.session_id,
-                            "trade_id": pos.id,
-                            "pair": self.pair,
-                            "side": pos.direction,
-                            "entry_price": pos.entry_price,
-                            "exit_price": exit_price,
-                            "quantity": pos.quantity,
-                            "usdt_value": self.capital_per_slot,
-                            "pnl_pct": trade_result['pnl'] * 100,
-                            "outcome": result,
-                            "prediction_correct": trade_result["hit"],
-                            "confidence": pos.confidence,
-                            "reasoning_id": pos.decision_id,
-                            "binance_order_id": f"BACKTEST_{pos.id[:8]}",
-                            "is_dry_run": True,
-                            "created_at": pos.entry_time.isoformat() if hasattr(pos.entry_time, 'isoformat') else datetime.now().isoformat(),
-                            "closed_at": current_row['timestamp'].isoformat() if hasattr(current_row['timestamp'], 'isoformat') else datetime.now().isoformat()
-                        })
-                        
-                        pos.close(exit_price, current_row['timestamp'], trade_result['pnl'] * 100, result)
-                        self.closed_trades.append(pos)
-                        self.positions.remove(pos)
-                        
-                        logger.info(f"[{i}] CERRAR {pos.direction} | Entry: ${pos.entry_price:.2f} → Exit: ${exit_price:.2f} | {result} | PnL: {trade_result['pnl']*100:+.2f}%")
-                
-                available_slots = self.max_slots - len(self.positions)
-                if available_slots > 0:
-                    analysis = self.brain.analyze(snapshot, source="backtest")
-                    direction = analysis.get("direction", "HOLD")
-                    confidence = analysis.get("confidence", 0)
-                    decision_id = analysis.get("_decision_id")
-                    
-                    if direction == "SELL" and self.trade_mode == 'spot':
-                        direction = "HOLD"
-                    
-                    if direction in ("BUY", "SELL") and confidence >= config.MIN_CONFIDENCE:
-                        quantity = self.capital_per_slot / current_row['close']
-                        quantity = round(quantity, 3)
-                        trade_id = str(uuid.uuid4())
-                        
-                        logger.info(f"[{i}] ABRIR {direction} @ {confidence}% | ID: {trade_id[:8]} | Precio: ${current_row['close']:.2f}")
-                        
-                        db.log_trade({
-                            "session_id": self.session_id,
-                            "trade_id": trade_id,
-                            "pair": self.pair,
-                            "side": direction,
-                            "entry_price": current_row['close'],
-                            "quantity": quantity,
-                            "usdt_value": self.capital_per_slot,
-                            "confidence": confidence,
-                            "reasoning_id": decision_id,
-                            "binance_order_id": f"BACKTEST_{trade_id[:8]}",
-                            "is_dry_run": True,
-                            "created_at": current_row['timestamp'].isoformat() if hasattr(current_row['timestamp'], 'isoformat') else datetime.now().isoformat()
-                        })
-                        
-                        new_position = Position(
-                            trade_id=trade_id,
-                            direction=direction,
-                            entry_price=current_row['close'],
-                            quantity=quantity,
-                            confidence=confidence,
-                            decision_id=decision_id,
-                            entry_time=current_row['timestamp']
-                        )
-                        self.positions.append(new_position)
-                
-                self.last_processed_index = i
-                
-                if (i - start_idx) % 50 == 0:
-                    logger.info(f"[{(i - start_idx) / total_velas * 100:.0f}%] Balance: ${self.current_balance:.2f}")
-                    self._save_checkpoint()
-            
-            if self.checkpoint_file.exists():
-                self.checkpoint_file.unlink()
-                logger.info("Checkpoint eliminado (sesión completada)")
-            
-            if self.positions:
-                last_price = df.iloc[-1]['close']
-                logger.info(f"Cerrando {len(self.positions)} posicion(es) final(es) a ${last_price:.2f}")
-                
-                for pos in self.positions[:]:
-                    trade_result = self.simulate_trade(pos.direction, pos.entry_price, last_price)
-                    if trade_result["executed"]:
-                        pnl_dollars = self.capital_per_slot * trade_result["pnl"]
-                        self.current_balance += pnl_dollars
-                        
-                        result = "WIN" if trade_result["hit"] else "LOSS"
-                        if trade_result["hit"]:
+
+                        self.current_balance += config.TRADE_AMOUNT_USDT * (pnl_pct / 100)
+                        if pnl_pct > 0:
                             self.wins += 1
                         else:
                             self.losses += 1
-                        
-                        db.log_trade({
-                            "session_id": self.session_id,
-                            "trade_id": pos.id,
-                            "pair": self.pair,
-                            "side": pos.direction,
-                            "entry_price": pos.entry_price,
-                            "exit_price": last_price,
-                            "quantity": pos.quantity,
-                            "usdt_value": self.capital_per_slot,
-                            "pnl_pct": trade_result['pnl'] * 100,
-                            "outcome": result,
-                            "prediction_correct": trade_result["hit"],
-                            "confidence": pos.confidence,
-                            "reasoning_id": pos.decision_id,
-                            "is_dry_run": True,
-                            "created_at": pos.entry_time.isoformat() if hasattr(pos.entry_time, 'isoformat') else datetime.now().isoformat(),
-                            "closed_at": df.iloc[-1]['timestamp'].isoformat() if hasattr(df.iloc[-1]['timestamp'], 'isoformat') else datetime.now().isoformat()
-                        })
-                        
-                        pos.close(last_price, df.iloc[-1]['timestamp'], trade_result['pnl'] * 100, result)
-                        self.closed_trades.append(pos)
-                
-                self.positions = []
-            
-            elapsed = time.time() - start_time
-            total_trades = self.wins + self.losses
-            win_rate = (self.wins / total_trades * 100) if total_trades > 0 else 0
-            total_return = (self.current_balance - self.total_capital) / self.total_capital * 100
-            
-            db.close_session(
-                session_id=self.session_id,
-                final_balance=self.current_balance,
-                total_trades=total_trades,
-                wins=self.wins,
-                losses=self.losses,
-                total_pnl=total_return
-            )
-            
-            logger.info("\n" + "=" * 80)
-            logger.info("RESULTADOS DEL BACKTESTING")
-            logger.info("=" * 80)
-            logger.info(f"Modelo: {self.brain.model_name}")
-            logger.info(f"Sesión: {self.session_id}")
-            logger.info(f"Capital inicial: ${self.total_capital:.2f}")
-            logger.info(f"Capital final: ${self.current_balance:.2f}")
-            logger.info(f"Retorno: {total_return:+.2f}%")
-            logger.info(f"Trades: {total_trades} | Wins: {self.wins} | Losses: {self.losses}")
-            logger.info(f"Win Rate: {win_rate:.1f}%")
-            logger.info("=" * 80)
-            
-            return {
-                'session_id': self.session_id,
-                'model': self.model_name,
-                'capital_initial': self.total_capital,
-                'capital_final': self.current_balance,
-                'total_return': total_return,
-                'total_trades': total_trades,
-                'wins': self.wins,
-                'losses': self.losses,
-                'win_rate': win_rate
-            }
-            
-        finally:
-            signal.signal(signal.SIGINT, original_handler)
 
-    def _signal_handler(self, sig, frame):
-        self.shutdown_flag = True
-        logger.warning("Backtesting interrumpido por el usuario.")
+                        #self.positions.clear()
+                        self.positions.remove(pos)
+                        self.usable_slots += 1
+                        self.last_action_vela = i
+                        logger.info(f"{Fore.YELLOW}Vela: [{i}] Vendiendo @ {confidence}%{Fore.RESET} | {Fore.YELLOW}Precio: ${current_row['close']:.2f}{Fore.RESET} | {Fore.YELLOW}PnL: {pnl_pct:+.2f}%{Fore.RESET}")
+                        self.Sells += 1
+                        if self.current_balance < config.TRADE_AMOUNT_USDT:
+                             logger.info(f"Monto insuficiente para una segunda operacion {self.current_balance} USDT, saliendo...")
+                             sys.exit()
+            self.current_vela = i + 1
+            # Guardar progreso cada 30 velas
+            if i % 30 == 0:
+                db.save_progress(self.model_name, self.session_id, i, self.current_balance, self.wins, self.losses)
+            #if i % 50 == 0:
+                win_rate = (self.wins / (self.wins + self.losses) * 100) if (self.wins + self.losses) > 0 else 0
+                logger.info("-"*100)
+                logger.info(f"{Fore.WHITE}Progreso: {i}/{len(df)} velas | Balance: ${self.current_balance:.2f} | Win Rate: {win_rate:.1f}%{Fore.RESET}")
+                #logger.info(f"{Fore.WHITE}{Fore.RESET}")
+                logger.info("-"*100)
+            logger.info(f"INFORME DEL BOOT: COMPRAS: {self.Buys} | VENTAS: {self.Sells} | OPERACIONES GANADORAS: {self.wins} | OPERACIONES PERDEDORAS: {self.losses} | BALANCE: {self.current_balance}")
+        # Guardado final
+        db.save_progress(self.model_name, self.session_id, self.current_vela, self.current_balance, self.wins, self.losses)
 
-
-def parse_arguments():
-    """Parsea argumentos de línea de comandos"""
-    parser = argparse.ArgumentParser(
-        description='Crypto AI Trading Bot - Trading automatizado con IA',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Ejemplos de uso:
-  python main.py                                              # Live trading (según config.json)
-  python main.py --backtest                                   # Backtesting con fechas de config.json
-  python main.py --backtest --start "1 Jan 2024" --end "1 Mar 2024"
-  python main.py --backtest --model gemma-3-4b-it-abliterated # Backtesting con modelo específico
-  python main.py --live --model qwen2.5-7b-instruct           # Live trading con modelo específico
-  python main.py --backtest --pair ETHUSDT --start "1 Feb 2024" --end "1 Apr 2024"
-  python main.py --live --dry-run                             # Live trading en modo simulación
-  python main.py --list-models                                # Listar modelos disponibles
-        """
-    )
-    
-    parser.add_argument(
-        '--fresh', '-f',
-        action='store_true',
-        help='Forzar inicio desde cero (ignorar checkpoint existente)'
-    )
-
-    parser.add_argument(
-        '--use-ollamafree',
-        action='store_true',
-        help='Usar OllamaFreeAPI en lugar de servidor local (override config)'
-    )
-
-    parser.add_argument(
-        '--use-local',
-        action='store_true',
-        help='Forzar uso de servidor local (override config)'
-    )
-
-    parser.add_argument(
-        '--backtest', '-b',
-        action='store_true',
-        help='Ejecutar backtesting en lugar de live trading'
-    )
-    
-    parser.add_argument(
-        '--live', '-l',
-        action='store_true',
-        help='Ejecutar live trading (por defecto)'
-    )
-    
-    parser.add_argument(
-        '--model', '-m',
-        type=str,
-        help='Nombre del modelo LLM a usar (ej: qwen2.5-7b-instruct, gemma-3-4b-it-abliterated)'
-    )
-    
-    parser.add_argument(
-        '--list-models',
-        action='store_true',
-        help='Listar todos los modelos disponibles en trained_models/'
-    )
-    
-    parser.add_argument(
-        '--start', '-s',
-        type=str,
-        help='Fecha de inicio para backtesting (ej: "1 Jan 2024")'
-    )
-    
-    parser.add_argument(
-        '--end', '-e',
-        type=str,
-        help='Fecha de fin para backtesting (ej: "1 Mar 2024")'
-    )
-    
-    parser.add_argument(
-        '--pair', '-p',
-        type=str,
-        help='Par de trading (ej: BNBUSDT, ETHUSDT)'
-    )
-    
-    parser.add_argument(
-        '--dry-run', '-d',
-        action='store_true',
-        help='Forzar modo dry run (simulación sin dinero real)'
-    )
-    
-    parser.add_argument(
-        '--config', '-c',
-        type=str,
-        default='config.json',
-        help='Archivo de configuración (default: config.json)'
-    )
-    
-    return parser.parse_args()
-
-
-def list_available_models():
-    """Lista todos los modelos disponibles en trained_models/"""
-    logger.info("=" * 80)
-    logger.info("MODELOS DISPONIBLES")
-    logger.info("=" * 80)
-    
-    if not MODELS_DIR.exists():
-        logger.info("No hay modelos entrenados aún")
-        return
-    
-    models = []
-    for db_file in MODELS_DIR.glob("*.db"):
-        if '_summary' in db_file.name:
-            continue
-        
-        model_name = db_file.stem
-        db_size = db_file.stat().st_size / (1024 * 1024)  # MB
-        
-        # Obtener estadísticas básicas
-        try:
-            conn = sqlite3.connect(str(db_file))
-            cursor = conn.cursor()
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
-            tables = [row[0] for row in cursor.fetchall()]
-            
-            stats = {}
-            if 'outcomes' in tables:
-                cursor.execute('SELECT COUNT(*) FROM outcomes')
-                stats['trades'] = cursor.fetchone()[0]
-            
-            if 'model_stats' in tables:
-                cursor.execute('SELECT win_rate, total_pnl FROM model_stats WHERE id = 1')
-                row = cursor.fetchone()
-                if row:
-                    stats['win_rate'] = row[0]
-                    stats['pnl'] = row[1]
-            
-            conn.close()
-            
-            models.append({
-                'name': model_name,
-                'size_mb': round(db_size, 2),
-                'stats': stats
-            })
-        except Exception as e:
-            logger.debug(f"Error leyendo {db_file}: {e}")
-    
-    if models:
-        logger.info(f"{'Nombre del Modelo':<40} {'Tamaño':<10} {'Trades':<10} {'Win Rate':<10} {'PnL':<10}")
-        logger.info("-" * 80)
-        for model in sorted(models, key=lambda x: x['name']):
-            stats = model['stats']
-            trades = stats.get('trades', 0)
-            win_rate = f"{stats.get('win_rate', 0):.1f}%" if 'win_rate' in stats else 'N/A'
-            pnl = f"{stats.get('pnl', 0):+.2f}%" if 'pnl' in stats else 'N/A'
-            logger.info(f"{model['name']:<40} {model['size_mb']:<10.2f}MB {trades:<10} {win_rate:<10} {pnl:<10}")
-    else:
-        logger.info("No hay modelos entrenados aún")
-    
-    logger.info("=" * 80)
+        logger.info("BACKTEST FINALIZADO")
 
 
 def main():
-    args = parse_arguments()
-    
-    # Listar modelos si se solicita
-    if args.list_models:
-        list_available_models()
-        return
-    
-    if args.use_ollamafree:
-        config.USE_OLLAMAFREE = True
-        logger.info("Usando OllamaFreeAPI (por argumento)")
-    elif args.use_local:
-        config.USE_OLLAMAFREE = False
-        logger.info("Usando servidor local (por argumento)")
-    
-    if args.fresh:
-        # Eliminar cualquier checkpoint existente
-        checkpoint_file = config.DATA_DIR / f"checkpoint_*.json"
-        for cp in config.DATA_DIR.glob("checkpoint_*.json"):
-            cp.unlink()
-        logger.info("Checkpoints eliminados. Inicio fresco.")
-        
-    # Validar configuración
-    config.validate()
-    
-    # Determinar modelo a usar
-    model_name = args.model if args.model else config.get_model_name_for_db()
-    
-    # Determinar modo de ejecución
-    if args.backtest or (not args.live and config.TRAIN_MODE):
-        logger.info(f"Iniciando backtesting")
-        
-        # Usar fechas de argumentos o de config
-        start_date = args.start or config.TRAIN_START
-        end_date = args.end or config.TRAIN_END
-        pair = args.pair or config.TRADING_PAIRS[0]
-        
-        if args.backtest:
-            logger.info(f"Modelo: {engine.brain.model_name}")
-        else:
-            logger.info(f"Modelo: {model_name}")
-        logger.info(f"Período: {start_date} → {end_date}")
-        logger.info(f"Par: {pair}")
-        
-        engine = BacktestEngine(
-            pair=pair,
-            start_date=start_date,
-            end_date=end_date,
-            model_name=model_name,
-            trade_mode=config.TRADE_MODE
-        )
-        results = engine.run()
-        
-        logger.info("Backtesting completado")
-        logger.info(f"Retorno: {results.get('total_return', 0):+.2f}%")
-        logger.info(f"Win Rate: {results.get('win_rate', 0):.1f}%")
-        logger.info(f"Trades: {results.get('total_trades', 0)}")
-    else:
-        logger.info("Iniciando trading en LIVE")
-        if args.backtest:
-            logger.info(f"Modelo: {engine.brain.model_name}")
-        else:
-            logger.info(f"Modelo: {model_name}")
-        bot = TradingBot(model_name=model_name)
-        bot.run_live()
+    # logger.info("Iniciando BACKTESTING...")
+    # engine = BacktestEngine(
+        # pair=config.TRADING_PAIRS[0],
+        # start_date=config.TRAIN_START,
+        # end_date=config.TRAIN_END,
+        # model_name=config.get_model_name_for_db()
+    # )
+    # engine.run()
+    parser = argparse.ArgumentParser(description="Crypto AI Trading Bot")
+    parser.add_argument("--mode", choices=["backtest", "live", "test"], default="backtest", help="Modo de ejecución")
+    parser.add_argument("--pair", type=str, default=config.TRADING_PAIRS[0], help="Par a operar (ej: BNBUSDT)")
+    parser.add_argument("--limit", type=int, default=0, help="Limitar número de velas para pruebas rápidas")
+    parser.add_argument("--model", type=str, default=None, help="Modelo específico a usar")
+    parser.add_argument("--min-confidence", type=int, default=None, help="Sobrescribir MIN_CONFIDENCE")
+    parser.add_argument("--show-responce", action='store_true', default=False, help="Muestra las respuestas del modelo")
+    args = parser.parse_args()
 
+    logger.info(f"Iniciando en modo: {args.mode.upper()} | Par: {args.pair}")
+    
+    if args.show_responce: showresponce = args.show_responce
+
+    if args.min_confidence:
+        config.MIN_CONFIDENCE = args.min_confidence
+
+    if args.mode == "backtest":
+        engine = BacktestEngine(
+            pair=args.pair,
+            start_date=config.TRAIN_START,
+            end_date=config.TRAIN_END,
+            model_name=args.model
+        )
+        engine.run()
+    else:
+        logger.warning("Modo live/test aún no implementado completamente.")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nPrograma interrumpido por el usuario.")
+        sys.exit()

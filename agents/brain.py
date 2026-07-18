@@ -1,634 +1,477 @@
 """
-agents/brain.py - Trading Brain con LLMAdapter unificado
-CORRECCIONES: Regex sin espacios, max_tokens razonable, prompt flexible, indicadores RAW
+agents/brain.py - Prompt completo con todos los indicadores
 """
+
 import json
 import re
 import time
 import sqlite3
 import os
+import sys
 from datetime import datetime
-from pathlib import Path
 from loguru import logger
 import config
 from agents.llm_adapter import LLMAdapter
-from agents.validator import PredictionValidator
+from db.client import client as db
+
+import argostranslate.package
+import argostranslate.translate
+
+from colorama import Fore, Style, init
+init(autoreset=True)
+
+from_code = "en"
+to_code = "es"
+
+# Descarga e instala el paquete de idioma (solo la primera vez)
+argostranslate.package.update_package_index()
+available_packages = argostranslate.package.get_available_packages()
+package_to_install = next(
+    filter(lambda x: x.from_code == from_code and x.to_code == to_code, available_packages)
+)
+argostranslate.package.install_from_path(package_to_install.download())
+
+# Traducir
+installed_languages = argostranslate.translate.get_installed_languages()
+from_lang = list(filter(lambda x: x.code == from_code, installed_languages))[0]
+to_lang = list(filter(lambda x: x.code == to_code, installed_languages))[0]
+translation = from_lang.get_translation(to_lang)
 
 class TradingBrain:
     def __init__(self, model_name: str = None):
-        if config.USE_OLLAMAFREE:
-            self.llm = LLMAdapter(use_ollamafree=True)
-        else:
-            self.llm = LLMAdapter(model_name=model_name, use_ollamafree=False)
-        
+        self.llm = LLMAdapter(model_name=model_name, use_ollamafree=False)
         self.model_name = self.llm.model_name
         self.db_path = config.get_model_db_path(self.model_name.replace(":", "_").replace("/", "_"))
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
-        
+
         self._init_database()
-        
-        self.validator = PredictionValidator(str(self.db_path))
-        self.previous_decision = None
-        
-        logger.info(f"Brain inicializado | Modelo: {self.model_name} | DB: {self.db_path}")
+        logger.info(f"Brain inicializado | Modelo: {self.model_name}")
 
     def _init_database(self):
-        try:
-            conn = sqlite3.connect(str(self.db_path))
-            cursor = conn.cursor()
-            
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS decisions (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    timestamp TEXT NOT NULL,
-                    historical_timestamp TEXT,
-                    source TEXT NOT NULL,
-                    pair TEXT NOT NULL,
-                    direction TEXT NOT NULL,
-                    confidence INTEGER NOT NULL,
-                    hypothesis TEXT,
-                    response_time REAL,
-                    rsi REAL,
-                    price REAL,
-                    market_regime TEXT,
-                    trend_strength TEXT,
-                    macd_cross TEXT,
-                    raw_response TEXT,
-                    error TEXT
-                )
-            ''')
-            
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS outcomes (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    decision_id INTEGER NOT NULL,
-                    timestamp TEXT NOT NULL,
-                    entry_price REAL,
-                    exit_price REAL,
-                    pnl REAL,
-                    was_correct BOOLEAN,
-                    actual_move TEXT,
-                    actual_move_pct REAL,
-                    FOREIGN KEY (decision_id) REFERENCES decisions (id)
-                )
-            ''')
-            
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS model_stats (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    updated_at TEXT NOT NULL,
-                    total_decisions INTEGER DEFAULT 0,
-                    total_trades INTEGER DEFAULT 0,
-                    correct_trades INTEGER DEFAULT 0,
-                    win_rate REAL DEFAULT 0,
-                    total_pnl REAL DEFAULT 0,
-                    avg_confidence REAL DEFAULT 0,
-                    llm_model TEXT
-                )
-            ''')
-            
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS prediction_validations (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    decision_id INTEGER,
-                    validated_at TEXT,
-                    previous_direction TEXT,
-                    previous_confidence INTEGER,
-                    price_change_pct REAL,
-                    validation_result TEXT,
-                    success BOOLEAN,
-                    reason TEXT,
-                    opportunity_cost REAL,
-                    pattern_learned TEXT,
-                    prev_rsi REAL,
-                    prev_regime TEXT,
-                    prev_trend TEXT,
-                    current_rsi REAL,
-                    current_regime TEXT,
-                    current_trend TEXT
-                )
-            ''')
-            
-            cursor.execute('''
-                INSERT OR REPLACE INTO model_stats (id, updated_at, llm_model)
-                VALUES (1, ?, ?)
-            ''', (datetime.now().isoformat(), self.model_name))
-            
-            conn.commit()
-            conn.close()
-            logger.debug(f"Base de datos inicializada: {self.db_path}")
-            
-        except Exception as e:
-            logger.error(f"Error inicializando base de datos: {e}")
-            raise
+        db.init_model_db(self.model_name)
+        # conn = sqlite3.connect(str(self.db_path))
+        # c = conn.cursor()
+        # c.execute('''CREATE TABLE IF NOT EXISTS decisions (
+            # id INTEGER PRIMARY KEY AUTOINCREMENT,
+            # timestamp TEXT NOT NULL,
+            # pair TEXT,
+            # direction TEXT,
+            # confidence INTEGER,
+            # hypothesis TEXT,
+            # source TEXT
+        # )''')
+        # c.execute('''CREATE TABLE IF NOT EXISTS trades (
+            # id INTEGER PRIMARY KEY AUTOINCREMENT,
+            # timestamp TEXT NOT NULL,
+            # pair TEXT NOT NULL,
+            # direction TEXT NOT NULL,
+            # entry_price REAL,
+            # exit_price REAL,
+            # quantity REAL,
+            # pnl_pct REAL,
+            # confidence INTEGER,
+            # outcome TEXT,
+            # hypothesis TEXT,
+            # session_id TEXT
+        # )''')
+        # conn.commit()
+        # conn.close()
 
-    def _get_learned_patterns(self, limit: int = 3) -> list:
-        """Obtiene patrones exitosos para SUGERIR (no forzar)"""
-        conn = sqlite3.connect(str(self.db_path))
-        cursor = conn.cursor()
-        
-        cursor.execute('''
-            SELECT pattern_learned, COUNT(*) as count,
-                   ROUND(SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1) as success_rate
-            FROM prediction_validations
-            WHERE pattern_learned != '' AND success = 1
-            GROUP BY pattern_learned
-            HAVING COUNT(*) >= 2
-            ORDER BY success_rate DESC, count DESC
-            LIMIT ?
-        ''', (limit,))
-        
-        patterns = []
-        for row in cursor.fetchall():
-            patterns.append({
-                'pattern': row[0],
-                'occurrences': row[1],
-                'success_rate': row[2]
-            })
-        
-        conn.close()
-        return patterns
-
-    def _build_prompt(self, snapshot: dict, current_indicators: dict) -> str:
+    def _build_prompt(self, snapshot: dict, ind: dict) -> str:
         pair = snapshot.get("pair", "Unknown")
         price = snapshot.get("current_price", 0)
-        
-        trade_mode = snapshot.get("trade_mode", config.TRADE_MODE)
-        capital_per_slot = snapshot.get("capital_per_slot", float(config.TRADE_AMOUNT_USDT))
-        
-        # === Indicadores RAW (sin interpretaciones) ===
-        rsi = current_indicators.get('rsi', 50)
-        
-        # MACD RAW
-        macd_line = current_indicators.get('macd_line', 0)
-        macd_signal = current_indicators.get('macd_signal', 0)
-        macd_histogram = current_indicators.get('macd_histogram', 0)
-        
-        # Bollinger Bands
-        bb_position = current_indicators.get('bb_position_pct', 50)
-        bb_width = current_indicators.get('bb_width_pct', 0)
-        
-        # Volumen y volatilidad
-        volume_ratio = current_indicators.get('volume_ratio', 1.0)
-        atr_pct = current_indicators.get('atr_pct', 0)
-        
-        # Stochastic
-        stoch_k = current_indicators.get('stoch_k', 50)
-        stoch_d = current_indicators.get('stoch_d', 50)
-        
-        # Price Action
-        price_1h = current_indicators.get('price_change_1h', 0)
-        price_4h = current_indicators.get('price_change_4h', 0)
-        
-        # Contexto (solo referencia, no reglas)
-        regime = current_indicators.get('market_regime', 'neutral')
-        trend_strength = current_indicators.get('trend_strength', 'weak')
-        macd_cross = current_indicators.get('macd_cross', 'none')
-        
-        # Patrones aprendidos
-        learned_patterns = self._get_learned_patterns(limit=3)
-        
-        learning_section = ""
-        if learned_patterns:
-            learning_section += "\n\n## HISTORICAL SUCCESSFUL PATTERNS (Priority over general guidelines):\n"
-            for i, p in enumerate(learned_patterns, 1):
-                learning_section += f"- {p['pattern']} (Success: {p['success_rate']}% in {p['occurrences']} cases)\n"
-            learning_section += "→ Use these as REFERENCE, not strict rules. Market conditions change.\n"
-        
-        prompt = f"""You are an experienced crypto trader with full autonomy to analyze RAW indicator data and decide: BUY, SELL, or HOLD.
+        open_pos = snapshot.get("open_position")
+        pnl_pct = snapshot.get("pnl_pct")
+        #open_pnl = ind.get('open_position_pnl', 0)
 
-MARKET DATA
-Pair: {pair}
-TECHNICAL INDICATORS (RAW VALUES - Analyze and Interpret)
-Price: ${price:,.2f}
-RSI(14): {rsi}
-MACD: Line={macd_line:.4f}, Signal={macd_signal:.4f}, Histogram={macd_histogram:.4f}
-Bollinger: Position={bb_position}% (0=lower band, 100=upper band), Width={bb_width}%
-Volume: {volume_ratio}x 20-period average
-ATR: {atr_pct}% of price
-Stochastic: K={stoch_k}, D={stoch_d}
-Price Action: 1h={price_1h:+.2f}%, 4h={price_4h:+.2f}%
-General Principles
-Look for HIGH-PROBABILITY setups, not just indicator thresholds
-Consider ALL factors together (RSI + MACD + Bollinger + Volume + Trend + Stochastic + ATR + Price Action)
-Risk/Reward should favor the trade (potential gain > potential loss)
-When in doubt, HOLD is acceptable but don't miss clear opportunities
-Exit Considerations
-In SPOT mode: SELL only to close existing BUY positions
-Take profits when indicators show extreme opposite conditions
-Cut losses if market regime changes against your position
-Use learned patterns to identify good exit timing
-Risk Management
-Never force a trade if signals are unclear
-Confidence should reflect certainty level (0-100)
-Higher confidence = clearer signals across multiple indicators
-OUTPUT FORMAT (JSON only):
-{{"direction": "BUY/SELL/HOLD", "confidence": 0-100, "market_regime": "bullish/bearish/neutral", "risk_level": "low/medium/high", "hypothesis": "brief reason"}}
-CRITICAL INSTRUCTIONS
-You may think step-by-step in <think> tags FIRST
-AFTER </think>, output ONLY the JSON object
-Do NOT include any text after the JSON
-Hypothesis must be under 100 characters
-ALWAYS close all strings with quotes (")
-Example:
-<think>
-Analyzing RSI, MACD, Bollinger, volume...
-</think>
-{{"direction": "BUY", "confidence": 75, "market_regime": "bullish", "risk_level": "medium", "hypothesis": "RSI 35 + bullish + volume spike"}}
-"""
+        # === TODOS LOS INDICADORES ===
+        rsi = ind.get('rsi', 50)
+        macd_hist = ind.get('macd_histogram', 0)
+        bb_pos = ind.get('bb_position_pct', 50)
+        vol_ratio = ind.get('volume_ratio', 1.0)
+        vol_trend = ind.get('volume_trend', 'NORMAL')
+        atr_pct = ind.get('atr_pct', 1.0)
+        regime = ind.get('market_regime', 'neutral')
+        trend_str = ind.get('trend_strength', 'WEAK')
+        ema50 = ind.get('ema50', 0)
+        ema200 = ind.get('ema200', 0)
+        price_vs_ema50 = ind.get('price_vs_ema50', 0)
+        price_vs_ema200 = ind.get("price_vs_ema200", 0)
+        dist_high = ind.get('distance_24h_high', 0)
+        dist_low = ind.get('distance_24h_low', 0)
+        obv_trend = ind.get('obv_trend', 'FLAT')
+        adx = ind.get('adx', 20)
+        trade_mode = getattr(config, 'TRADE_MODE', 'spot').lower()
+        #open_sec = ""
+        #for pos in open_pos[:]:
+        
+        #open_sec = f"\nPOSICIÓN ABIERTA → {open_pos.get('direction')} | PnL actual: {open_pos.get('pnl_pct')}%" if open_pos is not None else None
+        
+        open_sec = ""
+        if open_pos is not None:
+            open_sec = f"""
+                POSICIÓN ABIERTA ACTUAL:
+                - Dirección: {open_pos.get('direction')}
+                - Precio de entrada: ${open_pos.get('entry_price', 0):.4f}
+                - PnL actual: {open_pos.get('pnl_pct', 0):+.2f}%
+                ¡Esta es información CRÍTICA!"""
+        else:
+            open_sec = "\n(No hay posición abierta actualmente)"
+
+        prompt = f"""You are a disciplined and profitable crypto trader operating in **{trade_mode}**.
+
+            CURRENT MARKET:
+            Pair: {pair} | Current Price: ${price:,.4f}{open_sec}
+
+            TECHNICAL INDICATORS:
+            • RSI(14): {rsi:.1f}
+            • MACD Histogram: {macd_hist:.4f}
+            • Bollinger Bands Position: {bb_pos:.1f}%
+            • Volume: {vol_ratio:.2f}x [{vol_trend}]
+            • ATR: {atr_pct:.2f}%
+            • ADX: {adx:.1f} ({trend_str})
+            • Price vs EMA50: {price_vs_ema50:+.2f}%
+            • 24h High/Low Distance: {dist_high:+.2f}% / {dist_low:+.2f}%
+            • OBV Trend: {obv_trend}
+            • Regime: {regime.upper()}
+
+            
+            CRITICAL RULES FOR OPEN POSITIONS:
+            - If you have an open BUY: Prioritize closing (SELL) when you have profit or momentum is fading.
+            - If you have an open SELL: Prioritize closing (BUY) when you have profit or conditions reverse.
+            - Take profits regularly.
+            - Use StopLoss and TakeProfit.
+            - Only hold losing positions if there is strong reversal signal. Otherwise cut losses.
+            - Be decisive with open positions.
+
+            YOUR DECISION:
+            - BUY = Open new long (only if no open position or you closed previous)
+            - SELL = Open new short OR close current BUY
+            - HOLD = Do nothing (default when no clear edge)
+            
+            CONTRADICTION AWARENESS:
+            - If your hypothesis mentions "correction", "drop", "fall" → DO NOT recommend BUY
+            - If your hypothesis mentions "rebound", "rally", "rise" → DO NOT recommend SELL
+            - Ensure your direction matches your reasoning logic
+
+            YOUR DECISION:
+            - BUY = Open new long (only if no open position or you closed previous)
+            - SELL = Open new short OR close current BUY
+            - HOLD = Do nothing (default when no clear edge)
+
+            **IMPORTANTE:**
+            - Respond only in English.
+            - Respond **ONLY** with valid JSON.
+            - Never include "JSON Response Example:" in the output.
+            - Do not add text before or after the JSON.
+            - Do not use markdown, explanations, ```json tags, or output examples.
+            - Output ONLY valid JSON: {{"direction": "BUY|SELL|HOLD", "confidence": 0-100, "hypothesis": "short explanation"}}
+            - DO NOT include ticker, date, signal, decision objects in json responce. ONLY the 3 fields above.
+            - Send only ONE decision, NOT multiple examples.
+            Think step by step. Especially evaluate the open position first if it exists.
+            **WARNING:** If you output multiple JSON examples instead of ONE decision, the system will fail.
+            """
+       
         return prompt
 
+    # El resto del código (clean, analyze, record_outcome) se mantiene igual
+    # def _clean_json_response(self, raw: str) -> str:
+        # if not raw:
+            # return '{"direction":"HOLD","confidence":50,"hypothesis":"Empty response"}'
+
+        # # Eliminar todo lo que no sea JSON
+        # raw = re.sub(r'<think>.*?</think>', '', raw, flags=re.DOTALL | re.IGNORECASE)
+        # raw = re.sub(r'```json|```', '', raw, flags=re.IGNORECASE)
+        # raw = re.sub(r'^\s*[\w\s:]+:\s*', '', raw, flags=re.MULTILINE)  # Quitar líneas como "Dirección:"
+
+        # # Buscar el primer JSON válido
+        # match = re.search(r'\{.*\}', raw, re.DOTALL)
+        # if match:
+            # cleaned = match.group(0)
+            # # Limpiar comillas mal formadas
+            # cleaned = re.sub(r'(\w+):', r'"\1":', cleaned)  # Asegurar comillas en keys
+            # return cleaned.strip()
+
+        # # Fallback seguro
+        # return '{"direction":"HOLD","confidence":50,"hypothesis":"Parse error - invalid JSON"}'
+        
+    # def _clean_json_response(self, raw_text: str) -> str:
+        # """
+        # Limpia la respuesta de Ollama para extraer SOLO EL PRIMER JSON válido.
+        # CORREGIDO: Maneja múltiples JSON, think tags, claves sin comillas, etc.
+        # """
+        # if not raw_text or not isinstance(raw_text, str):
+            # return '{"direction":"HOLD","confidence":50,"hypothesis":"Empty response"}'
+        
+        # cleaned = raw_text
+        
+        # # ── 1. ELIMINAR TAGS DE RAZONAMIENTO ──
+        # cleaned = re.sub(r'<think>.*?</think>', '', cleaned, flags=re.DOTALL | re.IGNORECASE)
+        
+        # # ── 2. ELIMINAR MARKDOWN CODE BLOCKS ──
+        # cleaned = re.sub(r'```json\s*', '', cleaned, flags=re.IGNORECASE)
+        # cleaned = re.sub(r'```\s*', '', cleaned, flags=re.IGNORECASE)
+        
+        # # ── 3. ELIMINAR PREFIJOS COMO "Dirección:", "Response:", etc. ──
+        # cleaned = re.sub(r'^\s*[\w\sáéíóúñ:]+\s*:\s*', '', cleaned, flags=re.MULTILINE | re.IGNORECASE)
+        
+        # # ── 4. ENCONTRAR EL PRIMER JSON COMPLETO (depth counting) ──
+        # json_objects = []
+        # depth = 0
+        # start_idx = None
+        # in_string = False
+        # escape_next = False
+        
+        # for i, char in enumerate(cleaned):
+            # if escape_next:
+                # escape_next = False
+                # continue
+            
+            # if char == '\\' and in_string:
+                # escape_next = True
+                # continue
+            
+            # if char == '"' and not escape_next:
+                # in_string = not in_string
+                # continue
+            
+            # if not in_string:
+                # if char == '{':
+                    # if depth == 0:
+                        # start_idx = i
+                    # depth += 1
+                # elif char == '}':
+                    # depth -= 1
+                    # if depth == 0 and start_idx is not None:
+                        # json_objects.append(cleaned[start_idx:i+1])
+                        # break  #Solo tomamos el PRIMERO
+        
+        # if json_objects:
+            # cleaned = json_objects[0]
+        # else:
+            # # Fallback: regex simple
+            # match = re.search(r'\{[^{}]*\}', cleaned, re.DOTALL)
+            # if match:
+                # cleaned = match.group(0)
+            # else:
+                # return '{"direction":"HOLD","confidence":50,"hypothesis":"Parse error - no JSON found"}'
+        
+        # # ── 5. CORREGIR CLAVES SIN COMILLAS ──
+        # cleaned = re.sub(r'(?<=[{,])\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:', r'"\1":', cleaned)
+        
+        # # reemplazar ' por " solo en claves
+        # cleaned = re.sub(r'(?<=: )\'([^\']*)\'', r'"\1"', cleaned)
+        
+        # # ── 6. CONVERTIR COMILLAS SIMPLES A DOBLES ──
+        # cleaned = cleaned.replace("'", '"')
+        
+        # # ── 7. ELIMINAR CARACTERES NO IMPRIMIBLES ──
+        # cleaned = ''.join(char for char in cleaned if ord(char) >= 32 or char in '\n\r\t')
+        
+        # # ── 8. BALANCEAR BRACES SI ES NECESARIO ──
+        # open_braces = cleaned.count('{')
+        # close_braces = cleaned.count('}')
+        
+        # if open_braces > close_braces:
+            # cleaned += '}' * (open_braces - close_braces)
+        # elif close_braces > open_braces:
+            # cleaned = '{' * (close_braces - open_braces) + cleaned
+        
+        # # ── 9. VALIDAR QUE SEA JSON VÁLIDO ──
+        # try:
+            # json.loads(cleaned)  # Solo para validar
+        # except json.JSONDecodeError as e:
+            # logger.warning(f"JSON aún inválido después de limpieza: {e}")
+            # logger.warning(f"   Cleaned text: {cleaned[:200]}")
+            # return '{"direction":"HOLD","confidence":50,"hypothesis":"JSON parse error after cleanup"}'
+        
+        # return cleaned.strip()
+        
     def _clean_json_response(self, raw_text: str) -> str:
-        """Limpia la respuesta del LLM para extraer JSON válido"""
+        """
+        Limpia la respuesta de Ollama para extraer JSON válido.
+        CORREGIDO: Maneja apóstrofes en valores sin romper el JSON.
+        """
         if not raw_text or not isinstance(raw_text, str):
-            return "{}"
+            return '{"direction":"HOLD","confidence":50,"hypothesis":"Empty response"}'
         
-        # Debug: mostrar raw completo
-        #logger.debug(f"Respuesta raw: {raw_text}...")
-        #logger.debug(f"Últimos 500 chars de respuesta: {raw_text[-500:]}...")
+        cleaned = raw_text.strip()
         
-        # 1. Remover etiquetas de pensamiento de DeepSeek R1 (SIN ESPACIOS en regex)
-        cleaned = re.sub(r'<think>.*?</think>', '', raw_text, flags=re.DOTALL | re.IGNORECASE)
-        
-        #logger.debug(f"Después de remover <think>: {cleaned}...")
-        
-        # 2. Remover cualquier otro tag HTML/XML (SIN ESPACIOS)
-        cleaned = re.sub(r'<[^>]+>', '', cleaned)
-        
-        # 3. Remover code blocks de markdown
+        # ── 1. ELIMINAR MARKDOWN Y TAGS ──
         cleaned = re.sub(r'```json\s*', '', cleaned, flags=re.IGNORECASE)
-        cleaned = re.sub(r'```\s*', '', cleaned)
+        cleaned = re.sub(r'```\s*', '', cleaned, flags=re.IGNORECASE)
+        cleaned = re.sub(r'\<think\>.*?\</think\>', '', cleaned, flags=re.DOTALL | re.IGNORECASE)
         
-        # 4. Extraer solo el JSON entre llaves
-        json_match = re.search(r'\{.*\}', cleaned, re.DOTALL)
-        if json_match:
-            cleaned = json_match.group(0)
-        else:
-            logger.warning("No se encontró estructura JSON en la respuesta")
-            logger.debug(f"Respuesta completa después de limpiar: {cleaned}...")
-            return '{"direction": "HOLD", "confidence": 50, "market_regime": "neutral", "risk_level": "medium", "hypothesis": "No JSON found in response"}'
+        # ── 2. ENCONTRAR PRIMER JSON CON DEPTH COUNTING ──
+        depth = 0
+        start_idx = None
+        in_string = False
+        escape_next = False
         
-        # 5. Remover caracteres no imprimibles
+        for i, char in enumerate(cleaned):
+            if escape_next:
+                escape_next = False
+                continue
+            if char == '\\' and in_string:
+                escape_next = True
+                continue
+            if char == '"' and not escape_next:
+                in_string = not in_string
+                continue
+            if not in_string:
+                if char == '{':
+                    if depth == 0:
+                        start_idx = i
+                    depth += 1
+                elif char == '}':
+                    depth -= 1
+                    if depth == 0 and start_idx is not None:
+                        cleaned = cleaned[start_idx:i+1]
+                        break
+        
+        if not cleaned.startswith('{'):
+            return '{"direction":"HOLD","confidence":50,"hypothesis":"Parse error"}'
+        
+        # ── 3. CORREGIR CLAVES SIN COMILLAS (SOLO CLAVES, NO VALORES) ──
+        # Patrón: { o , seguido de palabra sin comillas seguida de :
+        cleaned = re.sub(r'([{,])\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:', r'\1"\2":', cleaned)
+        
+        # ── 4. ELIMINAR CARACTERES NO IMPRIMIBLES ──
         cleaned = ''.join(char for char in cleaned if ord(char) >= 32 or char in '\n\r\t')
         
-        # 6. Balancear llaves
-        open_braces = cleaned.count('{')
-        close_braces = cleaned.count('}')
-        if open_braces > close_braces:
-            cleaned += '}' * (open_braces - close_braces)
+        # ── 5. BALANCEAR BRACES ──
+        open_b = cleaned.count('{')
+        close_b = cleaned.count('}')
+        if open_b > close_b:
+            cleaned += '}' * (open_b - close_b)
+        elif close_b > open_b:
+            cleaned = '{' * (close_b - open_b) + cleaned
         
-        # 7. Remover comas antes de llaves de cierre
-        cleaned = re.sub(r',\s*}', '}', cleaned)
+        # ── 6. NO CONVERTIR COMILLAS SIMPLES A DOBLES (rompe apóstrofes) ──
+        # En su lugar, intentar parsear tal cual está
         
-        # 8. Validar JSON antes de retornar
+        # ── 7. VALIDAR Y RETORNAR ──
         try:
-            json.loads(cleaned)
+            json.loads(cleaned)  # Solo validar
             return cleaned.strip()
-        except json.JSONDecodeError as e:
-            logger.warning(f"JSON inválido después de limpiar: {e}")
-            logger.debug(f"JSON problematico: {cleaned}...")
-            return '{"direction": "HOLD", "confidence": 50, "market_regime": "neutral", "risk_level": "medium", "hypothesis": "JSON parse error, using fallback"}'
+        except json.JSONDecodeError:
+            # Fallback: retornar JSON seguro
+            return '{"direction":"HOLD","confidence":50,"hypothesis":"JSON parse error - check hypothesis for apostrophes"}'
+    
+    def analyze(self, snapshot: dict, source: str = "backtest", show_responce: bool = False) -> dict:
+        #try:
+        COLOR = Fore.WHITE
+        ind = snapshot.get("indicators_1h", {})
+        prompt = self._build_prompt(snapshot, ind)
 
-    def _fallback_decision(self, snapshot: dict) -> dict:
-        ind_1h = snapshot.get("indicators_1h", {})
-        rsi = ind_1h.get('rsi', 50)
-        regime = ind_1h.get('market_regime', 'neutral')
-        trend_strength = ind_1h.get('trend_strength', 'weak')
-        
-        if rsi < 35 and regime == 'bullish':
-            direction = "BUY"
-            confidence = 55
-            hypothesis = f"Fallback: RSI oversold ({rsi}) in bullish regime"
-        elif rsi > 65 and regime == 'bearish':
-            direction = "SELL"
-            confidence = 55
-            hypothesis = f"Fallback: RSI overbought ({rsi}) in bearish regime"
-        elif rsi < 30:
-            direction = "BUY"
-            confidence = 50
-            hypothesis = f"Fallback: RSI extremely oversold ({rsi})"
-        elif rsi > 70:
-            direction = "SELL"
-            confidence = 50
-            hypothesis = f"Fallback: RSI extremely overbought ({rsi})"
-        else:
-            direction = "HOLD"
-            confidence = 40
-            hypothesis = f"Fallback: No clear signal (RSI={rsi}, regime={regime})"
-        
-        if trend_strength in ['strong', 'STRONG']:
-            confidence = min(confidence + 10, 80)
-        elif trend_strength in ['weak', 'WEAK']:
-            confidence = max(confidence - 10, 30)
-        
-        return {
-            "direction": direction,
-            "confidence": confidence,
-            "market_regime": regime,
-            "risk_level": "medium",
-            "hypothesis": hypothesis
-        }
+        raw_response = self.llm.chat_completion(
+            # En LLMAdapter o donde se configura el modelo
+        messages=[
+            {"role": "system", "content": "You are a trading expert. Respond with ONE JSON object only. NO EXAMPLES. Respond ONLY in English."},
+            {"role": "user", "content": prompt},
+        ],
+            temperature=0, #0.32,
+            max_tokens=700
+        )
 
-    def _log_decision(self, decision_data: dict) -> int:
-        """Guarda una decisión en SQLite y retorna el ID"""
-        conn = sqlite3.connect(str(self.db_path))
-        cursor = conn.cursor()
+        if show_responce: print(f'raw_response: {raw_response}')
+        cleaned = self._clean_json_response(raw_response)
+        if show_responce: print(f'cleaned: {cleaned}')
+        reasoning = json.loads(cleaned)
+        decision_id = self._save_decision(snapshot, reasoning, source)
+        reasoning["_decision_id"] = decision_id
+        print("direction=", reasoning['direction'], type(reasoning['direction']))
+        if reasoning['direction'] == "BUY":
+            COLOR = Fore.GREEN
+        if reasoning['direction'] == "SELL":
+            COLOR = Fore.YELLOW
+        if reasoning['direction'] == "HOLD":
+            COLOR = Fore.BLUE
         
-        cursor.execute('''
-            INSERT INTO decisions (
-                timestamp, historical_timestamp, source, pair, direction, confidence,
-                hypothesis, response_time, rsi, price, market_regime, trend_strength,
-                macd_cross, raw_response, error
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            decision_data.get('timestamp', datetime.now().isoformat()),
-            decision_data.get('historical_timestamp'),
-            decision_data.get('source', 'live'),
-            decision_data.get('pair', ''),
-            decision_data.get('direction', ''),
-            decision_data.get('confidence', 0),
-            decision_data.get('hypothesis', '')[:2000],
-            decision_data.get('response_time', 0),
-            decision_data.get('rsi', 0),
-            decision_data.get('price', 0),
-            decision_data.get('market_regime', ''),
-            decision_data.get('trend_strength', ''),
-            decision_data.get('macd_cross', ''),
-            decision_data.get('raw_response', '')[:2000],
-            decision_data.get('error', '')[:2000]
-        ))
-        
-        decision_id = cursor.lastrowid
-        conn.commit()
-        conn.close()
-        
-        return decision_id
+        logger.info(f"Vela: {snapshot.get("vela_actual")} | Precio: ${snapshot.get("current_price")} | {COLOR}{reasoning.get('direction')} {Fore.CYAN}| Conf: {Fore.WHITE}{reasoning.get('confidence')}%{Fore.CYAN} | {translation.translate(reasoning.get('hypothesis'))}{Fore.RESET}")
 
-    def _log_outcome(self, decision_id: int, outcome: dict):
-        conn = sqlite3.connect(str(self.db_path))
-        cursor = conn.cursor()
-        
-        cursor.execute('''
-            INSERT INTO outcomes (
-                decision_id, timestamp, entry_price, exit_price, pnl,
-                was_correct, actual_move, actual_move_pct
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            decision_id,
-            datetime.now().isoformat(),
-            outcome.get('entry_price', 0),
-            outcome.get('exit_price', 0),
-            outcome.get('pnl', 0),
-            1 if outcome.get('was_correct') else 0,
-            outcome.get('actual_move', ''),
-            outcome.get('actual_move_pct', 0)
-        ))
-        
-        conn.commit()
-        conn.close()
+        return reasoning
 
-    def _get_recent_decisions(self, pair: str, limit: int = 5) -> list:
-        conn = sqlite3.connect(str(self.db_path))
-        cursor = conn.cursor()
-        
-        cursor.execute('''
-            SELECT direction, confidence, hypothesis, rsi, market_regime,
-                   was_correct, pnl
-            FROM decisions d
-            LEFT JOIN outcomes o ON d.id = o.decision_id
-            WHERE d.pair = ?
-            ORDER BY d.timestamp DESC
-            LIMIT ?
-        ''', (pair, limit))
-        
-        rows = cursor.fetchall()
-        conn.close()
-        
-        return rows
+        #except Exception as e:
+            #logger.error(f"Error en analyze: {e}")
+            #return {"direction": "HOLD", "confidence": 50, "hypothesis": "Error", "_decision_id": None}
 
-    def analyze(self, snapshot: dict, source: str = "live") -> dict:
-        pair = snapshot.get("pair", "Unknown")
-        start_time = time.time()
-        raw_response = ""
-        
+    def _save_decision(self, snapshot: dict, reasoning: dict, source: str, next_candle_change: float = None):
         try:
-            rsi = snapshot.get("indicators_1h", {}).get('rsi', 50)
-            price = snapshot.get("current_price", 0)
-            regime = snapshot.get("indicators_1h", {}).get('market_regime', 'neutral')
-            trend_strength = snapshot.get("indicators_1h", {}).get('trend_strength', 'weak')
-            macd_cross = snapshot.get("indicators_1h", {}).get('macd_cross', 'none')
+            ind = snapshot.get("indicators_1h", {})
             
-            # Validar decisión anterior (aprendizaje)
-            if self.previous_decision is not None:
-                try:
-                    from agents.validator import validate_and_save
-                    validation = validate_and_save(
-                        str(self.db_path),
-                        snapshot,
-                        self.previous_decision
-                    )
-                    logger.info(f"Validación: {validation['previous_direction']} → {validation['validation_result']}")
-                except Exception as e:
-                    logger.debug(f"Error en validación: {e}")
-            
-            # Feedback de decisiones recientes
-            recent = self._get_recent_decisions(pair, limit=3)
-            feedback = ""
-            if recent:
-                feedback = "\n## Recent Outcomes:\n"
-                for r in recent:
-                    status = "WIN" if r[5] == 1 else "LOSS" if r[5] == 0 else "PENDING"
-                    pnl_str = f"{r[6]:+.1f}%" if r[6] else "N/A"
-                    feedback += f"- {r[0]} @ {r[1]}%: {status} | PnL: {pnl_str}\n"
-            
-            prompt = self._build_prompt(snapshot, snapshot.get("indicators_1h", {}))
-            if feedback:
-                prompt += feedback
-            
-            # Debug: Mostrar prompt enviado
-            #logger.debug(f"PROMPT ENVIADO ({len(prompt)} chars):")
-            #logger.debug(f"{'='*80}")
-            #logger.debug(f"{prompt}") #[:2000]}{'...' if len(prompt) > 2000 else ''}")
-            #logger.debug(f"{'='*80}")
-            
-            historical_ts = snapshot.get("historical_timestamp")
-            ts_display = historical_ts.strftime("%Y-%m-%d %H:%M") if historical_ts else datetime.now().strftime("%Y-%m-%d %H:%M")
-            
-            logger.info(f"[{pair}] Analizando mercado...")
-            
-            # Usar LLMAdapter para chat completion
-            raw_response = self.llm.chat_completion(
-                messages=[
-                    {"role": "system", "content": "You are a trading expert. Respond with valid JSON only. ALWAYS make a decision (BUY/SELL/HOLD)."},
-                    {"role": "user", "content": prompt},
-                ],
-                temperature=0.2,
-                max_tokens=4000,
-            )
-            
-            # Debug: Mostrar respuesta recibida
-            #logger.debug(f"RESPUESTA RECIBIDA ({len(raw_response)} chars):")
-            #logger.debug(f"{'='*80}")
-            #logger.debug(f"{raw_response}") #{'...' if len(raw_response) > 1000 else ''}")
-            #logger.debug(f"{'='*80}")
-            
-            cleaned = self._clean_json_response(raw_response)
-            
-            if not cleaned or cleaned == "{}" or len(cleaned) < 10:
-                logger.warning("JSON inválido, usando fallback")
-                reasoning = self._fallback_decision(snapshot)
-            else:
-                try:
-                    reasoning = json.loads(cleaned)
-                except json.JSONDecodeError as e:
-                    logger.warning(f"JSON decode error: {e}")
-                    reasoning = self._fallback_decision(snapshot)
-            
-            reasoning.setdefault("direction", "HOLD")
-            reasoning.setdefault("confidence", 0)
-            reasoning.setdefault("market_regime", regime)
-            reasoning.setdefault("risk_level", "medium")
-            reasoning.setdefault("hypothesis", "No hypothesis")
-            
-            reasoning["confidence"] = max(0, min(100, int(reasoning.get("confidence", 0))))
-            
-            if reasoning["direction"] not in ["BUY", "SELL", "HOLD"]:
-                reasoning["direction"] = "HOLD"
-            
-            elapsed = time.time() - start_time
-            
-            historical_ts = snapshot.get("historical_timestamp")
-            if historical_ts is not None:
-                if hasattr(historical_ts, 'isoformat'):
-                    historical_ts_str = historical_ts.isoformat()
-                else:
-                    historical_ts_str = str(historical_ts)
-            else:
-                historical_ts_str = None
-            
-            decision_id = self._log_decision({
-                'timestamp': datetime.now().isoformat(),
-                'historical_timestamp': historical_ts_str,
-                'source': source,
-                'pair': pair,
-                'direction': reasoning['direction'],
-                'confidence': reasoning['confidence'],
-                'hypothesis': reasoning['hypothesis'],
-                'response_time': round(elapsed, 2),
-                'rsi': rsi,
-                'price': price,
-                'market_regime': reasoning['market_regime'],
-                'trend_strength': trend_strength,
-                'macd_cross': macd_cross,
-                'raw_response': raw_response,
-                'error': ''
-            })
-            
-            reasoning["_decision_id"] = decision_id
-            
-            logger.info(f"[{ts_display}] [{pair}] {reasoning['direction']} @ {reasoning['confidence']}% | {reasoning['hypothesis']}")
-            
-            # Guardar para validar en próxima iteración
-            self.previous_decision = {
-                'id': decision_id,
-                'direction': reasoning['direction'],
-                'confidence': reasoning['confidence'],
-                'hypothesis': reasoning['hypothesis'],
-                'price': price,
-                'rsi': rsi,
-                'market_regime': regime,
-                'trend_strength': trend_strength
+            indicators_snapshot = {
+                "rsi": ind.get('rsi'),
+                "macd_histogram": ind.get('macd_histogram'),
+                "bb_position_pct": ind.get('bb_position_pct'),
+                "volume_ratio": ind.get('volume_ratio'),
+                "volume_trend": ind.get('volume_trend'),
+                "atr_pct": ind.get('atr_pct'),
+                "adx": ind.get('adx'),
+                "price_vs_ema50": ind.get('price_vs_ema50'),
+                "distance_24h_high": ind.get('distance_24h_high'),
+                "distance_24h_low": ind.get('distance_24h_low'),
+                "obv_trend": ind.get('obv_trend'),
+                "market_regime": ind.get('market_regime'),
+                "current_price": snapshot.get("current_price")
             }
-            
-            return reasoning
-            
+
+            indicators_json = json.dumps(indicators_snapshot, default=str)
+
+            conn = sqlite3.connect(str(self.db_path))
+            c = conn.cursor()
+            c.execute('''INSERT INTO decisions 
+                (timestamp, pair, direction, confidence, hypothesis, 
+                 indicators_snapshot, next_candle_change, source)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)''', (
+                datetime.now().isoformat(),
+                snapshot.get("pair"),
+                reasoning.get("direction"),
+                reasoning.get("confidence"),
+                reasoning.get("hypothesis"),
+                indicators_json,
+                next_candle_change,
+                source
+            ))
+            decision_id = c.lastrowid
+            conn.commit()
+            conn.close()
+            return decision_id
+
         except Exception as e:
-            elapsed = time.time() - start_time
-            logger.error(f"[{pair}] Error: {e}")
+            logger.error(f"Error guardando decisión: {e}")
+            return None
             
-            fallback = self._fallback_decision(snapshot)
-            
-            historical_ts = snapshot.get("historical_timestamp")
-            if historical_ts is not None:
-                if hasattr(historical_ts, 'isoformat'):
-                    historical_ts_str = historical_ts.isoformat()
-                else:
-                    historical_ts_str = str(historical_ts)
-            else:
-                historical_ts_str = None
-            
-            self._log_decision({
-                'timestamp': datetime.now().isoformat(),
-                'historical_timestamp': historical_ts_str,
-                'source': source,
-                'pair': pair,
-                'direction': fallback['direction'],
-                'confidence': fallback['confidence'],
-                'hypothesis': fallback['hypothesis'],
-                'response_time': round(elapsed, 2),
-                'rsi': snapshot.get("indicators_1h", {}).get('rsi', 0),
-                'price': snapshot.get("current_price", 0),
-                'market_regime': fallback['market_regime'],
-                'trend_strength': snapshot.get("indicators_1h", {}).get('trend_strength', ''),
-                'macd_cross': snapshot.get("indicators_1h", {}).get('macd_cross', ''),
-                'raw_response': raw_response,
-                'error': str(e)[:1000]
-            })
-            
-            return fallback
-
     def record_outcome(self, decision_id: int, outcome_data: dict):
-        self._log_outcome(decision_id, outcome_data)
-        self._update_model_stats()
-        logger.info(f"Outcome registrado para decision {decision_id}")
+        if not decision_id:
+            logger.warning("record_outcome llamado sin decision_id")
+            return
+        try:
+            conn = sqlite3.connect(str(self.db_path))
+            c = conn.cursor()
+            c.execute('''INSERT INTO trades 
+                (timestamp, pair, direction, entry_price, exit_price, quantity, 
+                 pnl_pct, confidence, outcome, hypothesis, session_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
+                datetime.now().isoformat(),
+                outcome_data.get('pair', 'BNBUSDT'),
+                outcome_data.get('direction'),
+                outcome_data.get('entry_price'),
+                outcome_data.get('exit_price'),
+                outcome_data.get('quantity'),
+                outcome_data.get('pnl'),
+                outcome_data.get('confidence'),
+                "WIN" if outcome_data.get('pnl', 0) > 0 else "LOSS",
+                outcome_data.get('hypothesis', ''),
+                outcome_data.get('session_id')
+            ))
+            conn.commit()
+            conn.close()
+            logger.info(f"Trade guardado | PnL: {outcome_data.get('pnl',0):+.2f}%")
+        except Exception as e:
+            logger.error(f"Error guardando trade: {e}")
 
-    def _update_model_stats(self):
-        conn = sqlite3.connect(str(self.db_path))
-        cursor = conn.cursor()
-        
-        cursor.execute('''
-            SELECT 
-                COUNT(*) as total_decisions,
-                COUNT(CASE WHEN o.id IS NOT NULL THEN 1 END) as total_trades,
-                SUM(CASE WHEN o.was_correct = 1 THEN 1 ELSE 0 END) as correct,
-                AVG(CASE WHEN o.was_correct = 1 THEN d.confidence ELSE NULL END) as avg_confidence_correct,
-                AVG(CASE WHEN o.was_correct = 0 THEN d.confidence ELSE NULL END) as avg_confidence_wrong,
-                SUM(o.pnl) as total_pnl
-            FROM decisions d
-            LEFT JOIN outcomes o ON d.id = o.decision_id
-        ''')
-        
-        row = cursor.fetchone()
-        total_decisions, total_trades, correct, avg_correct, avg_wrong, total_pnl = row
-        
-        win_rate = (correct / total_trades * 100) if total_trades > 0 else 0
-        avg_confidence = ((avg_correct or 0) + (avg_wrong or 0)) / 2 if total_trades > 0 else 0
-        
-        cursor.execute('''
-            INSERT OR REPLACE INTO model_stats (id, updated_at, total_decisions, total_trades,
-                                                correct_trades, win_rate, total_pnl, avg_confidence, llm_model)
-            VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (datetime.now().isoformat(), total_decisions, total_trades, correct, win_rate, total_pnl, avg_confidence, self.model_name))
-        
-        conn.commit()
-        conn.close()
 
-    def get_stats(self) -> dict:
-        conn = sqlite3.connect(str(self.db_path))
-        cursor = conn.cursor()
-        
-        cursor.execute('SELECT * FROM model_stats WHERE id = 1')
-        row = cursor.fetchone()
-        conn.close()
-        
-        if row:
-            return {
-                'total_decisions': row[2],
-                'total_trades': row[3],
-                'correct_trades': row[4],
-                'win_rate': row[5],
-                'total_pnl': row[6],
-                'avg_confidence': row[7],
-                'llm_model': row[8] if len(row) > 8 else self.model_name
-            }
-        return {}
+if __name__ == "__main__":
+    brain = TradingBrain()
+    print("Brain cargado con todos los indicadores en el prompt")
